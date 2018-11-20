@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <RootNamespace>Cef.OIDC</RootNamespace>
+    <UserSecretsId>67b77ad0-95d6-4b9d-960d-e31607ac82cc</UserSecretsId>
+    <ApplicationInsightsResourceId>/subscriptions/71eb0568-25ab-4be5-b85a-a043d609410f/resourcegroups/Default-ApplicationInsights-WestUS2/providers/microsoft.insights/components/DotNetCore</ApplicationInsightsResourceId>
+    <ApplicationInsightsAnnotationResourceId>/subscriptions/71eb0568-25ab-4be5-b85a-a043d609410f/resourcegroups/Default-ApplicationInsights-WestUS2/providers/microsoft.insights/components/DotNetCore</ApplicationInsightsAnnotationResourceId>
+  </PropertyGroup>
+
+  <ItemGroup>
+   <_ContentIncludedByDefault Remove="Connected Services\Application Insights\ConnectedService.json" />
+   <_ContentIncludedByDefault Remove="Connected Services\Key Vault\ConnectedService.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Cef.Core" Version="2018.11.20.3" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.5.1" />
+    <PackageReference Include="IdentityServer4.AspNetIdentity" Version="2.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.AzureKeyVault" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="2.1.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.6" PrivateAssets="All" />
+  </ItemGroup>
+
+</Project>

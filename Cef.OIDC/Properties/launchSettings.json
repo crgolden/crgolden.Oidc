@@ -1,0 +1,12 @@
+﻿{
+  "profiles": {
+    "Cef.OIDC": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:6001;http://localhost:6000",
+      "environmentVariables": {
+        "ASPNETCORE_HTTPS_PORT": "6001"
+      }
+    }
+  }
+}
