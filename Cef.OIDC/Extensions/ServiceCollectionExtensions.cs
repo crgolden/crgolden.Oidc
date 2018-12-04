@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using Core.Models;
     using Core.Options;
+    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
@@ -11,16 +12,13 @@
 
     public static class ServiceCollectionExtensions
     {
-        public static void AddIdentityServer(this IServiceCollection services, Action<DbContextOptionsBuilder> dbContextOptions)
+        public static void AddIdentityServer(this IServiceCollection services, Action<DbContextOptionsBuilder> dbContextOptions, IHostingEnvironment environment)
         {
-            // configure identity server with in-memory stores, keys, clients and scopes
-            services
+            var builder = services
                 .AddIdentityServer(config =>
                 {
-                    //config.IssuerUri = "null";
                     config.Authentication.CookieLifetime = TimeSpan.FromHours(2);
                 })
-                .AddDeveloperSigningCredential()
                 // this adds the config data from DB (clients, resources, CORS)
                 .AddConfigurationStore(options => options.ConfigureDbContext = dbContextOptions)
                 // this adds the operational data from DB (codes, tokens, consents)
@@ -34,6 +32,15 @@
                 .AddAspNetIdentity<User>()
                 // this is something you will want in production to reduce load on and requests to the DB
                 .AddConfigurationStoreCache();
+
+            if (environment.IsDevelopment())
+            {
+                builder.AddDeveloperSigningCredential();
+            }
+            else
+            {
+
+            }
         }
 
         public static void AddAuthentication(this IServiceCollection services, IConfiguration configuration)

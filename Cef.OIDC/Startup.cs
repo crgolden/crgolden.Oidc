@@ -22,10 +22,12 @@
     public class Startup
     {
         private readonly IConfiguration _configuration;
+        private readonly IHostingEnvironment _environment;
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
             _configuration = configuration;
+            _environment = environment;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -46,7 +48,7 @@
             services.AddMvc(setup => setup.Filters.Add(typeof(ModelStateFilter)))
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddRazorPagesOptions(options => options.Conventions.AuthorizeFolder("/Account/Manage"));
-            services.AddIdentityServer(_configuration.GetDbContextOptions());
+            services.AddIdentityServer(_configuration.GetDbContextOptions(), _environment);
             services.AddAuthentication(_configuration);
         }
 
@@ -62,6 +64,7 @@
             else
             {
                 app.UseHsts();
+                app.UseExceptionHandler("/Error");
             }
 
             app.UseHttpsRedirection();
