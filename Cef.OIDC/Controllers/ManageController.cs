@@ -13,6 +13,7 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.UI.Services;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
     using Models.ManageModels;
     using Newtonsoft.Json;
@@ -277,14 +278,14 @@
                 if (!setPhoneResult.Succeeded) { errors.AddRange(setPhoneResult.Errors); }
             }
 
-            var firstName = user.Claims.SingleOrDefault(x => x.ClaimType == JwtClaimTypes.GivenName);
+            var firstName = await _context.UserClaims.SingleOrDefaultAsync(x => x.ClaimType == JwtClaimTypes.GivenName && x.UserId == user.Id);
             if (model.FirstName != null && firstName != null && model.FirstName != firstName.ClaimValue)
             {
                 firstName.ClaimValue = model.FirstName;
                 await _context.SaveChangesAsync();
             }
 
-            var lastName = user.Claims.SingleOrDefault(x => x.ClaimType == JwtClaimTypes.FamilyName);
+            var lastName = await _context.UserClaims.SingleOrDefaultAsync(x => x.ClaimType == JwtClaimTypes.FamilyName && x.UserId == user.Id);
             if (model.LastName != null && lastName != null && model.LastName != lastName.ClaimValue)
             {
                 lastName.ClaimValue = model.LastName;
