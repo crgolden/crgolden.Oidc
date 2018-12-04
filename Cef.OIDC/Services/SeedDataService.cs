@@ -8,6 +8,7 @@
     using Core.DbContexts;
     using Core.Interfaces;
     using Core.Models;
+    using Core.Relationships;
     using IdentityModel;
     using IdentityServer4;
     using IdentityServer4.EntityFramework.Mappers;
@@ -69,8 +70,24 @@
                         UserName = userOption.Email,
                         Email = userOption.Email,
                         SecurityStamp = $"{Guid.NewGuid()}",
-                        EmailConfirmed = true
+                        EmailConfirmed = true,
+                        PhoneNumberConfirmed = true,
+                        PhoneNumber = userOption.PhoneNumber,
+                        Claims = new List<UserClaim>
+                        {
+                            new UserClaim
+                            {
+                                ClaimType = JwtClaimTypes.FamilyName,
+                                ClaimValue = userOption.LastName
+                            },
+                            new UserClaim
+                            {
+                                ClaimType = JwtClaimTypes.GivenName,
+                                ClaimValue = userOption.FirstName
+                            }
+                        }
                     };
+
                     await _userManager.CreateAsync(user, userOption.Password);
                     await _userManager.AddToRolesAsync(user, SeedData.Roles.Select(role => role.Name));
                     await _userManager.AddClaimsAsync(user, SeedData.Claims);
@@ -88,14 +105,18 @@
                     ClientName = $"Client {index + 1}",
                     AllowedGrantTypes = GrantTypes.Implicit,
                     AllowAccessTokensViaBrowser = true,
-                    RedirectUris = { $"{origin}/" },
+                    RedirectUris = { $"{origin}/Account/LoginCallback" },
                     RequireConsent = false,
-                    PostLogoutRedirectUris = { $"{origin}/" },
+                    PostLogoutRedirectUris = { $"{origin}/Account/LogoutCallback" },
                     AllowedCorsOrigins = { origin },
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Email,
+                        IdentityServerConstants.StandardScopes.Phone,
+                        IdentityServerConstants.StandardScopes.Address,
+                        "api1"
                     }
                 };
                 return client.ToEntity();
@@ -130,24 +151,14 @@
 
         // Identity resources are data like user ID, name, or email address of a user
         // see: http://docs.identityserver.io/en/release/configuration/resources.html
-        public static readonly IEnumerable<IdentityResource> IdentityResources = new []
+        public static readonly IEnumerable<IdentityResource> IdentityResources = new IdentityResource[]
         {
             // some standard scopes from the OIDC spec
             new IdentityResources.OpenId(),
             new IdentityResources.Email(),
             new IdentityResources.Profile(),
             new IdentityResources.Phone(),
-            new IdentityResources.Address(),
-
-            // custom identity resource with some consolidated claims
-            new IdentityResource(
-                name: "custom.profile",
-                claimTypes: new[]
-                {
-                    JwtClaimTypes.Name,
-                    JwtClaimTypes.Email,
-                    "location"
-                })
+            new IdentityResources.Address()
         };
 
         public static readonly IEnumerable<ApiResource> ApiResources = new[]

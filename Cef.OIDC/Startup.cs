@@ -8,10 +8,8 @@
     using Core.Options;
     using Core.Services;
     using Extensions;
-    using IdentityServer4.EntityFramework.Interfaces;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.UI.Services;
     using Microsoft.AspNetCore.Mvc;
@@ -33,40 +31,23 @@
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
             services.AddApplicationInsightsTelemetry(_configuration);
             services.AddDatabase(_configuration);
             services.AddIdentity<User, Role>(setup => setup.SignIn.RequireConfirmedEmail = true)
                 .AddEntityFrameworkStores<CefDbContext>()
                 .AddDefaultTokenProviders();
-            services.AddScoped<IConfigurationDbContext, CefDbContext>();
-            services.AddScoped<IPersistedGrantDbContext, CefDbContext>();
             services.AddScoped<ISeedService, SeedDataService>();
             services.AddSingleton<IEmailSender, EmailSender>();
             services.AddCorsOptions(_configuration);
             services.AddEmailOptions(_configuration);
             services.AddUserOptions(_configuration);
-            services.AddAuthentication(_configuration);
             services.AddPolicies();
+            services.AddCors();
             services.AddMvc(setup => setup.Filters.Add(typeof(ModelStateFilter)))
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-                .AddRazorPagesOptions(options =>
-                {
-                    options.AllowAreas = true;
-                    options.Conventions.AuthorizeAreaFolder("Identity", "/Account/Manage");
-                    options.Conventions.AuthorizeAreaPage("Identity", "/Account/Logout");
-                });
-            services.ConfigureApplicationCookie(options =>
-            {
-                options.LoginPath = "/Identity/Account/Login";
-                options.LogoutPath = "/Identity/Account/Logout";
-                options.AccessDeniedPath = "/Identity/Account/AccessDenied";
-            });
+                .AddRazorPagesOptions(options => options.Conventions.AuthorizeFolder("/Account/Manage"));
             services.AddIdentityServer(_configuration.GetDbContextOptions());
+            services.AddAuthentication(_configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
