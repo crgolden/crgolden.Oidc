@@ -1,6 +1,7 @@
 ﻿namespace Cef.OIDC.Extensions
 {
     using System;
+    using System.Security.Cryptography.X509Certificates;
     using System.Threading.Tasks;
     using Core.Extensions;
     using Core.Models;
@@ -37,6 +38,12 @@
                 // this is something you will want in production to reduce load on and requests to the DB
                 .AddConfigurationStoreCache();
 
+            var x509TokenSigning = configuration.GetValue<string>("x509-token-signing");
+            if (string.IsNullOrEmpty(x509TokenSigning)) { return; }
+
+            var cert = new X509Certificate2(Convert.FromBase64String(x509TokenSigning));
+            builder.AddSigningCredential(cert);
+
             if (isDevelopment)
             {
                 builder.AddDeveloperSigningCredential();
@@ -45,8 +52,8 @@
             {
                 // TODO: Requires Basic-tier App Service Plan
                 // var cert = configuration.GetRegistryCertificate();
-                var cert = configuration.GetLocalCertificate(environment);
-                builder.AddSigningCredential(cert);
+                //var cert = configuration.GetLocalCertificate(environment);
+                //builder.AddSigningCredential(cert);
             }
         }
 

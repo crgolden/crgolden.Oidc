@@ -1,5 +1,6 @@
 ﻿namespace Cef.OIDC.Extensions
 {
+    using System;
     using System.IO;
     using System.Security.Cryptography.X509Certificates;
     using Microsoft.AspNetCore.Hosting;
@@ -39,11 +40,25 @@
             var path = Path.Combine(
                 path1: environment.ContentRootPath,
                 path2: "Cef.OIDC.pfx");
+            //var test = new X509Certificate2(
+            //    rawData: bytes,
+            //    password: null);
             var cert = new X509Certificate2(
                 fileName: path,
                 password: password,
                 keyStorageFlags: X509KeyStorageFlags.MachineKeySet);
             return cert;
+        }
+
+        private static X509Certificate2 PfxStringToCert(string pfx)
+        {
+            var bytes = Convert.FromBase64String(pfx);
+            var coll = new X509Certificate2Collection();
+            coll.Import(
+                rawData: bytes,
+                password: null,
+                keyStorageFlags: X509KeyStorageFlags.Exportable);
+            return coll[0];
         }
     }
 }
