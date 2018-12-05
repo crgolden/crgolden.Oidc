@@ -2,18 +2,20 @@
 {
     using System;
     using System.Threading.Tasks;
+    using Core.Extensions;
     using Core.Models;
     using Core.Options;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
-    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
     public static class ServiceCollectionExtensions
     {
-        public static void AddIdentityServer(this IServiceCollection services, Action<DbContextOptionsBuilder> dbContextOptions, IHostingEnvironment environment)
+        public static void AddIdentityServer(this IServiceCollection services, IConfiguration configuration, IHostingEnvironment environment)
         {
+            var dbContextOptions = configuration.GetDbContextOptions();
+            var isDevelopment = environment.IsDevelopment();
             var builder = services
                 .AddIdentityServer(config =>
                 {
@@ -25,6 +27,8 @@
                 .AddOperationalStore(options =>
                 {
                     options.ConfigureDbContext = dbContextOptions;
+                    if (!isDevelopment) { return; }
+
                     // this enables automatic token cleanup. this is optional.
                     options.EnableTokenCleanup = true;
                     options.TokenCleanupInterval = 30; // interval in seconds, short for testing
@@ -33,13 +37,16 @@
                 // this is something you will want in production to reduce load on and requests to the DB
                 .AddConfigurationStoreCache();
 
-            if (environment.IsDevelopment())
+            if (isDevelopment)
             {
                 builder.AddDeveloperSigningCredential();
             }
             else
             {
-
+                // TODO: Requires Basic-tier App Service Plan
+                // var cert = configuration.GetRegistryCertificate();
+                var cert = configuration.GetLocalCertificate(environment);
+                builder.AddSigningCredential(cert);
             }
         }
 
