@@ -41,7 +41,8 @@
                 path2: "Cef.OIDC.pfx");
             var cert = new X509Certificate2(
                 fileName: path,
-                password: password);
+                password: password,
+                keyStorageFlags: X509KeyStorageFlags.MachineKeySet);
             return cert;
         }
     }
