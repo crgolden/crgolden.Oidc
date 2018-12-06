@@ -48,7 +48,14 @@
             services.AddMvc(setup => setup.Filters.Add(typeof(ModelStateFilter)))
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddRazorPagesOptions(options => options.Conventions.AuthorizeFolder("/Account/Manage"));
-            services.AddIdentityServer(_configuration, _environment);
+            if (_environment.IsDevelopment())
+            {
+                services.AddIdentityServerDevelopment(_configuration);
+            }
+            else if (_environment.IsProduction())
+            {
+                services.AddIdentityServerProduction(_configuration);
+            }
             services.AddAuthentication(_configuration);
         }
 
