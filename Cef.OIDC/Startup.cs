@@ -71,7 +71,7 @@
             else
             {
                 app.UseHsts();
-                app.UseExceptionHandler("/Error");
+                app.UseExceptionHandler("/Home/Error");
             }
 
             app.UseHttpsRedirection();

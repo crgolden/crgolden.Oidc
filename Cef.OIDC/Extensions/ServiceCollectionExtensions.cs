@@ -18,15 +18,12 @@
             var dbContextOptions = configuration.GetDbContextOptions();
             services
                 .AddIdentityServer(config => config.Authentication.CookieLifetime = TimeSpan.FromHours(2))
-                // this adds the config data from DB (clients, resources, CORS)
                 .AddConfigurationStore(options => options.ConfigureDbContext = dbContextOptions)
-                // this adds the operational data from DB (codes, tokens, consents)
                 .AddOperationalStore(options =>
                 {
                     options.ConfigureDbContext = dbContextOptions;
-                    // this enables automatic token cleanup. this is optional.
                     options.EnableTokenCleanup = true;
-                    options.TokenCleanupInterval = 30; // interval in seconds, short for testing
+                    options.TokenCleanupInterval = 30;
                 })
                 .AddDeveloperSigningCredential()
                 .AddAspNetIdentity<User>();
@@ -34,42 +31,33 @@
 
         public static void AddIdentityServerProduction(this IServiceCollection services, IConfiguration configuration)
         {
-            X509Certificate2 PfxStringToCert(string pfx)
-            {
-                var bytes = Convert.FromBase64String(pfx);
-                var coll = new X509Certificate2Collection();
-                coll.Import(
-                    rawData: bytes,
-                    password: null,
-                    keyStorageFlags: X509KeyStorageFlags.MachineKeySet);
-                return coll[0];
-            }
-
             var dbContextOptions = configuration.GetDbContextOptions();
             var signingCredential = configuration.GetValue<string>("SigningCredential");
             var validationKey = configuration.GetValue<string>("ValidationKey");
 
-
             services
                 .AddIdentityServer(config => config.Authentication.CookieLifetime = TimeSpan.FromHours(2))
-                // this adds the config data from DB (clients, resources, CORS)
                 .AddConfigurationStore(options => options.ConfigureDbContext = dbContextOptions)
-                // this adds the operational data from DB (codes, tokens, consents)
                 .AddOperationalStore(options => options.ConfigureDbContext = dbContextOptions)
-                // this is something you will want in production to reduce load on and requests to the DB
                 .AddConfigurationStoreCache()
-                .AddSigningCredential(PfxStringToCert(signingCredential))
-                .AddValidationKey(PfxStringToCert(validationKey))
+                .AddSigningCredential(new X509Certificate2(
+                    Convert.FromBase64String(signingCredential),
+                    (string) null,
+                    X509KeyStorageFlags.MachineKeySet))
+                .AddValidationKey(new X509Certificate2(
+                    Convert.FromBase64String(validationKey),
+                    (string) null,
+                    X509KeyStorageFlags.MachineKeySet))
                 .AddAspNetIdentity<User>();
         }
 
         public static void AddAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             var authenticationOptionsSection = configuration.GetSection(nameof(AuthenticationOptions));
-            if (!authenticationOptionsSection.Exists()) { return; }
+            if (!authenticationOptionsSection.Exists()) return;
 
             var authenticationOptions = authenticationOptionsSection.Get<AuthenticationOptions>();
-            if (authenticationOptions?.Facebook == null) { return; }
+            if (authenticationOptions?.Facebook == null) return;
 
             services.AddAuthentication()
                 .AddIdentityServerAuthentication("token", options =>
