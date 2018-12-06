@@ -18,10 +18,7 @@
             var dbContextOptions = configuration.GetDbContextOptions();
             var isDevelopment = environment.IsDevelopment();
             var builder = services
-                .AddIdentityServer(config =>
-                {
-                    config.Authentication.CookieLifetime = TimeSpan.FromHours(2);
-                })
+                .AddIdentityServer(config => config.Authentication.CookieLifetime = TimeSpan.FromHours(2))
                 // this adds the config data from DB (clients, resources, CORS)
                 .AddConfigurationStore(options => options.ConfigureDbContext = dbContextOptions)
                 // this adds the operational data from DB (codes, tokens, consents)
@@ -34,15 +31,7 @@
                     options.EnableTokenCleanup = true;
                     options.TokenCleanupInterval = 30; // interval in seconds, short for testing
                 })
-                .AddAspNetIdentity<User>()
-                // this is something you will want in production to reduce load on and requests to the DB
-                .AddConfigurationStoreCache();
-
-            var x509TokenSigning = configuration.GetValue<string>("x509-token-signing");
-            if (string.IsNullOrEmpty(x509TokenSigning)) { return; }
-
-            var cert = new X509Certificate2(Convert.FromBase64String(x509TokenSigning));
-            builder.AddSigningCredential(cert);
+                .AddAspNetIdentity<User>();
 
             if (isDevelopment)
             {
@@ -50,10 +39,28 @@
             }
             else
             {
-                // TODO: Requires Basic-tier App Service Plan
-                // var cert = configuration.GetRegistryCertificate();
-                //var cert = configuration.GetLocalCertificate(environment);
-                //builder.AddSigningCredential(cert);
+                // this is something you will want in production to reduce load on and requests to the DB
+                builder.AddConfigurationStoreCache();
+
+                X509Certificate2 PfxStringToCert(string pfx)
+                {
+                    var bytes = Convert.FromBase64String(pfx);
+                    var coll = new X509Certificate2Collection();
+                    coll.Import(bytes, null, X509KeyStorageFlags.Exportable);
+                    return coll[0];
+                }
+
+                var signingCredential = configuration.GetValue<string>("SigningCredential");
+                if (!string.IsNullOrEmpty(signingCredential))
+                {
+                    builder.AddSigningCredential(PfxStringToCert(signingCredential));
+                }
+
+                var validationKey = configuration.GetValue<string>("ValidationKey");
+                if (!string.IsNullOrEmpty(validationKey))
+                {
+                    builder.AddValidationKey(PfxStringToCert(validationKey));
+                }
             }
         }
 
