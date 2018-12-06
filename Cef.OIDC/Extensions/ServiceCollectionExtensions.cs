@@ -41,7 +41,7 @@
                 coll.Import(
                     rawData: bytes,
                     password: null,
-                    keyStorageFlags: X509KeyStorageFlags.EphemeralKeySet);
+                    keyStorageFlags: X509KeyStorageFlags.MachineKeySet);
                 return coll[0];
             }
 

@@ -1,4 +1,4 @@
-﻿namespace Cef.OIDC.Pages
+﻿namespace Cef.OIDC.Pages.Home
 {
     using System.Diagnostics;
     using Microsoft.AspNetCore.Authorization;
