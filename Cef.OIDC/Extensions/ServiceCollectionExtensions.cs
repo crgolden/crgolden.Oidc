@@ -62,7 +62,7 @@
                 : null;
 
             services.AddAuthentication()
-                .AddIdentityServerAuthentication("token", options =>
+                .AddIdentityServerAuthentication("identity", options =>
                 {
                     var identityServerAddress = configuration.GetValue<string>("IdentityServerAddress");
                     if (string.IsNullOrEmpty(identityServerAddress)) return;
