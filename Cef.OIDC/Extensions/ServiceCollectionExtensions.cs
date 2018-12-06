@@ -46,7 +46,14 @@
                 {
                     var bytes = Convert.FromBase64String(pfx);
                     var coll = new X509Certificate2Collection();
-                    coll.Import(bytes, null, X509KeyStorageFlags.Exportable);
+                    coll.Import(
+                        rawData: bytes,
+                        password: null,
+                        keyStorageFlags: X509KeyStorageFlags.Exportable |
+                                         X509KeyStorageFlags.MachineKeySet |
+                                         X509KeyStorageFlags.EphemeralKeySet |
+                                         X509KeyStorageFlags.PersistKeySet |
+                                         X509KeyStorageFlags.DefaultKeySet);
                     return coll[0];
                 }
 
