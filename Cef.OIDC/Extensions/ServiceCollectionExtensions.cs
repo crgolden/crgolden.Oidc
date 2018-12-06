@@ -51,9 +51,7 @@
                         password: null,
                         keyStorageFlags: X509KeyStorageFlags.Exportable |
                                          X509KeyStorageFlags.MachineKeySet |
-                                         X509KeyStorageFlags.EphemeralKeySet |
-                                         X509KeyStorageFlags.PersistKeySet |
-                                         X509KeyStorageFlags.DefaultKeySet);
+                                         X509KeyStorageFlags.EphemeralKeySet);
                     return coll[0];
                 }
 
