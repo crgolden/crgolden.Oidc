@@ -6,6 +6,7 @@
     using Core.Extensions;
     using Core.Models;
     using Core.Options;
+    using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -56,10 +57,7 @@
                 // this adds the config data from DB (clients, resources, CORS)
                 .AddConfigurationStore(options => options.ConfigureDbContext = dbContextOptions)
                 // this adds the operational data from DB (codes, tokens, consents)
-                .AddOperationalStore(options =>
-                {
-                    options.ConfigureDbContext = dbContextOptions;
-                })
+                .AddOperationalStore(options => options.ConfigureDbContext = dbContextOptions)
                 // this is something you will want in production to reduce load on and requests to the DB
                 .AddConfigurationStoreCache()
                 .AddSigningCredential(PfxStringToCert(signingCredential))
@@ -76,6 +74,11 @@
             if (authenticationOptions?.Facebook == null) { return; }
 
             services.AddAuthentication()
+                .AddIdentityServerAuthentication("token", options =>
+                {
+                    options.Authority = "https://clarity-oidc.azurewebsites.net";
+                    options.ApiName = "api1";
+                })
                 .AddFacebook(options =>
                 {
                     options.AppId = authenticationOptions.Facebook.AppId;

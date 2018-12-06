@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <PackageReference Include="Cef.Core" Version="2018.11.28.1" />
+    <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="2.7.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.5.1" />
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="2.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
