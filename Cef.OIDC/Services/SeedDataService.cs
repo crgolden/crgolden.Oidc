@@ -119,7 +119,8 @@
                         IdentityServerConstants.StandardScopes.Phone,
                         IdentityServerConstants.StandardScopes.Address,
                         "api1",
-                        "api2",
+                        "api2.full_access",
+                        "api2.read_only",
                         "identity"
                     }
                 };
