@@ -41,20 +41,10 @@
             var x509TokenSigning = configuration.GetValue<string>("x509-token-signing");
             if (string.IsNullOrEmpty(x509TokenSigning)) { return; }
 
-            var cert = new X509Certificate2(Convert.FromBase64String(x509TokenSigning));
-            builder.AddSigningCredential(cert);
-
-            if (isDevelopment)
-            {
-                builder.AddDeveloperSigningCredential();
-            }
-            else
-            {
-                // TODO: Requires Basic-tier App Service Plan
-                // var cert = configuration.GetRegistryCertificate();
-                //var cert = configuration.GetLocalCertificate(environment);
-                //builder.AddSigningCredential(cert);
-            }
+            var bytes = Convert.FromBase64String(x509TokenSigning);
+            var coll = new X509Certificate2Collection();
+            coll.Import(bytes, null, X509KeyStorageFlags.Exportable);
+            builder.AddSigningCredential(coll[0]);
         }
 
         public static void AddAuthentication(this IServiceCollection services, IConfiguration configuration)
