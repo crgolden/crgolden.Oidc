@@ -15,28 +15,29 @@
     using IdentityServer4.Models;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Options;
 
     public class SeedDataService : ISeedService
     {
+        private readonly CefDbContext _context;
+        private readonly IConfiguration _configuration;
         private readonly Core.Options.UserOptions _userOptions;
-        private readonly Core.Options.CorsOptions _corsOptions;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<Role> _roleManager;
-        private readonly CefDbContext _context;
 
         public SeedDataService(
             CefDbContext context,
+            IConfiguration configuration,
             IOptions<Core.Options.UserOptions> userOptions,
-            IOptions<Core.Options.CorsOptions> corsOptions,
             UserManager<User> userManager,
             RoleManager<Role> roleManager)
         {
+            _context = context;
+            _configuration = configuration;
             _userOptions = userOptions.Value;
-            _corsOptions = corsOptions.Value;
             _userManager = userManager;
             _roleManager = roleManager;
-            _context = context;
         }
 
         public async Task SeedAsync()
@@ -97,18 +98,19 @@
 
         private async Task SeedClientsAsync()
         {
-            await _context.Clients.AddRangeAsync(_corsOptions.Origins.Select((origin, index) =>
+            var angularClientAddress = _configuration.GetValue<string>("AngularClientAddress");
+            if (!string.IsNullOrEmpty(angularClientAddress))
             {
                 var client = new Client
                 {
                     ClientId = $"{Guid.NewGuid()}",
-                    ClientName = $"Client {index + 1}",
+                    ClientName = "Clarity Angular Client",
                     AllowedGrantTypes = GrantTypes.Implicit,
                     AllowAccessTokensViaBrowser = true,
-                    RedirectUris = { $"{origin}/Account/LoginCallback" },
+                    RedirectUris = { $"{angularClientAddress}/Account/LoginCallback" },
                     RequireConsent = false,
-                    PostLogoutRedirectUris = { $"{origin}/Account/LogoutCallback" },
-                    AllowedCorsOrigins = { origin },
+                    PostLogoutRedirectUris = { $"{angularClientAddress}/Account/LogoutCallback" },
+                    AllowedCorsOrigins = { angularClientAddress },
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
@@ -116,12 +118,14 @@
                         IdentityServerConstants.StandardScopes.Email,
                         IdentityServerConstants.StandardScopes.Phone,
                         IdentityServerConstants.StandardScopes.Address,
-                        "api1"
+                        "api1",
+                        "api2",
+                        "identity"
                     }
                 };
-                return client.ToEntity();
-            }));
-            await _context.SaveChangesAsync();
+                _context.Clients.Add(client.ToEntity());
+                await _context.SaveChangesAsync();
+            }
         }
 
         private async Task SeedIdentityResourcesAsync()
@@ -163,6 +167,8 @@
 
         public static readonly IEnumerable<ApiResource> ApiResources = new[]
         {
+            new ApiResource("identity"),
+
             // simple version with ctor
             new ApiResource(
                 name: "api1",

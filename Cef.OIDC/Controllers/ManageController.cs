@@ -18,6 +18,7 @@
     using Models.ManageModels;
     using Newtonsoft.Json;
 
+    [Authorize(AuthenticationSchemes = "identity")]
     [ApiController]
     [Produces("application/json")]
     [Route("[controller]/[action]")]
@@ -164,7 +165,6 @@
         }
 
         [HttpGet]
-        [Authorize(AuthenticationSchemes = "token")]
         public async Task<IActionResult> ExternalAuthenticationSchemes()
         {
             return Ok(await _signInManager.GetExternalAuthenticationSchemesAsync());

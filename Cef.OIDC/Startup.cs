@@ -5,7 +5,6 @@
     using Core.Filters;
     using Core.Interfaces;
     using Core.Models;
-    using Core.Options;
     using Core.Services;
     using Extensions;
     using Microsoft.AspNetCore.Builder;
@@ -16,7 +15,6 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.Options;
     using Services;
 
     public class Startup
@@ -40,7 +38,6 @@
                 .AddDefaultTokenProviders();
             services.AddScoped<ISeedService, SeedDataService>();
             services.AddSingleton<IEmailSender, EmailSender>();
-            services.AddCorsOptions(_configuration);
             services.AddEmailOptions(_configuration);
             services.AddUserOptions(_configuration);
             services.AddPolicies();
@@ -48,20 +45,13 @@
             services.AddMvc(setup => setup.Filters.Add(typeof(ModelStateFilter)))
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddRazorPagesOptions(options => options.Conventions.AuthorizeFolder("/Account/Manage"));
-            if (_environment.IsDevelopment())
-            {
-                services.AddIdentityServerDevelopment(_configuration);
-            }
-            else if (_environment.IsProduction())
-            {
-                services.AddIdentityServerProduction(_configuration);
-            }
+            services.AddIdentityServer(_configuration, _environment);
             services.AddAuthentication(_configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env,
-            ILoggerFactory loggerFactory, IOptions<CorsOptions> corsOptions)
+            ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -78,7 +68,7 @@
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseIdentityServer();
-            app.UseCors(corsOptions.Value);
+            app.UseCors(_configuration);
             app.UseMvcWithDefaultRoute();
 
             loggerFactory.AddAzureWebAppDiagnostics();

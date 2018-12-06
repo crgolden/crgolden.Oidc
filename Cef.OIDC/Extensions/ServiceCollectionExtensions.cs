@@ -7,66 +7,73 @@
     using Core.Models;
     using Core.Options;
     using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
     public static class ServiceCollectionExtensions
     {
-        public static void AddIdentityServerDevelopment(this IServiceCollection services, IConfiguration configuration)
+        public static void AddIdentityServer(this IServiceCollection services,
+            IConfiguration configuration, IHostingEnvironment environment)
         {
             var dbContextOptions = configuration.GetDbContextOptions();
-            services
-                .AddIdentityServer(config => config.Authentication.CookieLifetime = TimeSpan.FromHours(2))
-                .AddConfigurationStore(options => options.ConfigureDbContext = dbContextOptions)
-                .AddOperationalStore(options =>
-                {
-                    options.ConfigureDbContext = dbContextOptions;
-                    options.EnableTokenCleanup = true;
-                    options.TokenCleanupInterval = 30;
-                })
-                .AddDeveloperSigningCredential()
-                .AddAspNetIdentity<User>();
-        }
+            if (environment.IsDevelopment())
+            {
+                services
+                    .AddIdentityServer(config => config.Authentication.CookieLifetime = TimeSpan.FromHours(2))
+                    .AddConfigurationStore(options => options.ConfigureDbContext = dbContextOptions)
+                    .AddOperationalStore(options =>
+                    {
+                        options.ConfigureDbContext = dbContextOptions;
+                        options.EnableTokenCleanup = true;
+                        options.TokenCleanupInterval = 30;
+                    })
+                    .AddDeveloperSigningCredential()
+                    .AddAspNetIdentity<User>();
+            }
+            else if (environment.IsProduction())
+            {
+                var signingCredential = configuration.GetValue<string>("SigningCredential");
+                var validationKey = configuration.GetValue<string>("ValidationKey");
 
-        public static void AddIdentityServerProduction(this IServiceCollection services, IConfiguration configuration)
-        {
-            var dbContextOptions = configuration.GetDbContextOptions();
-            var signingCredential = configuration.GetValue<string>("SigningCredential");
-            var validationKey = configuration.GetValue<string>("ValidationKey");
-
-            services
-                .AddIdentityServer(config => config.Authentication.CookieLifetime = TimeSpan.FromHours(2))
-                .AddConfigurationStore(options => options.ConfigureDbContext = dbContextOptions)
-                .AddOperationalStore(options => options.ConfigureDbContext = dbContextOptions)
-                .AddConfigurationStoreCache()
-                .AddSigningCredential(new X509Certificate2(
-                    Convert.FromBase64String(signingCredential),
-                    (string) null,
-                    X509KeyStorageFlags.MachineKeySet))
-                .AddValidationKey(new X509Certificate2(
-                    Convert.FromBase64String(validationKey),
-                    (string) null,
-                    X509KeyStorageFlags.MachineKeySet))
-                .AddAspNetIdentity<User>();
+                services
+                    .AddIdentityServer(config => config.Authentication.CookieLifetime = TimeSpan.FromHours(2))
+                    .AddConfigurationStore(options => options.ConfigureDbContext = dbContextOptions)
+                    .AddOperationalStore(options => options.ConfigureDbContext = dbContextOptions)
+                    .AddConfigurationStoreCache()
+                    .AddSigningCredential(new X509Certificate2(
+                        Convert.FromBase64String(signingCredential),
+                        (string)null,
+                        X509KeyStorageFlags.MachineKeySet))
+                    .AddValidationKey(new X509Certificate2(
+                        Convert.FromBase64String(validationKey),
+                        (string)null,
+                        X509KeyStorageFlags.MachineKeySet))
+                    .AddAspNetIdentity<User>();
+            }
         }
 
         public static void AddAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             var authenticationOptionsSection = configuration.GetSection(nameof(AuthenticationOptions));
-            if (!authenticationOptionsSection.Exists()) return;
-
-            var authenticationOptions = authenticationOptionsSection.Get<AuthenticationOptions>();
-            if (authenticationOptions?.Facebook == null) return;
+            var authenticationOptions = authenticationOptionsSection.Exists()
+                ? authenticationOptionsSection.Get<AuthenticationOptions>()
+                : null;
 
             services.AddAuthentication()
                 .AddIdentityServerAuthentication("token", options =>
                 {
-                    options.Authority = "https://clarity-oidc.azurewebsites.net";
-                    options.ApiName = "api1";
+                    var identityServerAddress = configuration.GetValue<string>("IdentityServerAddress");
+                    if (string.IsNullOrEmpty(identityServerAddress)) return;
+
+                    options.Authority = identityServerAddress;
+                    options.ApiName = "identity";
                 })
                 .AddFacebook(options =>
                 {
+                    if (authenticationOptions?.Facebook == null) return;
+
                     options.AppId = authenticationOptions.Facebook.AppId;
                     options.AppSecret = authenticationOptions.Facebook.AppSecret;
                     options.SignInScheme = IdentityConstants.ExternalScheme;
