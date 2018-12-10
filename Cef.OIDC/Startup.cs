@@ -50,15 +50,14 @@
             services.AddPolicies();
             services.AddCors();
             services.AddMvc(setup => setup.Filters.Add(typeof(ModelStateFilter)))
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddRazorPagesOptions(options => options.Conventions.AuthorizeFolder("/Account/Manage"));
             services.AddIdentityServer(_configuration, _environment);
             services.AddAuthentication(_configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env,
-            ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -78,7 +77,6 @@
             app.UseCors(_configuration);
             app.UseMvcWithDefaultRoute();
 
-            loggerFactory.AddAzureWebAppDiagnostics();
             loggerFactory.AddApplicationInsights(app.ApplicationServices, LogLevel.Warning);
         }
 
