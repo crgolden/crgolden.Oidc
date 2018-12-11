@@ -1,15 +1,15 @@
 ﻿namespace Cef.OIDC
 {
-    using System;
     using Core.DbContexts;
     using Core.Extensions;
+    using Core.Factories;
     using Core.Filters;
     using Core.Interfaces;
     using Core.Models;
+    using Core.Options;
     using Core.Services;
     using Extensions;
     using Microsoft.ApplicationInsights.AspNetCore;
-    using Microsoft.ApplicationInsights.Extensibility;
     using Microsoft.ApplicationInsights.SnapshotCollector;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -19,7 +19,6 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.Options;
     using Services;
 
     public class Startup
@@ -37,7 +36,8 @@
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<SnapshotCollectorConfiguration>(_configuration.GetSection(nameof(SnapshotCollectorConfiguration)));
-            services.AddSingleton<ITelemetryProcessorFactory>(sp => new SnapshotCollectorTelemetryProcessorFactory(sp));
+            services.Configure<EmailOptions>(_configuration.GetSection(nameof(EmailOptions)));
+            services.Configure<UserOptions>(_configuration.GetSection(nameof(Options.UserOptions)));
             services.AddApplicationInsightsTelemetry(_configuration);
             services.AddDatabase(_configuration);
             services.AddIdentity<User, Role>(setup => setup.SignIn.RequireConfirmedEmail = true)
@@ -45,13 +45,11 @@
                 .AddDefaultTokenProviders();
             services.AddScoped<ISeedService, SeedDataService>();
             services.AddSingleton<IEmailSender, EmailSender>();
-            services.AddEmailOptions(_configuration);
-            services.AddUserOptions(_configuration);
-            services.AddPolicies();
+            services.AddSingleton<ITelemetryProcessorFactory>(sp => new SnapshotCollectorTelemetryProcessorFactory(sp));
             services.AddCors();
             services.AddMvc(setup => setup.Filters.Add(typeof(ModelStateFilter)))
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddRazorPagesOptions(options => options.Conventions.AuthorizeFolder("/Account/Manage"));
+                .AddRazorPagesOptions(options => options.Conventions.AuthorizeFolder("/Account/Manage", "identity"));
             services.AddIdentityServer(_configuration, _environment);
             services.AddAuthentication(_configuration);
         }
@@ -78,20 +76,6 @@
             app.UseMvcWithDefaultRoute();
 
             loggerFactory.AddApplicationInsights(app.ApplicationServices, LogLevel.Warning);
-        }
-
-        private class SnapshotCollectorTelemetryProcessorFactory : ITelemetryProcessorFactory
-        {
-            private readonly IServiceProvider _serviceProvider;
-
-            public SnapshotCollectorTelemetryProcessorFactory(IServiceProvider serviceProvider) =>
-                _serviceProvider = serviceProvider;
-
-            public ITelemetryProcessor Create(ITelemetryProcessor next)
-            {
-                var snapshotConfigurationOptions = _serviceProvider.GetService<IOptions<SnapshotCollectorConfiguration>>();
-                return new SnapshotCollectorTelemetryProcessor(next, configuration: snapshotConfigurationOptions.Value);
-            }
         }
     }
 }

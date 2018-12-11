@@ -5,12 +5,12 @@
     using System.Threading.Tasks;
     using Core.Extensions;
     using Core.Models;
-    using Core.Options;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Options;
 
     public static class ServiceCollectionExtensions
     {
@@ -61,7 +61,7 @@
                 ? authenticationOptionsSection.Get<AuthenticationOptions>()
                 : null;
 
-            services.AddAuthentication()
+            services.AddAuthentication("Bearer")
                 .AddIdentityServerAuthentication("identity", options =>
                 {
                     var identityServerAddress = configuration.GetValue<string>("IdentityServerAddress");

@@ -17,19 +17,20 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Options;
+    using UserOptions = Options.UserOptions;
 
     public class SeedDataService : ISeedService
     {
         private readonly CefDbContext _context;
         private readonly IConfiguration _configuration;
-        private readonly Core.Options.UserOptions _userOptions;
+        private readonly UserOptions _userOptions;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<Role> _roleManager;
 
         public SeedDataService(
             CefDbContext context,
             IConfiguration configuration,
-            IOptions<Core.Options.UserOptions> userOptions,
+            IOptions<UserOptions> userOptions,
             UserManager<User> userManager,
             RoleManager<Role> roleManager)
         {
