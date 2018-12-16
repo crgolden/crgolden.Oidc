@@ -3,21 +3,20 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Claims;
     using System.Text;
     using System.Text.Encodings.Web;
     using System.Threading.Tasks;
-    using Core.DbContexts;
-    using Core.Models;
+    using Models;
     using Extensions;
     using IdentityModel;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.UI.Services;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
-    using Models.ManageModels;
     using Newtonsoft.Json;
+    using ViewModels.ManageViewModels;
 
     [Authorize(AuthenticationSchemes = "identity")]
     [ApiController]
@@ -27,7 +26,6 @@
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly CefDbContext _context;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<ManageController> _logger;
         private readonly UrlEncoder _urlEncoder;
@@ -37,14 +35,12 @@
         public ManageController(
           UserManager<User> userManager,
           SignInManager<User> signInManager,
-          CefDbContext context,
           IEmailSender emailSender,
           ILogger<ManageController> logger,
           UrlEncoder urlEncoder)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _context = context;
             _emailSender = emailSender;
             _logger = logger;
             _urlEncoder = urlEncoder;
@@ -267,44 +263,45 @@
 
             var errors = new List<IdentityError>();
 
-            if (model.Email != null && model.Email != await _userManager.GetEmailAsync(user))
+            if (model.Email != user.Email)
             {
                 var setEmailResult = await _userManager.SetEmailAsync(user, model.Email);
                 if (!setEmailResult.Succeeded) { errors.AddRange(setEmailResult.Errors); }
             }
 
-            if (model.PhoneNumber != null && model.PhoneNumber != await _userManager.GetPhoneNumberAsync(user))
+            if (!string.IsNullOrEmpty(model.PhoneNumber) && model.PhoneNumber != user.PhoneNumber)
             {
                 var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, model.PhoneNumber);
                 if (!setPhoneResult.Succeeded) { errors.AddRange(setPhoneResult.Errors); }
             }
 
-            var firstName = await _context.UserClaims.SingleOrDefaultAsync(x => x.ClaimType == JwtClaimTypes.GivenName && x.UserId == user.Id);
-            if (model.FirstName != null && firstName != null && model.FirstName != firstName.ClaimValue)
+            foreach (var claim in await _userManager.GetClaimsAsync(user))
             {
-                firstName.ClaimValue = model.FirstName;
-                await _context.SaveChangesAsync();
-            }
-
-            var lastName = await _context.UserClaims.SingleOrDefaultAsync(x => x.ClaimType == JwtClaimTypes.FamilyName && x.UserId == user.Id);
-            if (model.LastName != null && lastName != null && model.LastName != lastName.ClaimValue)
-            {
-                lastName.ClaimValue = model.LastName;
-                await _context.SaveChangesAsync();
+                switch (claim.Type)
+                {
+                    case JwtClaimTypes.GivenName:
+                    {
+                        if (model.FirstName != claim.Value)
+                        {
+                            await _userManager.ReplaceClaimAsync(user, claim, new Claim(JwtClaimTypes.GivenName, model.FirstName));
+                        }
+                        break;
+                    }
+                    case JwtClaimTypes.FamilyName:
+                    {
+                        if (model.LastName != claim.Value)
+                        {
+                            await _userManager.ReplaceClaimAsync(user, claim, new Claim(JwtClaimTypes.FamilyName, model.LastName));
+                        }
+                        break;
+                    }
+                }
             }
 
             if (errors.Any()) { return BadRequest(errors); }
 
             await _signInManager.RefreshSignInAsync(user);
-            return Ok(new ProfileViewModel
-            {
-                Email = await _userManager.GetEmailAsync(user),
-                EmailConfirmed = await _userManager.IsEmailConfirmedAsync(user),
-                PhoneNumber = await _userManager.GetPhoneNumberAsync(user),
-                PhoneNumberConfirmed = await _userManager.IsPhoneNumberConfirmedAsync(user),
-                FirstName = user.Claims.SingleOrDefault(x => x.ClaimType == JwtClaimTypes.GivenName)?.ClaimValue,
-                LastName = user.Claims.SingleOrDefault(x => x.ClaimType == JwtClaimTypes.FamilyName)?.ClaimValue
-            });
+            return Ok(model);
         }
 
         [HttpPost]

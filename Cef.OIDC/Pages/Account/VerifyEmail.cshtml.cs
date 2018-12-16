@@ -1,8 +1,8 @@
 ﻿namespace Cef.OIDC.Pages.Account
 {
     using System.Threading.Tasks;
-    using Core.Models;
     using Extensions;
+    using Models;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.UI.Services;
     using Microsoft.AspNetCore.Mvc;

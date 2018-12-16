@@ -1,4 +1,4 @@
-﻿namespace Cef.OIDC.Models.ManageModels
+﻿namespace Cef.OIDC.ViewModels.ManageViewModels
 {
     using System.Collections.Generic;
 

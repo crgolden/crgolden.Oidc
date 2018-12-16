@@ -1,4 +1,4 @@
-﻿namespace Cef.OIDC.Models.AccountModels
+﻿namespace Cef.OIDC.ViewModels.AccountViewModels
 {
     using System.ComponentModel.DataAnnotations;
 

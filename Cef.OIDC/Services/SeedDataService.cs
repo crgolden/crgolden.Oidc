@@ -5,32 +5,30 @@
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
-    using Core.DbContexts;
     using Core.Interfaces;
-    using Core.Models;
-    using Core.Relationships;
+    using Models;
     using IdentityModel;
     using IdentityServer4;
+    using IdentityServer4.EntityFramework.Interfaces;
     using IdentityServer4.EntityFramework.Mappers;
     using IdentityServer4.Models;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Options;
-    using UserOptions = Options.UserOptions;
 
     public class SeedDataService : ISeedService
     {
-        private readonly CefDbContext _context;
+        private readonly IConfigurationDbContext _context;
         private readonly IConfiguration _configuration;
-        private readonly UserOptions _userOptions;
+        private readonly OIDC.Options.UserOptions _userOptions;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<Role> _roleManager;
 
         public SeedDataService(
-            CefDbContext context,
+            IConfigurationDbContext context,
             IConfiguration configuration,
-            IOptions<UserOptions> userOptions,
+            IOptions<OIDC.Options.UserOptions> userOptions,
             UserManager<User> userManager,
             RoleManager<Role> roleManager)
         {
@@ -74,25 +72,17 @@
                         SecurityStamp = $"{Guid.NewGuid()}",
                         EmailConfirmed = true,
                         PhoneNumberConfirmed = true,
-                        PhoneNumber = userOption.PhoneNumber,
-                        Claims = new List<UserClaim>
-                        {
-                            new UserClaim
-                            {
-                                ClaimType = JwtClaimTypes.FamilyName,
-                                ClaimValue = userOption.LastName
-                            },
-                            new UserClaim
-                            {
-                                ClaimType = JwtClaimTypes.GivenName,
-                                ClaimValue = userOption.FirstName
-                            }
-                        }
+                        PhoneNumber = userOption.PhoneNumber
+                    };
+                    var claims = new List<Claim>
+                    {
+                        new Claim(JwtClaimTypes.GivenName, userOption.FirstName),
+                        new Claim(JwtClaimTypes.FamilyName, userOption.LastName)
                     };
 
                     await _userManager.CreateAsync(user, userOption.Password);
                     await _userManager.AddToRolesAsync(user, SeedData.Roles.Select(role => role.Name));
-                    await _userManager.AddClaimsAsync(user, SeedData.Claims);
+                    await _userManager.AddClaimsAsync(user, claims.Union(SeedData.Claims));
                 }
             }
         }

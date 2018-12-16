@@ -4,7 +4,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.Security.Claims;
     using System.Threading.Tasks;
-    using Core.Models;
+    using Models;
     using Extensions;
     using IdentityModel;
     using Microsoft.AspNetCore.Authorization;

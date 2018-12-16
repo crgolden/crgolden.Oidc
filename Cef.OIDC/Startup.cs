@@ -1,14 +1,14 @@
 ﻿namespace Cef.OIDC
 {
-    using Core.DbContexts;
     using Core.Extensions;
     using Core.Factories;
     using Core.Filters;
     using Core.Interfaces;
-    using Core.Models;
     using Core.Options;
     using Core.Services;
+    using Data;
     using Extensions;
+    using IdentityServer4.EntityFramework.Interfaces;
     using Microsoft.ApplicationInsights.AspNetCore;
     using Microsoft.ApplicationInsights.SnapshotCollector;
     using Microsoft.AspNetCore.Builder;
@@ -16,9 +16,11 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.UI.Services;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
+    using Models;
     using Services;
 
     public class Startup
@@ -35,13 +37,16 @@
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddApplicationInsightsTelemetry(_configuration);
+            services.AddDbContext<OidcDbContext>(_configuration.GetDbContextOptions());
             services.Configure<SnapshotCollectorConfiguration>(_configuration.GetSection(nameof(SnapshotCollectorConfiguration)));
             services.Configure<EmailOptions>(_configuration.GetSection(nameof(EmailOptions)));
-            services.Configure<UserOptions>(_configuration.GetSection(nameof(Options.UserOptions)));
-            services.AddApplicationInsightsTelemetry(_configuration);
-            services.AddDatabase(_configuration);
+            services.Configure<Options.UserOptions>(_configuration.GetSection(nameof(Options.UserOptions)));
+            services.AddScoped<DbContext, OidcDbContext>();
+            services.AddScoped<IConfigurationDbContext, OidcDbContext>();
+            services.AddScoped<IPersistedGrantDbContext, OidcDbContext>();
             services.AddIdentity<User, Role>(setup => setup.SignIn.RequireConfirmedEmail = true)
-                .AddEntityFrameworkStores<CefDbContext>()
+                .AddEntityFrameworkStores<OidcDbContext>()
                 .AddDefaultTokenProviders();
             services.AddScoped<ISeedService, SeedDataService>();
             services.AddSingleton<IEmailSender, EmailSender>();

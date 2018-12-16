@@ -1,5 +1,6 @@
 ﻿namespace Cef.OIDC
 {
+    using System.Threading.Tasks;
     using Cef.Core.Extensions;
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
@@ -11,15 +12,15 @@
 
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            CreateWebHostBuilder(args)
-                .Build()
-                .SeedDatabaseAsync()
-                .Result.Run();
+            var webHost = CreateWebHostBuilder(args).Build();
+            await webHost.MigrateDatabaseAsync();
+            await webHost.SeedDatabaseAsync();
+            await webHost.RunAsync();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+        private static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((context, configBuilder) =>
                 {

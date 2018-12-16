@@ -4,14 +4,14 @@ namespace Cef.OIDC.Controllers
     using System.Security.Claims;
     using System.Threading.Tasks;
     using Extensions;
-    using Core.Models;
+    using Models;
     using IdentityModel;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.UI.Services;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using Models.AccountModels;
+    using ViewModels.AccountViewModels;
 
     [AllowAnonymous]
     [ApiController]

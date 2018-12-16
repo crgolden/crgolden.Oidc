@@ -4,7 +4,7 @@
     using System.Security.Cryptography.X509Certificates;
     using System.Threading.Tasks;
     using Core.Extensions;
-    using Core.Models;
+    using Models;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
