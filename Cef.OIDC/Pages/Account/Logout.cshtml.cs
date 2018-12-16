@@ -27,6 +27,10 @@
 
         public string LogoutId { get; set; }
 
+        [TempData]
+        [ViewData]
+        public string Origin { get; set; }
+
         public async Task<IActionResult> OnGetAsync(string logoutId)
         {
             if (User.Identity.IsAuthenticated == false)

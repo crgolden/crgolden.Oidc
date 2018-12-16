@@ -2,6 +2,11 @@
 @model LoginWith2faModel
 @{
     ViewData["Title"] = "Two-factor authentication";
+    var routeData = new Dictionary<string, string>
+    {
+        {nameof(Model.ReturnUrl), Model.ReturnUrl},
+        {nameof(Model.Origin), Model.Origin}
+    };
 }
 
 <div class="row">
@@ -9,13 +14,15 @@
         <hr />
         <h2><i class="fal fa-sign-in"></i> @ViewData["Title"]</h2>
         <hr />
-        <p>Your login is protected with an authenticator app. Enter your authenticator code below.</p>
+        <p>
+            Your login is protected with an authenticator app. Enter your authenticator code below.
+        </p>
         <hr />
     </div>
 </div>
 <div class="row">
     <div class="col-12 col-md-6">
-        <form method="post" asp-route-returnUrl="@Model.ReturnUrl">
+        <form method="post" asp-all-route-data="@routeData">
             <input asp-for="RememberMe" type="hidden" />
             <div class="form-group row">
                 <label asp-for="Input.TwoFactorCode" class="col-4 col-form-label"></label>
@@ -36,16 +43,21 @@
                 </div>
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-default">Log in</button>
+                <button type="submit" class="btn btn-primary">
+                    Log in
+                </button>
             </div>
             <div class="form-group">
                 <p>
                     Don't have access to your authenticator device? You can
-                    <a asp-page="./LoginWithRecoveryCode" asp-route-returnUrl="@Model.ReturnUrl">log in with a recovery code</a>.
+                    <a asp-page="./LoginWithRecoveryCode" asp-all-route-data="@routeData">
+                        log in with a recovery code
+                    </a>.
                 </p>
 
             </div>
         </form>
+        <div asp-validation-summary="All" class="text-danger"></div>
     </div>
 </div>
 

@@ -29,6 +29,10 @@
 
         public string ReturnUrl { get; set; }
 
+        [TempData]
+        [ViewData]
+        public string Origin { get; set; }
+
         public class InputModel
         {
             [Required]
@@ -50,17 +54,18 @@
                 throw new InvalidOperationException("Unable to load two-factor authentication user.");
             }
 
-            ReturnUrl = returnUrl;
+            ReturnUrl = returnUrl ?? Url.Content("~/");
             RememberMe = rememberMe;
 
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(bool rememberMe, string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(bool rememberMe, string returnUrl = null, string origin = null)
         {
             if (!ModelState.IsValid) { return Page(); }
 
             returnUrl = returnUrl ?? Url.Content("~/");
+            TempData[nameof(Origin)] = origin;
 
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
@@ -84,8 +89,15 @@
                 return RedirectToPage("./Lockout");
             }
 
+            if (result.IsNotAllowed)
+            {
+                return RedirectToPage("./VerifyEmail", new { returnUrl });
+            }
+
             _logger.LogWarning($"Invalid authenticator code entered for user with email '{user.Email}'.");
             ModelState.AddModelError(string.Empty, "Invalid authenticator code.");
+            Origin = origin;
+            ReturnUrl = returnUrl;
             return Page();
         }  
     }

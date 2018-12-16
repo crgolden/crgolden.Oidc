@@ -4,6 +4,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.Threading.Tasks;
     using Core.Models;
+    using Extensions;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
@@ -35,6 +36,10 @@
         [TempData]
         public string ErrorMessage { get; set; }
 
+        [TempData]
+        [ViewData]
+        public string Origin { get; set; }
+
         public class InputModel
         {
             [Required]
@@ -59,15 +64,19 @@
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             ExternalLogins = await _signInManager.GetExternalAuthenticationSchemesAsync();
-
-            ReturnUrl = returnUrl;
-
-            if (Request.Headers.TryGetValue("Origin", out var origin)) { ViewData["Origin"] = origin; }
+            ReturnUrl = returnUrl ?? Url.Content("~/");
+            if (string.IsNullOrEmpty(Origin))
+            {
+                Origin = Request.GetOrigin();
+            }
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(string returnUrl = null, string origin = null)
         {
             if (!ModelState.IsValid) { return Page(); }
+
+            returnUrl = returnUrl ?? Url.Content("~/");
+            TempData[nameof(Origin)] = origin;
 
             var result = await _signInManager.PasswordSignInAsync(
                 userName: Input.Email,
@@ -82,13 +91,7 @@
 
             if (result.RequiresTwoFactor)
             {
-                return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, Input.RememberMe });
-            }
-
-            if (result.IsNotAllowed)
-            {
-                ModelState.AddModelError(string.Empty, "Email confirmation required.");
-                return Page();
+                return RedirectToPage("./LoginWith2fa", new { returnUrl, Input.RememberMe,  });
             }
 
             if (result.IsLockedOut)
@@ -97,7 +100,14 @@
                 return RedirectToPage("./Lockout");
             }
 
+            if (result.IsNotAllowed)
+            {
+                return RedirectToPage("./VerifyEmail", new { returnUrl });
+            }
+
             ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+            Origin = origin;
+            ReturnUrl = returnUrl;
             return Page();
         }
     }

@@ -8,6 +8,7 @@
     using System.Threading.Tasks;
     using Core.DbContexts;
     using Core.Models;
+    using Extensions;
     using IdentityModel;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
@@ -356,7 +357,7 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> SendVerificationEmail()
+        public async Task<IActionResult> SendVerificationEmail(string origin = null)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
@@ -364,18 +365,11 @@
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            var userId = await _userManager.GetUserIdAsync(user);
-            var email = await _userManager.GetEmailAsync(user);
-            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var callbackUrl = Url.Page(
-                "/Account/ConfirmEmail",
-                pageHandler: null,
-                values: new { userId, code },
-                protocol: Request.Scheme);
-            await _emailSender.SendEmailAsync(
-                email: email,
-                subject: "Confirm your email",
-                htmlMessage: $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+            await _emailSender.SendConfirmationEmailAsync(
+                userId: user.Id,
+                email: user.Email,
+                origin: origin ?? Request.GetOrigin(),
+                code: await _userManager.GenerateEmailConfirmationTokenAsync(user));
 
             return Ok("Verification email sent. Please check your email.");
         }

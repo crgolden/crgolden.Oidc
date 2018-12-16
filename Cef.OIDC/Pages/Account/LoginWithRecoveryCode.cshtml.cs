@@ -25,6 +25,12 @@
         [BindProperty]
         public InputModel Input { get; set; }
 
+        public string ReturnUrl { get; set; }
+
+        [TempData]
+        [ViewData]
+        public string Origin { get; set; }
+
         public class InputModel
         {
             [BindProperty]
@@ -43,12 +49,16 @@
                 throw new InvalidOperationException("Unable to load two-factor authentication user.");
             }
 
+            ReturnUrl = returnUrl ?? Url.Content("~/");
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(string returnUrl = null, string origin = null)
         {
             if (!ModelState.IsValid) { return Page(); }
+
+            returnUrl = returnUrl ?? Url.Content("~/");
+            TempData[nameof(Origin)] = origin;
 
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
@@ -61,13 +71,18 @@
             if (result.Succeeded)
             {
                 _logger.LogInformation($"User with email '{user.Email}' logged in with a recovery code.");
-                return LocalRedirect(returnUrl ?? Url.Content("~/"));
+                return LocalRedirect(returnUrl);
             }
 
             if (result.IsLockedOut)
             {
                 _logger.LogWarning($"User account with email '{user.Email}' locked out.");
                 return RedirectToPage("./Lockout");
+            }
+
+            if (result.IsNotAllowed)
+            {
+                return RedirectToPage("./VerifyEmail", new { returnUrl });
             }
 
             _logger.LogWarning($"Invalid recovery code entered for user with email '{user.Email}'.");

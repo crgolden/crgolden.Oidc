@@ -1,10 +1,9 @@
 namespace Cef.OIDC.Controllers
 {
-    using System;
     using System.Collections.Generic;
     using System.Security.Claims;
-    using System.Text.Encodings.Web;
     using System.Threading.Tasks;
+    using Extensions;
     using Core.Models;
     using IdentityModel;
     using Microsoft.AspNetCore.Authorization;
@@ -40,7 +39,10 @@ namespace Cef.OIDC.Controllers
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user != null && await _userManager.IsEmailConfirmedAsync(user))
             {
-                await SendPasswordResetEmailAsync(user);
+                await _emailSender.SendPasswordResetEmailAsync(
+                    email: user.Email,
+                    origin: Request.GetOrigin(),
+                    code: await _userManager.GeneratePasswordResetTokenAsync(user));
             }
 
             return Ok("Please check your email to reset your password.");
@@ -60,7 +62,11 @@ namespace Cef.OIDC.Controllers
                 new Claim(JwtClaimTypes.GivenName, model.FirstName),
                 new Claim(JwtClaimTypes.FamilyName, model.LastName)
             });
-            await SendConfirmationEmailAsync(user);
+            await _emailSender.SendConfirmationEmailAsync(
+                userId: user.Id,
+                email: user.Email,
+                origin: Request.GetOrigin(),
+                code: await _userManager.GenerateEmailConfirmationTokenAsync(user));
             return Ok("Registration successful! Please check your email for the confirmation link");
         }
 
@@ -107,39 +113,5 @@ namespace Cef.OIDC.Controllers
             _logger.LogInformation($"Error confirming email for user with ID '{user.Id}'");
             return BadRequest(result.Errors);
         }
-
-        #region Private
-
-        private async Task SendConfirmationEmailAsync(User user)
-        {
-            var url = Request.Headers.TryGetValue("Origin", out var origin)
-                ? $"{origin}"
-                : $"{Request.Scheme}://{Request.Host}";
-            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var confirmEmailUrl = HtmlEncoder.Default.Encode($"{url}/Account/ConfirmEmail?" +
-                                                             $"userId={user.Id}&" +
-                                                             $"code={Uri.EscapeDataString(code)}");
-            var htmlMessage = $"Please confirm your account by <a href='{confirmEmailUrl}'>clicking here</a>.";
-            await _emailSender.SendEmailAsync(user.Email, "Confirm your email", htmlMessage);
-        }
-
-        private async Task SendPasswordResetEmailAsync(User user)
-        {
-            var url = Request.Headers.TryGetValue("Origin", out var origin)
-                ? $"{origin}"
-                : $"{Request.Scheme}://{Request.Host}";
-            // For more information on how to enable account confirmation and password reset please
-            // visit https://go.microsoft.com/fwlink/?LinkID=532713
-            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var resetPasswordUrl = HtmlEncoder.Default.Encode($"{url}/Account/ResetPassword?" +
-                                                              $"code={Uri.EscapeDataString(code)}");
-            var htmlMessage = $"Please reset your password by <a href='{resetPasswordUrl}'>clicking here</a>";
-            await _emailSender.SendEmailAsync(
-                email: user.Email,
-                subject: "Reset Password",
-                htmlMessage: htmlMessage);
-        }
-
-        #endregion
     }
 }

@@ -48,8 +48,7 @@
             services.AddSingleton<ITelemetryProcessorFactory>(sp => new SnapshotCollectorTelemetryProcessorFactory(sp));
             services.AddCors();
             services.AddMvc(setup => setup.Filters.Add(typeof(ModelStateFilter)))
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddRazorPagesOptions(options => options.Conventions.AuthorizeFolder("/Account/Manage", "identity"));
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddIdentityServer(_configuration, _environment);
             services.AddAuthentication(_configuration);
         }

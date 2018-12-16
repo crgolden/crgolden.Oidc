@@ -9,15 +9,20 @@
         <hr />
         <h2><i class="fal fa-sign-out"></i> @ViewData["Title"]</h2>
         <hr />
+        <p>
+            Would you like to logout?
+        </p>
+        <hr />
     </div>
 </div>
 <div class="row">
     <div class="col-12 col-md-6">
-        <p>Would you like to logout?</p>
         <form method="post">
             <input type="hidden" name="logoutId" value="@Model.LogoutId" />
             <div class="form-group">
-                <button class="btn btn-primary">Yes</button>
+                <button type="submit" class="btn btn-primary">
+                    Yes
+                </button>
             </div>
         </form>
     </div>
