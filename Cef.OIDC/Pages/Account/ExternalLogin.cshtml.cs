@@ -230,7 +230,8 @@
                             await _userManager.AddClaimsAsync(user, new List<Claim>
                             {
                                 new Claim(JwtClaimTypes.GivenName, Input.FirstName),
-                                new Claim(JwtClaimTypes.FamilyName, Input.LastName)
+                                new Claim(JwtClaimTypes.FamilyName, Input.LastName),
+                                new Claim(ClaimTypes.Role, "User")
                             });
                             return RedirectToPage("./VerifyEmail", new { returnUrl });
                         }

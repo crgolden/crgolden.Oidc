@@ -60,7 +60,8 @@ namespace Cef.OIDC.Controllers
             await _userManager.AddClaimsAsync(user, new List<Claim>
             {
                 new Claim(JwtClaimTypes.GivenName, model.FirstName),
-                new Claim(JwtClaimTypes.FamilyName, model.LastName)
+                new Claim(JwtClaimTypes.FamilyName, model.LastName),
+                new Claim(ClaimTypes.Role, "User")
             });
             await _emailSender.SendConfirmationEmailAsync(
                 userId: user.Id,

@@ -19,33 +19,35 @@
 
     public class SeedDataService : ISeedService
     {
-        private readonly IConfigurationDbContext _context;
+        private readonly IConfigurationDbContext _configurationDbContext;
         private readonly IConfiguration _configuration;
         private readonly OIDC.Options.UserOptions _userOptions;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<Role> _roleManager;
+        private readonly Secret _api1Secret;
 
         public SeedDataService(
-            IConfigurationDbContext context,
+            IConfigurationDbContext configurationDbContext,
             IConfiguration configuration,
             IOptions<OIDC.Options.UserOptions> userOptions,
             UserManager<User> userManager,
             RoleManager<Role> roleManager)
         {
-            _context = context;
+            _configurationDbContext = configurationDbContext;
             _configuration = configuration;
             _userOptions = userOptions.Value;
             _userManager = userManager;
             _roleManager = roleManager;
+            _api1Secret = new Secret(configuration.GetValue<string>("Api1Secret").ToSha256());
         }
 
         public async Task SeedAsync()
         {
             if (!await _roleManager.Roles.AnyAsync()) await SeedRolesAsync();
             if (!await _userManager.Users.AnyAsync()) await SeedUsersAsync();
-            if (!await _context.Clients.AnyAsync()) { await SeedClientsAsync(); }
-            if (!await _context.IdentityResources.AnyAsync()) { await SeedIdentityResourcesAsync(); }
-            if (!await _context.ApiResources.AnyAsync()) { await SeedApiResourcesAsync(); }
+            if (!await _configurationDbContext.Clients.AnyAsync()) await SeedClientsAsync();
+            if (!await _configurationDbContext.IdentityResources.AnyAsync()) await SeedIdentityResourcesAsync();
+            if (!await _configurationDbContext.ApiResources.AnyAsync()) await SeedApiResourcesAsync();
         }
 
         private async Task SeedRolesAsync()
@@ -79,6 +81,7 @@
                         new Claim(JwtClaimTypes.GivenName, userOption.FirstName),
                         new Claim(JwtClaimTypes.FamilyName, userOption.LastName)
                     };
+                    claims.AddRange(SeedData.Roles.Select(x => new Claim(ClaimTypes.Role, x.Name)));
 
                     await _userManager.CreateAsync(user, userOption.Password);
                     await _userManager.AddToRolesAsync(user, SeedData.Roles.Select(role => role.Name));
@@ -95,8 +98,9 @@
                 var client = new Client
                 {
                     ClientId = $"{Guid.NewGuid()}",
+                    ClientSecrets = { _api1Secret },
                     ClientName = "Clarity Angular Client",
-                    AllowedGrantTypes = GrantTypes.Implicit,
+                    AllowedGrantTypes = GrantTypes.ImplicitAndClientCredentials,
                     AllowAccessTokensViaBrowser = true,
                     RedirectUris = { $"{angularClientAddress}/Account/LoginCallback" },
                     RequireConsent = false,
@@ -112,24 +116,27 @@
                         "api1",
                         "api2.full_access",
                         "api2.read_only",
-                        "identity"
+                        "identity",
+                        "roles"
                     }
                 };
-                _context.Clients.Add(client.ToEntity());
-                await _context.SaveChangesAsync();
+                _configurationDbContext.Clients.Add(client.ToEntity());
+                await _configurationDbContext.SaveChangesAsync();
             }
         }
 
         private async Task SeedIdentityResourcesAsync()
         {
-            await _context.IdentityResources.AddRangeAsync(SeedData.IdentityResources.Select(x => x.ToEntity()));
-            await _context.SaveChangesAsync();
+            var identityResources = SeedData.IdentityResources.Select(x => x.ToEntity());
+            await _configurationDbContext.IdentityResources.AddRangeAsync(identityResources);
+            await _configurationDbContext.SaveChangesAsync();
         }
 
         private async Task SeedApiResourcesAsync()
         {
-            await _context.ApiResources.AddRangeAsync(SeedData.ApiResources.Select(x => x.ToEntity()));
-            await _context.SaveChangesAsync();
+            var apiResources = SeedData.ApiResources(_api1Secret).Select(x => x.ToEntity());
+            await _configurationDbContext.ApiResources.AddRangeAsync(apiResources);
+            await _configurationDbContext.SaveChangesAsync();
         }
     }
 
@@ -147,8 +154,10 @@
 
         // Identity resources are data like user ID, name, or email address of a user
         // see: http://docs.identityserver.io/en/release/configuration/resources.html
-        public static readonly IEnumerable<IdentityResource> IdentityResources = new IdentityResource[]
+        public static readonly IEnumerable<IdentityResource> IdentityResources = new []
         {
+            new IdentityResource("roles", "Your assigned roles", new[] { ClaimTypes.Role }),
+
             // some standard scopes from the OIDC spec
             new IdentityResources.OpenId(),
             new IdentityResources.Email(),
@@ -157,19 +166,20 @@
             new IdentityResources.Address()
         };
 
-        public static readonly IEnumerable<ApiResource> ApiResources = new[]
+        public static IEnumerable<ApiResource> ApiResources(Secret api1Secret) => new[]
         {
             new ApiResource("identity"),
 
             // simple version with ctor
             new ApiResource(
                 name: "api1",
-                displayName: "Some API 1")
+                displayName: "Some API 1",
+                claimTypes: new[] { ClaimTypes.Role })
             {
                 // this is needed for introspection when using reference tokens
-                ApiSecrets = { new Secret("secret".Sha256()) }
+                ApiSecrets = { api1Secret }
             },
-                
+
             // expanded version if more control is needed
             new ApiResource
             {

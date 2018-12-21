@@ -40,6 +40,7 @@
             services.AddApplicationInsightsTelemetry(_configuration);
             services.AddDbContext<OidcDbContext>(_configuration.GetDbContextOptions());
             services.Configure<SnapshotCollectorConfiguration>(_configuration.GetSection(nameof(SnapshotCollectorConfiguration)));
+            services.Configure<CookieTempDataProviderOptions>(options => options.Cookie.IsEssential = true);
             services.Configure<EmailOptions>(_configuration.GetSection(nameof(EmailOptions)));
             services.Configure<Options.UserOptions>(_configuration.GetSection(nameof(Options.UserOptions)));
             services.AddScoped<DbContext, OidcDbContext>();

@@ -1,6 +1,7 @@
 ﻿namespace Cef.OIDC.Extensions
 {
     using System;
+    using System.Security.Claims;
     using System.Security.Cryptography.X509Certificates;
     using System.Threading.Tasks;
     using Core.Extensions;
@@ -21,7 +22,10 @@
             if (environment.IsDevelopment())
             {
                 services
-                    .AddIdentityServer(config => config.Authentication.CookieLifetime = TimeSpan.FromHours(2))
+                    .AddIdentityServer(config =>
+                    {
+                        config.Authentication.CookieLifetime = TimeSpan.FromHours(2);
+                    })
                     .AddConfigurationStore(options => options.ConfigureDbContext = dbContextOptions)
                     .AddOperationalStore(options =>
                     {
@@ -69,6 +73,7 @@
 
                     options.Authority = identityServerAddress;
                     options.ApiName = "identity";
+                    options.RoleClaimType = ClaimTypes.Role;
                 })
                 .AddFacebook(options =>
                 {
