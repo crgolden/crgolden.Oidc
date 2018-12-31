@@ -11,6 +11,7 @@ namespace Cef.OIDC.Controllers
     using Microsoft.AspNetCore.Identity.UI.Services;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
+    using Newtonsoft.Json;
     using ViewModels.AccountViewModels;
 
     [AllowAnonymous]
@@ -57,12 +58,18 @@ namespace Cef.OIDC.Controllers
 
             _logger.LogInformation($"User with email '{user.Email}' created a new account with password.");
             await _userManager.AddToRoleAsync(user, "User");
-            await _userManager.AddClaimsAsync(user, new List<Claim>
+            var claims = new List<Claim>
             {
                 new Claim(JwtClaimTypes.GivenName, model.FirstName),
                 new Claim(JwtClaimTypes.FamilyName, model.LastName),
                 new Claim(ClaimTypes.Role, "User")
-            });
+            };
+            if (model.Address != null)
+            {
+                var address = JsonConvert.SerializeObject(model.Address);
+                claims.Add(new Claim(JwtClaimTypes.Address, address));
+            }
+            await _userManager.AddClaimsAsync(user, claims);
             await _emailSender.SendConfirmationEmailAsync(
                 userId: user.Id,
                 email: user.Email,

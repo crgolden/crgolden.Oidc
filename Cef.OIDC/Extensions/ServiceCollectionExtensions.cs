@@ -66,13 +66,13 @@
                 : null;
 
             services.AddAuthentication("Bearer")
-                .AddIdentityServerAuthentication("identity", options =>
+                .AddIdentityServerAuthentication("Bearer", options =>
                 {
                     var identityServerAddress = configuration.GetValue<string>("IdentityServerAddress");
                     if (string.IsNullOrEmpty(identityServerAddress)) return;
 
                     options.Authority = identityServerAddress;
-                    options.ApiName = "identity";
+                    options.ApiName = "api1";
                     options.RoleClaimType = ClaimTypes.Role;
                 })
                 .AddFacebook(options =>

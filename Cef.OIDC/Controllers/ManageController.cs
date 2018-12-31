@@ -18,7 +18,7 @@
     using Newtonsoft.Json;
     using ViewModels.ManageViewModels;
 
-    [Authorize(AuthenticationSchemes = "identity")]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [ApiController]
     [Produces("application/json")]
     [Route("[controller]/[action]")]
@@ -265,14 +265,39 @@
 
             if (model.Email != user.Email)
             {
-                var setEmailResult = await _userManager.SetEmailAsync(user, model.Email);
-                if (!setEmailResult.Succeeded) { errors.AddRange(setEmailResult.Errors); }
+                user.Email = model.Email;
+                user.EmailConfirmed = false;
+
+                var updateResult = await _userManager.UpdateAsync(user);
+                if (!updateResult.Succeeded)
+                {
+                    errors.AddRange(updateResult.Errors);
+                }
+                else
+                {
+                    model.EmailConfirmed = false;
+                    await _emailSender.SendConfirmationEmailAsync(
+                        userId: user.Id,
+                        email: user.Email,
+                        origin: Request.GetOrigin(),
+                        code: await _userManager.GenerateEmailConfirmationTokenAsync(user));
+                }
             }
 
             if (!string.IsNullOrEmpty(model.PhoneNumber) && model.PhoneNumber != user.PhoneNumber)
             {
-                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, model.PhoneNumber);
-                if (!setPhoneResult.Succeeded) { errors.AddRange(setPhoneResult.Errors); }
+                user.PhoneNumber = model.PhoneNumber;
+                user.PhoneNumberConfirmed = false;
+
+                var updateResult = await _userManager.UpdateAsync(user);
+                if (!updateResult.Succeeded)
+                {
+                    errors.AddRange(updateResult.Errors);
+                }
+                else
+                {
+                    model.PhoneNumberConfirmed = false;
+                }
             }
 
             foreach (var claim in await _userManager.GetClaimsAsync(user))
@@ -281,7 +306,7 @@
                 {
                     case JwtClaimTypes.GivenName:
                     {
-                        if (model.FirstName != claim.Value)
+                        if (!model.FirstName.Equals(claim.Value))
                         {
                             await _userManager.ReplaceClaimAsync(user, claim, new Claim(JwtClaimTypes.GivenName, model.FirstName));
                         }
@@ -289,11 +314,23 @@
                     }
                     case JwtClaimTypes.FamilyName:
                     {
-                        if (model.LastName != claim.Value)
+                        if (!model.LastName.Equals(claim.Value))
                         {
                             await _userManager.ReplaceClaimAsync(user, claim, new Claim(JwtClaimTypes.FamilyName, model.LastName));
                         }
                         break;
+                    }
+                    case JwtClaimTypes.Address:
+                    {
+                        if (model.Address != null)
+                        {
+                            var address = JsonConvert.SerializeObject(model.Address);
+                            if (!string.IsNullOrEmpty(address) && !address.Equals(claim.Value))
+                            {
+                                await _userManager.ReplaceClaimAsync(user, claim, new Claim(JwtClaimTypes.Address, address));
+                            }
+                        }
+                            break;
                     }
                 }
             }

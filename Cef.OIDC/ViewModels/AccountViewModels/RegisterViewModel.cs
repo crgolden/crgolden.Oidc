@@ -1,6 +1,7 @@
 ﻿namespace Cef.OIDC.ViewModels.AccountViewModels
 {
     using System.ComponentModel.DataAnnotations;
+    using Core.Claims;
 
     public class RegisterViewModel
     {
@@ -22,5 +23,7 @@
         [Required]
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
+
+        public Address Address { get; set; }
     }
 }

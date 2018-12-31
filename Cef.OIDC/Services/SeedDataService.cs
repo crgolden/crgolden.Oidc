@@ -16,6 +16,7 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Options;
+    using Newtonsoft.Json;
 
     public class SeedDataService : ISeedService
     {
@@ -79,7 +80,8 @@
                     var claims = new List<Claim>
                     {
                         new Claim(JwtClaimTypes.GivenName, userOption.FirstName),
-                        new Claim(JwtClaimTypes.FamilyName, userOption.LastName)
+                        new Claim(JwtClaimTypes.FamilyName, userOption.LastName),
+                        new Claim(JwtClaimTypes.Address, JsonConvert.SerializeObject(userOption.Address))
                     };
                     claims.AddRange(SeedData.Roles.Select(x => new Claim(ClaimTypes.Role, x.Name)));
 
@@ -98,13 +100,17 @@
                 var client = new Client
                 {
                     ClientId = $"{Guid.NewGuid()}",
-                    ClientSecrets = { _api1Secret },
                     ClientName = "Clarity Angular Client",
-                    AllowedGrantTypes = GrantTypes.ImplicitAndClientCredentials,
+                    AllowedGrantTypes = GrantTypes.Implicit,
                     AllowAccessTokensViaBrowser = true,
-                    RedirectUris = { $"{angularClientAddress}/Account/LoginCallback" },
+                    RedirectUris =
+                    {
+                        $"{angularClientAddress}/Account/LoginSuccess",
+                        $"{angularClientAddress}/silent-callback.html"
+                    },
+                    AlwaysIncludeUserClaimsInIdToken = true,
                     RequireConsent = false,
-                    PostLogoutRedirectUris = { $"{angularClientAddress}/Account/LogoutCallback" },
+                    PostLogoutRedirectUris = { $"{angularClientAddress}/Account/LogoutSuccess" },
                     AllowedCorsOrigins = { angularClientAddress },
                     AllowedScopes =
                     {
@@ -116,7 +122,6 @@
                         "api1",
                         "api2.full_access",
                         "api2.read_only",
-                        "identity",
                         "roles"
                     }
                 };
@@ -168,8 +173,6 @@
 
         public static IEnumerable<ApiResource> ApiResources(Secret api1Secret) => new[]
         {
-            new ApiResource("identity"),
-
             // simple version with ctor
             new ApiResource(
                 name: "api1",
