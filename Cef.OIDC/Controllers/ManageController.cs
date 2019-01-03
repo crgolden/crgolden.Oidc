@@ -300,7 +300,8 @@
                 }
             }
 
-            foreach (var claim in await _userManager.GetClaimsAsync(user))
+            var userClaims = await _userManager.GetClaimsAsync(user);
+            foreach (var claim in userClaims)
             {
                 switch (claim.Type)
                 {
@@ -333,6 +334,12 @@
                             break;
                     }
                 }
+            }
+
+            if (model.Address != null && !userClaims.Any(x => x.Type.Equals(JwtClaimTypes.Address)))
+            {
+                var addressClaim = new Claim(JwtClaimTypes.Address, JsonConvert.SerializeObject(model.Address));
+                await _userManager.AddClaimAsync(user, addressClaim);
             }
 
             if (errors.Any()) { return BadRequest(errors); }
