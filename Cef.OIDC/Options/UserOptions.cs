@@ -1,6 +1,6 @@
 ﻿namespace Cef.OIDC.Options
 {
-    using Cef.Core.Claims;
+    using Core;
 
     public class UserOptions
     {
@@ -19,6 +19,6 @@
 
         public string PhoneNumber { get; set; }
 
-        public Address Address { get; set; }
+        public AddressClaim Address { get; set; }
     }
 }

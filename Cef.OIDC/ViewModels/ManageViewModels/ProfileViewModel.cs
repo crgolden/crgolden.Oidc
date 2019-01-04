@@ -1,7 +1,7 @@
 ﻿namespace Cef.OIDC.ViewModels.ManageViewModels
 {
     using System.ComponentModel.DataAnnotations;
-    using Core.Claims;
+    using Core;
 
     public class ProfileViewModel
     {
@@ -25,6 +25,6 @@
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
-        public Address Address { get; set; }
+        public AddressClaim Address { get; set; }
     }
 }
