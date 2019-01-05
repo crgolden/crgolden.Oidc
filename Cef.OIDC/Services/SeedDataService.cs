@@ -105,12 +105,12 @@
                     AllowAccessTokensViaBrowser = true,
                     RedirectUris =
                     {
-                        $"{angularClientAddress}/Account/LoginSuccess",
+                        $"{angularClientAddress}/account/login-success",
                         $"{angularClientAddress}/silent-callback.html"
                     },
                     AlwaysIncludeUserClaimsInIdToken = true,
                     RequireConsent = false,
-                    PostLogoutRedirectUris = { $"{angularClientAddress}/Account/LogoutSuccess" },
+                    PostLogoutRedirectUris = { $"{angularClientAddress}/account/logout-success" },
                     AllowedCorsOrigins = { angularClientAddress },
                     AllowedScopes =
                     {
