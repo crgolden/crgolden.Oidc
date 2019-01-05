@@ -3,12 +3,12 @@ namespace Cef.OIDC.Controllers
     using System.Collections.Generic;
     using System.Security.Claims;
     using System.Threading.Tasks;
+    using Core.Interfaces;
     using Extensions;
     using Models;
     using IdentityModel;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
-    using Microsoft.AspNetCore.Identity.UI.Services;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
