@@ -6,6 +6,7 @@
     using Core.Interfaces;
     using Core.Options;
     using Core.Services;
+    using Core.Transformers;
     using Data;
     using Extensions;
     using IdentityServer4.EntityFramework.Interfaces;
@@ -15,6 +16,7 @@
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.ApplicationModels;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -48,12 +50,24 @@
             services.AddIdentity<User, Role>(setup => setup.SignIn.RequireConfirmedEmail = true)
                 .AddEntityFrameworkStores<OidcDbContext>()
                 .AddDefaultTokenProviders();
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/account/login";
+                options.LogoutPath = "/account/logout";
+                options.ReturnUrlParameter = "returnUrl";
+                options.SlidingExpiration = true;
+            });
             services.AddScoped<ISeedService, SeedDataService>();
             services.AddSingleton<IEmailSender, SendGridEmailSender>();
             services.AddSingleton<ITelemetryProcessorFactory>(sp => new SnapshotCollectorTelemetryProcessorFactory(sp));
             services.AddCors();
-            services.AddMvc(setup => setup.Filters.Add(typeof(ModelStateFilter)))
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(setup =>
+                {
+                    setup.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
+                    setup.Filters.Add(typeof(ModelStateFilter));
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddRazorPagesOptions(setup => setup.Conventions.Add(new PageRouteTransformerConvention(new SlugifyParameterTransformer())));
             services.AddIdentityServer(_configuration, _environment);
             services.AddAuthentication(_configuration);
         }

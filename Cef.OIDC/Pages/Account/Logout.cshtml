@@ -5,9 +5,11 @@
 }
 
 <div class="row">
-    <div class="col-12">
+    <div class="col">
         <hr />
-        <h2><i class="fal fa-sign-out"></i> @ViewData["Title"]</h2>
+        <h2>
+            <i class="fal fa-sign-out"></i> @ViewData["Title"]
+        </h2>
         <hr />
         <p>
             Would you like to logout?
@@ -16,7 +18,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-12 col-md-6">
+    <div class="col">
         <form method="post">
             <input type="hidden" name="logoutId" value="@Model.LogoutId" />
             <div class="form-group">

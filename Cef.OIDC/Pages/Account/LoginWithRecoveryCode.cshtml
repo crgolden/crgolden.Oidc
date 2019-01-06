@@ -10,9 +10,11 @@
 }
 
 <div class="row">
-    <div class="col-12">
+    <div class="col">
         <hr />
-        <h2><i class="fal fa-sign-in"></i> @ViewData["Title"]</h2>
+        <h2>
+            <i class="fal fa-sign-in"></i> @ViewData["Title"]
+        </h2>
         <hr />
         <p>
             You have requested to log in with a recovery code. This login will not be remembered until you provide
@@ -22,14 +24,12 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-12 col-md-6">
+    <div class="col">
         <form method="post" asp-all-route-data="@routeData">
             <div class="form-group">
-                <label asp-for="Input.RecoveryCode" class="col-4 col-form-label"></label>
-                <div class="col-8">
-                    <input asp-for="Input.RecoveryCode" class="form-control" placeholder="Recovery Code" autocomplete="off" />
-                    <span asp-validation-for="Input.RecoveryCode" class="text-danger"></span>
-                </div>
+                <label asp-for="Input.RecoveryCode"></label>
+                <input asp-for="Input.RecoveryCode" class="form-control" placeholder="Recovery Code" autocomplete="off" />
+                <span asp-validation-for="Input.RecoveryCode" class="text-danger"></span>
             </div>
             <button type="submit" class="btn btn-primary">Log in</button>
         </form>

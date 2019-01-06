@@ -73,7 +73,7 @@
                     // hack: try/catch to handle social providers that throw
                     await HttpContext.SignOutAsync(idp, new AuthenticationProperties
                     {
-                        RedirectUri = $"/Account/Logout?logoutId={logoutId}"
+                        RedirectUri = $"/account/logout?logoutId={logoutId}"
                     });
                 }
                 catch (Exception ex)

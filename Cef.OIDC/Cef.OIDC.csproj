@@ -21,11 +21,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cef.Core" Version="2019.1.5.4" />
-    <PackageReference Include="Cef.Core.Extensions" Version="2019.1.5.4" />
-    <PackageReference Include="Cef.Core.Factories" Version="2019.1.5.4" />
-    <PackageReference Include="Cef.Core.Filters" Version="2019.1.5.4" />
-    <PackageReference Include="Cef.Core.Services" Version="2019.1.5.4" />
+    <PackageReference Include="Cef.Core" Version="2019.1.6.1" />
+    <PackageReference Include="Cef.Core.Extensions" Version="2019.1.6.1" />
+    <PackageReference Include="Cef.Core.Factories" Version="2019.1.6.1" />
+    <PackageReference Include="Cef.Core.Filters" Version="2019.1.6.1" />
+    <PackageReference Include="Cef.Core.Services" Version="2019.1.6.1" />
+    <PackageReference Include="Cef.Core.Transformers" Version="2019.1.6.1" />
     <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="2.7.0" />
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="2.3.0" />
     <PackageReference Include="IdentityServer4.EntityFramework" Version="2.3.2" />

@@ -10,14 +10,16 @@
 }
 
 <div class="row">
-    <div class="col-12">
+    <div class="col">
         <hr />
-        <h2><i class="fal fa-sign-in"></i> @ViewData["Title"]</h2>
+        <h2>
+            <i class="fal fa-sign-in"></i> @ViewData["Title"]
+        </h2>
         <hr />
     </div>
 </div>
 <div class="row">
-    <div class="col-12 col-md-6">
+    <div class="col">
         <form method="post" asp-all-route-data="@routeData">
             <div class="form-group row">
                 <label asp-for="Input.Email" class="col-md-4 col-form-label"></label>
@@ -77,12 +79,12 @@
             }
         }
     </div>
-    <div class="col-12">
+    <div class="col">
         <p>
-            <a href="@ViewData["Origin"]/Account/ForgotPassword">Forgot your password?</a>
+            <a href="@ViewData["Origin"]/account/forgot-password">Forgot your password?</a>
         </p>
         <p>
-            <a href="@ViewData["Origin"]/Account/Register">Register as a new user</a>
+            <a href="@ViewData["Origin"]/account/register">Register as a new user</a>
         </p>
     </div>
 </div>
