@@ -3,10 +3,10 @@
 @{
     ViewData["Title"] = "Login";
     var routeData = new Dictionary<string, string>
-    {
-        {nameof(Model.ReturnUrl), Model.ReturnUrl},
-        {nameof(Model.Origin), Model.Origin}
-    };
+{
+{nameof(Model.ReturnUrl), Model.ReturnUrl},
+{nameof(Model.Origin), Model.Origin}
+};
 }
 
 <div class="row">
@@ -54,7 +54,7 @@
         </form>
         <div asp-validation-summary="All" class="text-danger"></div>
     </div>
-    <div class="col-12 col-md-6">
+    <div class="col">
         @{
             if (Model.ExternalLogins != null && Model.ExternalLogins.Any())
             {
@@ -79,6 +79,8 @@
             }
         }
     </div>
+</div>
+<div class="row">
     <div class="col">
         <p>
             <a href="@ViewData["Origin"]/account/forgot-password">Forgot your password?</a>
