@@ -60,6 +60,7 @@
             services.AddScoped<ISeedService, SeedDataService>();
             services.AddSingleton<IEmailSender, SendGridEmailSender>();
             services.AddSingleton<ITelemetryProcessorFactory>(sp => new SnapshotCollectorTelemetryProcessorFactory(sp));
+            services.AddHealthChecks();
             services.AddCors();
             services.AddMvc(setup =>
                 {
@@ -90,6 +91,7 @@
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseIdentityServer();
+            app.UseHealthChecks("/health");
             app.UseCors(_configuration);
             app.UseMvcWithDefaultRoute();
 
