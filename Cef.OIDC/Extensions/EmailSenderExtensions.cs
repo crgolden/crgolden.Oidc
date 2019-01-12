@@ -10,7 +10,7 @@
         public static async Task SendConfirmationEmailAsync(this IEmailSender emailSender,
             Guid userId, string email, string origin, string code)
         {
-            var confirmEmailUrl = HtmlEncoder.Default.Encode($"{origin}/Account/ConfirmEmail?" +
+            var confirmEmailUrl = HtmlEncoder.Default.Encode($"{origin}/account/confirm-email?" +
                                                              $"userId={userId}&" +
                                                              $"code={Uri.EscapeDataString(code)}");
             var htmlMessage = $"Please confirm your account by <a href='{confirmEmailUrl}'>clicking here</a>.";
@@ -25,7 +25,7 @@
         {
             // For more information on how to enable account confirmation and password reset please
             // visit https://go.microsoft.com/fwlink/?LinkID=532713
-            var resetPasswordUrl = HtmlEncoder.Default.Encode($"{origin}/Account/ResetPassword?" +
+            var resetPasswordUrl = HtmlEncoder.Default.Encode($"{origin}/account/reset-password?" +
                                                               $"code={Uri.EscapeDataString(code)}");
             var htmlMessage = $"Please reset your password by <a href='{resetPasswordUrl}'>clicking here</a>";
             await emailSender.SendEmailAsync(
