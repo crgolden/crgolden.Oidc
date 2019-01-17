@@ -306,33 +306,37 @@
                 switch (claim.Type)
                 {
                     case JwtClaimTypes.GivenName:
-                    {
-                        if (!model.FirstName.Equals(claim.Value))
                         {
-                            await _userManager.ReplaceClaimAsync(user, claim, new Claim(JwtClaimTypes.GivenName, model.FirstName));
-                        }
-                        break;
-                    }
-                    case JwtClaimTypes.FamilyName:
-                    {
-                        if (!model.LastName.Equals(claim.Value))
-                        {
-                            await _userManager.ReplaceClaimAsync(user, claim, new Claim(JwtClaimTypes.FamilyName, model.LastName));
-                        }
-                        break;
-                    }
-                    case JwtClaimTypes.Address:
-                    {
-                        if (model.Address != null)
-                        {
-                            var address = JsonConvert.SerializeObject(model.Address);
-                            if (!string.IsNullOrEmpty(address) && !address.Equals(claim.Value))
+                            if (!model.FirstName.Equals(claim.Value))
                             {
-                                await _userManager.ReplaceClaimAsync(user, claim, new Claim(JwtClaimTypes.Address, address));
+                                await _userManager.ReplaceClaimAsync(user, claim, new Claim(JwtClaimTypes.GivenName, model.FirstName));
                             }
-                        }
                             break;
-                    }
+                        }
+                    case JwtClaimTypes.FamilyName:
+                        {
+                            if (!model.LastName.Equals(claim.Value))
+                            {
+                                await _userManager.ReplaceClaimAsync(user, claim, new Claim(JwtClaimTypes.FamilyName, model.LastName));
+                            }
+                            break;
+                        }
+                    case JwtClaimTypes.Address:
+                        {
+                            if (model.Address != null)
+                            {
+                                var address = JsonConvert.SerializeObject(model.Address);
+                                if (!string.IsNullOrEmpty(address) && !address.Equals(claim.Value))
+                                {
+                                    await _userManager.ReplaceClaimAsync(user, claim, new Claim(JwtClaimTypes.Address, address));
+                                }
+                            }
+                            else
+                            {
+                                await _userManager.RemoveClaimAsync(user, claim);
+                            }
+                            break;
+                        }
                 }
             }
 
