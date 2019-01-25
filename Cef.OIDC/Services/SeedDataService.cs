@@ -17,6 +17,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Serialization;
 
     public class SeedDataService : ISeedService
     {
@@ -81,7 +82,10 @@
                     {
                         new Claim(JwtClaimTypes.GivenName, userOption.FirstName),
                         new Claim(JwtClaimTypes.FamilyName, userOption.LastName),
-                        new Claim(JwtClaimTypes.Address, JsonConvert.SerializeObject(userOption.Address))
+                        new Claim(JwtClaimTypes.Address, JsonConvert.SerializeObject(userOption.Address, new JsonSerializerSettings
+                        {
+                            ContractResolver = new CamelCasePropertyNamesContractResolver()
+                        }))
                     };
                     claims.AddRange(SeedData.Roles.Select(x => new Claim(ClaimTypes.Role, x.Name)));
 

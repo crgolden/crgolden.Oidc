@@ -1,0 +1,74 @@
+﻿@page "{id:guid}"
+@using Cef.OIDC.Models
+@using Kendo.Mvc.UI
+@model DetailsModel
+
+@{
+    ViewData["Title"] = "User Details";
+}
+
+<div class="row">
+    <div class="col">
+        <hr />
+        <div class="row">
+            <div class="col">
+                <h2>
+                    <i class="fal fa-user"></i> @ViewData["Title"]
+                </h2>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <hr />
+        <dl>
+            <dt>
+                @Html.DisplayNameFor(model => model.UserModel.Email)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.UserModel.Email)
+            </dd>
+        </dl>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <hr />
+        @(Html.Kendo().Grid(Model.Roles)
+              .Name("rolesGrid")
+              .ToolBar(toolbar => toolbar.ClientTemplate("<h4><i class='fal fa-id-badge'></i> Roles</h4>"))
+              .Columns(columns => columns.Bound(c => c.Name))
+              .Sortable(sort => sort.AllowUnsort(false))
+              .Filterable(filterable => filterable.Mode(GridFilterMode.Row))
+              .Pageable(pageable => pageable.ButtonCount(5))
+              .DataSource(dataSource => dataSource
+                  .Ajax()
+                  .Sort(sort => sort.Add(nameof(Role.Name)).Ascending())
+                  .PageSize(5)
+                  .ServerOperation(false))
+              .ClientRowTemplate(
+                  "<tr data-uid='#: uid #'>" +
+                  "<td>" +
+                  "<a href='/roles/details/#:data.Id#'>#:data.Name#</a>" +
+                  "</td>" +
+                  "</tr>"))
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <hr />
+        <h4>
+            <a asp-page="./Index" title="Users">
+                <i class="fal fa-list"></i> List |
+            </a>
+            <a asp-page="./Edit" asp-route-id="@Model.UserModel.Id" title="Edit User">
+                <i class="fal fa-edit"></i> Edit
+            </a> |
+            <a asp-page="./Delete" asp-route-id="@Model.UserModel.Id" title="Delete User">
+                <i class="fal fa-trash"></i> Delete
+            </a>
+        </h4>
+        <hr />
+    </div>
+</div>

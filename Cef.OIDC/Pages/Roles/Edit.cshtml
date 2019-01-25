@@ -1,0 +1,125 @@
+﻿@page "{id:guid}"
+@using Kendo.Mvc.UI
+@model EditModel
+
+@{
+    ViewData["Title"] = "Edit Role";
+}
+
+<div class="row">
+    <div class="col">
+        <hr />
+        <div class="row">
+            <div class="col">
+                <h2>
+                    <i class="fal fa-id-badge"></i> @ViewData["Title"]
+                </h2>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <hr />
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Role.Id" />
+            @{
+                var userRoles = Model.Role.UserRoles.ToArray();
+                for (var i = 0; i < userRoles.Length; i++)
+                {
+                    <input type="hidden" name="Role.UserRoles[@i].UserId" value="@userRoles[i].UserId" />
+                }
+            }
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label asp-for="Role.Name"></label>
+                        <input asp-for="Role.Name" class="form-control" />
+                        <span asp-validation-for="Role.Name" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <hr />
+                    @(Html.Kendo().Grid(Model.Users)
+                          .Name("usersGrid")
+                          .ToolBar(toolbar => toolbar.ClientTemplate("<h4><i class='fal fa-user'></i> Users</h4>"))
+                          .Columns(columns =>
+                          {
+                              columns.Select().Width(50);
+                              columns.Bound(c => c.UserName);
+                          })
+                          .Sortable(sort => sort.AllowUnsort(false))
+                          .Filterable(filterable => filterable.Mode(GridFilterMode.Row))
+                          .Pageable(pageable => pageable.ButtonCount(5))
+                          .PersistSelection()
+                          .Events(events => events
+                              .Change("onUsersChange")
+                              .DataBound("onUsersDataBound"))
+                          .DataSource(dataSource => dataSource
+                              .Ajax()
+                              .Model(model => model.Id(p => p.Id))
+                              .Sort(sort => sort.Add(nameof(Models.User.UserName)).Ascending())
+                              .PageSize(5)
+                              .ServerOperation(false))
+                          .ClientRowTemplate(
+                              @"<tr data-uid='#:uid#' role='row'>" +
+                              "<td role='gridcell'>" +
+                              "<input class='k-checkbox' data-role='checkbox' type='checkbox' id='cb_#:data.uid#'>" +
+                              "<label class='k-checkbox-label k-no-text' for='cb_#:data.uid#'>​</label>" +
+                              "</td>" +
+                              "<td role='gridcell'>" +
+                              "<a href='/users/details/#:data.Id#'>#:data.UserName#</a>" +
+                              "</td>" +
+                              "</tr>"))
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <hr />
+                        <h4>
+                            <button type="submit" class="btn btn-primary" title="Save Role">
+                                Save
+                            </button> |
+                            <a asp-page="./Details" asp-route-id="@Model.Role.Id" title="Role Details">
+                                <i class="fal fa-info-square"></i> Details
+                            </a> |
+                            <a asp-page="./Index" title="Roles">
+                                <i class="fal fa-list"></i> List
+                            </a>
+                        </h4>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <hr />
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        function onUsersChange(event) {
+            $('input[name^="Role.UserRoles"]').remove();
+            $('form').append(event.sender.selectedKeyNames().map((userId, index) => $('<input>',
+                {
+                    type: 'hidden',
+                    name: `Role.UserRoles[${index}].UserId`,
+                    value: userId
+                })));
+        }
+
+        function onUsersDataBound(event) {
+            var userRoles = $('input[name^="Role.UserRoles"]')
+                .toArray()
+                .map(userRole => userRole.value);
+            event.sender.items()
+                .toArray()
+                .filter(item => userRoles.some(userRole => userRole === event.sender.dataItem(item).Id))
+                .forEach(item => event.sender.select(item));
+        }
+    </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

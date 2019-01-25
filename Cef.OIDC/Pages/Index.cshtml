@@ -1,0 +1,32 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="row">
+    <div class="col">
+        <hr />
+        <h2>
+            <i class="fal fa-tachometer"></i> @ViewData["Title"]
+        </h2>
+    </div>
+</div>
+<div class="row text-center">
+    <div class="col">
+        <hr />
+        <div class="row">
+            <div class="col">
+                <a asp-page="./Users/Index">
+                    <i class="fal fa-user fa-5x"></i><br /><br />Users
+                </a>
+            </div>
+            <div class="col">
+                <a asp-page="./Roles/Index">
+                    <i class="fal fa-id-badge fa-5x"></i><br /><br />Roles
+                </a>
+            </div>
+        </div>
+        <hr />
+    </div>
+</div>

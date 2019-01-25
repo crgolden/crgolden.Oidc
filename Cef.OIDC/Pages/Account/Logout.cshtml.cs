@@ -95,7 +95,7 @@
             // get context information (client name, post logout redirect URI and iframe for federated signout)
             var logout = await _interaction.GetLogoutContextAsync(logoutId);
 
-            return Redirect(logout?.PostLogoutRedirectUri);
+            return Redirect(logout?.PostLogoutRedirectUri ?? Url.Content("~/"));
         }
     }
 }

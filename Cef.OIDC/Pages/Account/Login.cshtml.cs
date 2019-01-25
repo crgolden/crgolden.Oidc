@@ -16,13 +16,16 @@
     public class LoginModel : PageModel
     {
         private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
         private readonly ILogger<LoginModel> _logger;
 
         public LoginModel(
             SignInManager<User> signInManager,
+            UserManager<User> userManager,
             ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
+            _userManager = userManager;
             _logger = logger;
         }
 
@@ -86,7 +89,19 @@
             if (result.Succeeded)
             {
                 _logger.LogInformation($"User with email '{Input.Email}' logged in.");
-                return LocalRedirect(returnUrl);
+                if (!returnUrl.Equals(Url.Content("~/")))
+                {
+                    return LocalRedirect(returnUrl);
+                }
+
+                var user = await _userManager.FindByEmailAsync(Input.Email);
+                if (await _userManager.IsInRoleAsync(user, "Admin"))
+                {
+                    return LocalRedirect(returnUrl);
+                }
+
+                return RedirectToPage("./AccessDenied");
+
             }
 
             if (result.RequiresTwoFactor)

@@ -54,6 +54,7 @@
             {
                 options.LoginPath = "/account/login";
                 options.LogoutPath = "/account/logout";
+                options.AccessDeniedPath = "/account/access-denied";
                 options.ReturnUrlParameter = "returnUrl";
                 options.SlidingExpiration = true;
             });
@@ -71,6 +72,7 @@
                 .AddRazorPagesOptions(setup => setup.Conventions.Add(new PageRouteTransformerConvention(new SlugifyParameterTransformer())));
             services.AddIdentityServer(_configuration, _environment);
             services.AddAuthentication(_configuration);
+            services.AddKendo();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

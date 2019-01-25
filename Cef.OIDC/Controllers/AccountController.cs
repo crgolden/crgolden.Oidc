@@ -12,6 +12,7 @@ namespace Cef.OIDC.Controllers
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Serialization;
     using ViewModels.AccountViewModels;
 
     [AllowAnonymous]
@@ -66,7 +67,10 @@ namespace Cef.OIDC.Controllers
             };
             if (model.Address != null)
             {
-                var address = JsonConvert.SerializeObject(model.Address);
+                var address = JsonConvert.SerializeObject(model.Address, new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                });
                 claims.Add(new Claim(JwtClaimTypes.Address, address));
             }
             await _userManager.AddClaimsAsync(user, claims);

@@ -16,6 +16,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Serialization;
     using ViewModels.ManageViewModels;
 
     [Authorize(AuthenticationSchemes = "Bearer")]
@@ -135,7 +136,10 @@
             if (lastName != null) { personalData.Add("Last Name", lastName.Value); }
 
             Response.Headers.Add("Content-Disposition", "attachment; filename=PersonalData.json");
-            return new FileContentResult(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(personalData)), "text/json");
+            return new FileContentResult(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(personalData, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            })), "text/json");
         }
 
         [HttpGet]
@@ -325,7 +329,10 @@
                         {
                             if (model.Address != null)
                             {
-                                var address = JsonConvert.SerializeObject(model.Address);
+                                var address = JsonConvert.SerializeObject(model.Address, new JsonSerializerSettings
+                                {
+                                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                                });
                                 if (!string.IsNullOrEmpty(address) && !address.Equals(claim.Value))
                                 {
                                     await _userManager.ReplaceClaimAsync(user, claim, new Claim(JwtClaimTypes.Address, address));
@@ -342,7 +349,10 @@
 
             if (model.Address != null && !userClaims.Any(x => x.Type.Equals(JwtClaimTypes.Address)))
             {
-                var addressClaim = new Claim(JwtClaimTypes.Address, JsonConvert.SerializeObject(model.Address));
+                var addressClaim = new Claim(JwtClaimTypes.Address, JsonConvert.SerializeObject(model.Address, new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                }));
                 await _userManager.AddClaimAsync(user, addressClaim);
             }
 
