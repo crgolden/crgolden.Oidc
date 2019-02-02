@@ -52,7 +52,7 @@
             }
 
             await _roleManager.CreateAsync(Role);
-            return RedirectToPage("./Details", new { id = Role.Id });
+            return RedirectToPage("./Details/Index", new { Role.Id });
         }
     }
 }

@@ -114,6 +114,11 @@
                 providerKey: info.ProviderKey);
             if (user != null)
             {
+                if (returnUrl.Equals(Url.Content("~/")) && !await _userManager.IsInRoleAsync(user, "Admin"))
+                {
+                    return RedirectToPage("./Login");
+                }
+
                 // Sign in the user with this external login provider if the user already has a login.
                 var result = await _signInManager.ExternalLoginSignInAsync(
                     loginProvider: info.LoginProvider,
@@ -209,7 +214,7 @@
                             updateClaims: true);
                     }
                 }
-                else
+                else if (!returnUrl.Equals(Url.Content("~/")))
                 {
                     user = new User { UserName = Input.Email, Email = Input.Email };
                     var result = await _userManager.CreateAsync(user);
@@ -265,6 +270,11 @@
             if (!await _userManager.IsEmailConfirmedAsync(user))
             {
                 return RedirectToPage("./VerifyEmail", new { returnUrl });
+            }
+
+            if (returnUrl.Equals(Url.Content("~/")) && !await _userManager.IsInRoleAsync(user, "Admin"))
+            {
+                return RedirectToPage("./Login");
             }
 
             _logger.LogInformation($"User account with email '{user.Email}' logged in with {info.LoginProvider} provider.");

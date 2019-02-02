@@ -1,0 +1,29 @@
+﻿@page "{id:guid}"
+@model IndexModel
+
+@{
+    Layout = "_DetailsLayout";
+    ViewData["Title"] = "User Properties";
+}
+
+<dl>
+    <dt>
+        @Html.DisplayNameFor(model => model.UserModel.Email)
+    </dt>
+    <dd>
+        @Html.DisplayFor(model => model.UserModel.Email)
+    </dd>
+</dl>
+<hr />
+<h4>
+    <a asp-page="../Index" title="Users">
+        <i class="fal fa-list"></i> List |
+    </a>
+    <a asp-page="../Edit/Index" asp-route-id="@Model.UserModel.Id" title="Edit User Properties">
+        <i class="fal fa-edit"></i> Edit
+    </a> |
+    <a asp-page="../Delete" asp-route-id="@Model.UserModel.Id" title="Delete User">
+        <i class="fal fa-trash"></i> Delete
+    </a>
+</h4>
+<hr />

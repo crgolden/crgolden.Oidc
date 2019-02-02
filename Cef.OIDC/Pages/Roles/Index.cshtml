@@ -9,7 +9,7 @@
 
 <div class="row">
     <div class="col">
-        <hr/>
+        <hr />
         <div class="row">
             <div class="col">
                 <h2>
@@ -24,16 +24,16 @@
                 </h2>
             </div>
         </div>
+        <hr />
     </div>
 </div>
 <div class="row">
     <div class="col">
-        <hr/>
         @(Html.Kendo().Grid(Model.Roles)
-              .Name("grid")
+              .Name("rolesGrid")
               .Columns(columns => columns.Bound(c => c.Name))
               .Sortable(sort => sort.AllowUnsort(false))
-              .Filterable(filterable => filterable.Mode(GridFilterMode.Row))
+              .Filterable(filterable => filterable.Mode(GridFilterMode.Menu))
               .Pageable(pageable => pageable.ButtonCount(5))
               .DataSource(dataSource => dataSource
                   .Ajax()

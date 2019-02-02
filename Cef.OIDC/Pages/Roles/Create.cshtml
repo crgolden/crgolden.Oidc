@@ -1,4 +1,5 @@
 ﻿@page
+@using Cef.OIDC.Relationships
 @using Kendo.Mvc.UI
 @model CreateModel
 
@@ -12,6 +13,7 @@
         <h2>
             <i class="fal fa-id-badge"></i> @ViewData["Title"]
         </h2>
+        <hr />
     </div>
 </div>
 <div class="row">
@@ -22,27 +24,27 @@
                 <div class="col">
                     <div class="form-group">
                         <label asp-for="Role.Name"></label>
-                        <input asp-for="Role.Name" class="form-control" />
+                        <input asp-for="Role.Name" class="form-control" required />
                         <span asp-validation-for="Role.Name" class="text-danger"></span>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col">
+                <div class="col-12 col-md-6">
                     <hr />
                     @(Html.Kendo().Grid(Model.Users)
                           .Name("usersGrid")
-                          .ToolBar(toolbar => toolbar.ClientTemplate("<h4><i class='fal fa-user'></i> Users</h4>"))
+                          .ToolBar(toolbar => toolbar.ClientTemplateId("usersToolbarTemplate"))
                           .Columns(columns =>
                           {
                               columns.Select().Width(50);
                               columns.Bound(c => c.UserName);
                           })
                           .Sortable(sort => sort.AllowUnsort(false))
-                          .Filterable(filterable => filterable.Mode(GridFilterMode.Row))
+                          .Filterable(filterable => filterable.Mode(GridFilterMode.Menu))
                           .Pageable(pageable => pageable.ButtonCount(5))
                           .PersistSelection()
-                          .Events(ev => ev.Change("onUsersChange"))
+                          .Events(events => events.Change("usersChange"))
                           .DataSource(dataSource => dataSource
                               .Ajax()
                               .Model(model => model.Id(p => p.Id))
@@ -59,6 +61,29 @@
                               "<a href='/users/details/#:data.Id#'>#:data.UserName#</a>" +
                               "</td>" +
                               "</tr>"))
+                </div>
+                <div class="col-12 col-md-6">
+                    <hr />
+                    @(Html.Kendo().Grid(new List<RoleClaim>())
+                          .Name("claimsGrid")
+                          .ToolBar(toolbar => toolbar.ClientTemplateId("claimsToolbarTemplate"))
+                          .Editable(editable => editable
+                              .Mode(GridEditMode.InCell)
+                              .DisplayDeleteConfirmation(false))
+                          .Columns(columns =>
+                          {
+                              columns.Bound(c => c.ClaimType);
+                              columns.Bound(c => c.ClaimValue);
+                              columns.Command(command => command.Destroy());
+                          })
+                          .Filterable(filterable => filterable.Mode(GridFilterMode.Menu))
+                          .Pageable(pageable => pageable.ButtonCount(5))
+                          .DataSource(dataSource => dataSource
+                              .Ajax()
+                              .Events(events => events.Change("claimsChange"))
+                              .PageSize(5)
+                              .Batch(true)
+                              .ServerOperation(false)))
                 </div>
             </div>
             <div class="row">
@@ -82,14 +107,48 @@
 </div>
 
 @section Scripts {
+    <script id="usersToolbarTemplate" type="text/x-kendo-template">
+        <h4>
+            <i class="fal fa-user"></i> Users
+        </h4>
+    </script>
+
+    <script id="claimsToolbarTemplate" type="text/x-kendo-template">
+        <h4>
+            <i class="fal fa-id-card"></i> Claims
+            <button class="k-button k-button-icontext k-grid-add float-right">
+                <span class="k-icon k-i-plus"></span>Add Claim
+            </button>
+        </h4>
+    </script>
+
     <script type="text/javascript">
-        function onUsersChange(event) {
+        function usersChange(event) {
             $('input[name^="Role.UserRoles"]').remove();
             $('form').append(event.sender.selectedKeyNames().map((userId, index) => $('<input>', {
                 type: 'hidden',
                 name: `Role.UserRoles[${index}].UserId`,
                 value: userId
             })));
+        }
+
+        function claimsChange(event) {
+            $('input[name^="Role.RoleClaims"]').remove();
+            $('form').append(event.sender.data().filter(claim => {
+                return claim.ClaimType.length > 0 && claim.ClaimValue.length > 0;
+            }).reduce((inputs, claim, index) => {
+                inputs.push($('<input>', {
+                    type: 'hidden',
+                    name: `Role.RoleClaims[${index}].ClaimType`,
+                    value: claim.ClaimType
+                }));
+                inputs.push($('<input>', {
+                    type: 'hidden',
+                    name: `Role.RoleClaims[${index}].ClaimValue`,
+                    value: claim.ClaimValue
+                }));
+                return inputs;
+            }, []));
         }
     </script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

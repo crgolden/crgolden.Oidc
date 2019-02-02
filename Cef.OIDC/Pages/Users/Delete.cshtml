@@ -1,5 +1,4 @@
 ﻿@page "{id:guid}"
-@using Kendo.Mvc.UI
 @model DeleteModel
 
 @{
@@ -29,29 +28,6 @@
                 @Html.DisplayFor(model => model.UserModel.Email)
             </dd>
         </dl>
-    </div>
-</div>
-<div class="row">
-    <div class="col">
-        <hr/>
-        @(Html.Kendo().Grid(Model.Roles)
-              .Name("rolesGrid")
-              .ToolBar(toolbar => toolbar.ClientTemplate("<h4><i class='fal fa-id-badge'></i> Roles</h4>"))
-              .Columns(columns => columns.Bound(c => c.Name))
-              .Sortable(sort => sort.AllowUnsort(false))
-              .Filterable(filterable => filterable.Mode(GridFilterMode.Row))
-              .Pageable(pageable => pageable.ButtonCount(5))
-              .DataSource(dataSource => dataSource
-                  .Ajax()
-                  .Sort(sort => sort.Add(nameof(Models.User.UserName)).Ascending())
-                  .PageSize(5)
-                  .ServerOperation(false))
-              .ClientRowTemplate(
-                  "<tr data-uid='#: uid #'>" +
-                  "<td>" +
-                  "<a href='/roles/details/#:data.Id#'>#:data.Name#</a>" +
-                  "</td>" +
-                  "</tr>"))
     </div>
 </div>
 <div class="row">

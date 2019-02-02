@@ -2,6 +2,10 @@
 @using Models
 @inject SignInManager<User> SignInManager
 
+@{
+    var activePath = ViewContext.ActionDescriptor.DisplayName;
+}
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -92,8 +96,36 @@
                      class="collapse navbar-collapse">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
+                            <a class="nav-link @(string.Equals(activePath, "/Users/Index", StringComparison.OrdinalIgnoreCase) ? "active" : null)"
+                               asp-page="/Users/Index"
+                               title="Users">
+                                <i class="fal fa-user"></i> Users
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(string.Equals(activePath, "/Roles/Index", StringComparison.OrdinalIgnoreCase) ? "active" : null)"
+                               asp-page="/Roles/Index"
+                               title="Roles">
+                                <i class="fal fa-id-badge"></i> Roles
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(string.Equals(activePath, "/Clients/Index", StringComparison.OrdinalIgnoreCase) ? "active" : null)"
+                               asp-page="/Clients/Index"
+                               title="Clients">
+                                <i class="fal fa-bow-arrow"></i> Clients
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(string.Equals(activePath, "/Apis/Index", StringComparison.OrdinalIgnoreCase) ? "active" : null)"
+                               asp-page="/Apis/Index"
+                               title="APIs">
+                                <i class="fal fa-bullseye-arrow"></i> APIs
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link"
-                               asp-page="./Account/Logout"
+                               asp-page="/Account/Logout"
                                title="Logout">
                                 <i class="fal fa-sign-out"></i> Logout
                             </a>
@@ -114,7 +146,7 @@
         </span>
     </nav>
 
-    @RenderSection("Scripts", required: false)
+    @await RenderSectionAsync("Scripts", required: false)
 
 </body>
 </html>

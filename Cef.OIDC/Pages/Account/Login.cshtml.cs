@@ -81,6 +81,12 @@
             returnUrl = returnUrl ?? Url.Content("~/");
             TempData[nameof(Origin)] = origin;
 
+            var user = await _userManager.FindByEmailAsync(Input.Email);
+            if (user == null || returnUrl.Equals(Url.Content("~/")) && !await _userManager.IsInRoleAsync(user, "Admin"))
+            {
+                return Page();
+            }
+
             var result = await _signInManager.PasswordSignInAsync(
                 userName: Input.Email,
                 password: Input.Password,
@@ -89,19 +95,7 @@
             if (result.Succeeded)
             {
                 _logger.LogInformation($"User with email '{Input.Email}' logged in.");
-                if (!returnUrl.Equals(Url.Content("~/")))
-                {
-                    return LocalRedirect(returnUrl);
-                }
-
-                var user = await _userManager.FindByEmailAsync(Input.Email);
-                if (await _userManager.IsInRoleAsync(user, "Admin"))
-                {
-                    return LocalRedirect(returnUrl);
-                }
-
-                return RedirectToPage("./AccessDenied");
-
+                return LocalRedirect(returnUrl);
             }
 
             if (result.RequiresTwoFactor)

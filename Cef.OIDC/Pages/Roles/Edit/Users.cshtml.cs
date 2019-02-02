@@ -1,4 +1,4 @@
-﻿namespace Cef.OIDC.Pages.Roles
+﻿namespace Cef.OIDC.Pages.Roles.Edit
 {
     using System;
     using System.Collections.Generic;
@@ -14,12 +14,12 @@
     using Relationships;
 
     [Authorize(Roles = "Admin")]
-    public class EditModel : PageModel
+    public class UsersModel : PageModel
     {
         private readonly RoleManager<Role> _roleManager;
         private readonly UserManager<User> _userManager;
 
-        public EditModel(
+        public UsersModel(
             RoleManager<Role> roleManager,
             UserManager<User> userManager)
         {
@@ -32,8 +32,6 @@
 
         public IEnumerable<User> Users { get; set; }
 
-        public IEnumerable<Claim> Claims { get; set; }
-
         public async Task<IActionResult> OnGetAsync([FromRoute] Guid id)
         {
             if (id.Equals(Guid.Empty))
@@ -43,63 +41,65 @@
 
             Role = await _roleManager.Roles
                 .Include(x => x.UserRoles)
-                .Include(x => x.RoleClaims)
                 .SingleOrDefaultAsync(x => x.Id.Equals(id));
             if (Role == null)
             {
                 return NotFound();
             }
 
-            Role.UserRoles = Role.UserRoles.Select(x => new UserRole
+            Users = _userManager.Users.Select(x => new User
             {
-                UserId = x.UserId
-            }).ToList();
-            Users = _userManager.Users;
-            Claims = await _roleManager.GetClaimsAsync(Role);
+                Id = x.Id,
+                Email = x.Email
+            });
 
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(Guid id)
+        public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid || id.Equals(Guid.Empty))
+            if (!ModelState.IsValid || Role.Id.Equals(Guid.Empty))
             {
                 return Page();
             }
 
             var role = await _roleManager.Roles
                 .Include(x => x.UserRoles)
-                .Include(x => x.RoleClaims)
-                .SingleOrDefaultAsync(x => x.Id.Equals(id));
+                .SingleOrDefaultAsync(x => x.Id.Equals(Role.Id));
             if (role == null)
             {
                 return Page();
             }
 
-            role.Name = Role.Name;
             if (Role.UserRoles != null)
             {
-                foreach (var userRole in Role.UserRoles.Where(x => !role.UserRoles.Any(y => y.UserId.Equals(x.UserId))))
+                foreach (var roleUser in Role.UserRoles.Where(x => !role.UserRoles.Any(y => y.UserId.Equals(x.UserId))))
                 {
-                    role.UserRoles.Add(userRole);
-                    var user = await _userManager.FindByIdAsync($"{userRole.UserId}");
-                    await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, Role.Name));
+                    var user = await _userManager.FindByIdAsync($"{roleUser.UserId}");
+                    await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, role.Name));
+                    role.UserRoles.Add(roleUser);
                 }
 
-                var userRoles = role.UserRoles.Where(x => !Role.UserRoles.Any(y => y.UserId.Equals(x.UserId))).ToHashSet();
-                foreach (var userRole in userRoles)
+                var roleUsers = role.UserRoles.Where(x => !Role.UserRoles.Any(y => y.UserId.Equals(x.UserId))).ToHashSet();
+                foreach (var roleUser in roleUsers)
                 {
-                    var user = await _userManager.FindByIdAsync($"{userRole.UserId}");
-                    await _userManager.RemoveClaimAsync(user, new Claim(ClaimTypes.Role, Role.Name));
-                    role.UserRoles.Remove(userRole);
+                    var user = await _userManager.FindByIdAsync($"{roleUser.UserId}");
+                    await _userManager.RemoveClaimAsync(user, new Claim(ClaimTypes.Role, role.Name));
+                    role.UserRoles.Remove(roleUser);
                 }
             }
             else
             {
                 role.UserRoles = new List<UserRole>();
+                var users = await _userManager.GetUsersInRoleAsync(role.Name);
+                foreach (var user in users)
+                {
+                    await _userManager.RemoveClaimAsync(user, new Claim(ClaimTypes.Role, role.Name));
+                }
             }
+
             await _roleManager.UpdateAsync(role);
-            return RedirectToPage("./Details", new { id });
+            return RedirectToPage("../Details/Users", new { Role.Id });
         }
     }
 }

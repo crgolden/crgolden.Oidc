@@ -1,4 +1,4 @@
-﻿namespace Cef.OIDC.Pages.Users
+﻿namespace Cef.OIDC.Pages.Users.Details
 {
     using System;
     using System.Collections.Generic;
@@ -11,22 +11,22 @@
     using Microsoft.AspNetCore.Mvc.RazorPages;
     using Microsoft.EntityFrameworkCore;
     using Models;
+    using Relationships;
 
     [Authorize(Roles = "Admin")]
-    public class DetailsModel : PageModel
+    public class ClaimsModel : PageModel
     {
         private readonly UserManager<User> _userManager;
 
-        public DetailsModel(UserManager<User> userManager)
+        public ClaimsModel(UserManager<User> userManager)
         {
             _userManager = userManager;
         }
 
+        [BindProperty]
         public User UserModel { get; set; }
 
-        public IEnumerable<Role> Roles { get; set; }
-
-        public IEnumerable<Claim> Claims { get; set; }
+        public IEnumerable<UserClaim> Claims { get; set; }
 
         public async Task<IActionResult> OnGetAsync([FromRoute] Guid id)
         {
@@ -36,20 +36,22 @@
             }
 
             UserModel = await _userManager.Users
-                .Include(x => x.UserRoles)
-                .ThenInclude(x => x.Role)
+                .Include(x => x.Claims)
                 .SingleOrDefaultAsync(x => x.Id.Equals(id));
             if (UserModel == null)
             {
                 return NotFound();
             }
 
-            Roles = UserModel.UserRoles.Select(x => new Role
-            {
-                Id = x.Role.Id,
-                Name = x.Role.Name
-            });
-            Claims = await _userManager.GetClaimsAsync(UserModel);
+            Claims = UserModel.Claims
+                .Where(x => !x.ClaimType.Equals(ClaimTypes.Role))
+                .Select(x => new UserClaim
+                {
+                    Id = x.Id,
+                    UserId = x.UserId,
+                    ClaimType = x.ClaimType,
+                    ClaimValue = x.ClaimValue
+                });
 
             return Page();
         }

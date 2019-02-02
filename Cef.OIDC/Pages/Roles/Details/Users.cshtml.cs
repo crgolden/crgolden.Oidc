@@ -1,49 +1,52 @@
-﻿namespace Cef.OIDC.Pages.Roles
+﻿namespace Cef.OIDC.Pages.Roles.Details
 {
+    using System;
     using System.Collections.Generic;
-    using System.Security.Claims;
+    using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
+    using Microsoft.EntityFrameworkCore;
     using Models;
 
     [Authorize(Roles = "Admin")]
-    public class DetailsModel : PageModel
+    public class UsersModel : PageModel
     {
         private readonly RoleManager<Role> _roleManager;
-        private readonly UserManager<User> _userManager;
 
-        public DetailsModel(
-            RoleManager<Role> roleManager,
-            UserManager<User> userManager)
+        public UsersModel(RoleManager<Role> roleManager)
         {
             _roleManager = roleManager;
-            _userManager = userManager;
         }
 
+        [BindProperty]
         public Role Role { get; set; }
 
         public IEnumerable<User> Users { get; set; }
 
-        public IEnumerable<Claim> Claims { get; set; }
-
-        public async Task<IActionResult> OnGetAsync([FromRoute] string id)
+        public async Task<IActionResult> OnGetAsync([FromRoute] Guid id)
         {
-            if (string.IsNullOrEmpty(id))
+            if (id.Equals(Guid.Empty))
             {
                 return NotFound();
             }
 
-            Role = await _roleManager.FindByIdAsync(id);
+            Role = await _roleManager.Roles
+                .Include(x => x.UserRoles)
+                .ThenInclude(x => x.User)
+                .SingleOrDefaultAsync(x => x.Id.Equals(id));
             if (Role == null)
             {
                 return NotFound();
             }
 
-            Users = await _userManager.GetUsersInRoleAsync(Role.Name);
-            Claims = await _roleManager.GetClaimsAsync(Role);
+            Users = Role.UserRoles.Select(x => new User
+            {
+                Id = x.User.Id,
+                Email = x.User.Email
+            });
 
             return Page();
         }
