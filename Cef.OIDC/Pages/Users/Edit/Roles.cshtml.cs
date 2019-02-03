@@ -98,7 +98,7 @@
             }
 
             await _userManager.UpdateAsync(user);
-            return RedirectToPage("../Details/Users", new { UserModel.Id });
+            return RedirectToPage("../Details/Roles", new { UserModel.Id });
         }
     }
 }
