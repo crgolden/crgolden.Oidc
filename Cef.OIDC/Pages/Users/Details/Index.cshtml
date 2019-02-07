@@ -2,8 +2,7 @@
 @model IndexModel
 
 @{
-    Layout = "_DetailsLayout";
-    ViewData["Title"] = "User Properties";
+    ViewData["Title"] = "User Details";
 }
 
 <dl>
@@ -19,7 +18,7 @@
     <a asp-page="../Index" title="Users">
         <i class="fal fa-list"></i> List |
     </a>
-    <a asp-page="../Edit/Index" asp-route-id="@Model.UserModel.Id" title="Edit User Properties">
+    <a asp-page="../Edit/Index" asp-route-id="@Model.UserModel.Id" title="Edit User Details">
         <i class="fal fa-edit"></i> Edit
     </a> |
     <a asp-page="../Delete" asp-route-id="@Model.UserModel.Id" title="Delete User">

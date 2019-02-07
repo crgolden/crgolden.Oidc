@@ -37,6 +37,10 @@
               asp-fallback-test-value="0" />
         <link rel="stylesheet"
               href="https://pro.fontawesome.com/releases/v5.7.1/css/all.css"
+              asp-fallback-href="~/lib/font-awesome/css/all.min.css"
+              asp-fallback-test-class="fa"
+              asp-fallback-test-property="display"
+              asp-fallback-test-value="block"
               crossorigin="anonymous"
               integrity="sha384-6jHF7Z3XI3fF4XZixAuSu0gGKrXwoX/w3uFPxC56OtjChio7wtTGJWRW53Nhx6Ev" />
     </environment>
@@ -77,7 +81,7 @@
            href="@(ViewData["Origin"] ?? "/")"
            title="Clarity">Clarity</a>
         @{
-            if (SignInManager.IsSignedIn(User))
+            if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
             {
                 <button type="button"
                         class="navbar-toggler"
@@ -106,6 +110,13 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link @(string.Equals(activePath, "/IdentityResources/Index", StringComparison.OrdinalIgnoreCase) ? "active" : null)"
+                               asp-page="/IdentityResources/Index"
+                               title="Identity Resources">
+                                <i class="fal fa-book-user"></i> Identity Resources
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link @(string.Equals(activePath, "/Clients/Index", StringComparison.OrdinalIgnoreCase) ? "active" : null)"
                                asp-page="/Clients/Index"
                                title="Clients">
@@ -113,10 +124,10 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link @(string.Equals(activePath, "/Apis/Index", StringComparison.OrdinalIgnoreCase) ? "active" : null)"
-                               asp-page="/Apis/Index"
-                               title="APIs">
-                                <i class="fal fa-bullseye-arrow"></i> APIs
+                            <a class="nav-link @(string.Equals(activePath, "/ApiResources/Index", StringComparison.OrdinalIgnoreCase) ? "active" : null)"
+                               asp-page="/ApiResources/Index"
+                               title="API Resources">
+                                <i class="fal fa-bullseye-arrow"></i> API Resources
                             </a>
                         </li>
                         <li class="nav-item">
@@ -138,11 +149,17 @@
 
     <nav class="navbar container fixed-bottom navbar-light bg-light">
         <span class="navbar-brand">
-            &copy;2018 Clarity Ventures, Inc.
+            &copy;2019 Clarity Ventures, Inc.
         </span>
     </nav>
 
     @await RenderSectionAsync("Scripts", required: false)
+    
+<style>
+    .k-checkbox:disabled+.k-checkbox-label {
+        opacity: 1
+    }
+</style>
 
 </body>
 </html>

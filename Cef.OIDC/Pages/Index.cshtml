@@ -12,31 +12,52 @@
         </h2>
     </div>
 </div>
+<hr />
 <div class="row text-center">
-    <div class="col">
-        <hr />
-        <div class="row">
-            <div class="col">
-                <a asp-page="./Users/Index" title="Users">
-                    <i class="fal fa-user fa-5x"></i><br /><br />Users
-                </a>
-            </div>
-            <div class="col">
-                <a asp-page="./Roles/Index" title="Roles">
-                    <i class="fal fa-id-badge fa-5x"></i><br /><br />Roles
-                </a>
-            </div>
-            <div class="col">
-                <a asp-page="./Clients/Index" title="Clients">
-                    <i class="fal fa-bow-arrow fa-5x"></i><br /><br />Clients
-                </a>
-            </div>
-            <div class="col">
-                <a asp-page="./Apis/Index" title="APIs">
-                    <i class="fal fa-bullseye-arrow fa-5x"></i><br /><br />APIs
-                </a>
-            </div>
-        </div>
-        <hr />
+    <div class="col-1 d-none d-md-block"></div>
+    <div class="col-6 col-md-2 mb-3 mb-md-0">
+        <a asp-page="./Users/Index" title="Users">
+            <i class="fal fa-user fa-5x"></i><br /><br />Users
+        </a>
+    </div>
+    <div class="col-6 col-md-2 mb-3 mb-md-0">
+        <a asp-page="./Roles/Index" title="Roles">
+            <i class="fal fa-id-badge fa-5x"></i><br /><br />Roles
+        </a>
+    </div>
+    <div class="col-6 col-md-2 mb-3 mb-md-0">
+        <a asp-page="./IdentityResources/Index" title="Identity Resources">
+            <i class="fal fa-book-user fa-5x"></i><br /><br />Identity Resources
+        </a>
+    </div>
+    <div class="col-6 col-md-2 mb-3 mb-md-0">
+        <a asp-page="./Clients/Index" title="Clients">
+            <i class="fal fa-bow-arrow fa-5x"></i><br /><br />Clients
+        </a>
+    </div>
+    <div class="col-12 col-md-2">
+        <a asp-page="./ApiResources/Index" title="API Resources">
+            <i class="fal fa-bullseye-arrow fa-5x"></i><br /><br />API Resources
+        </a>
+    </div>
+    <div class="col-1 d-none d-md-block"></div>
+</div>
+<hr />
+<div class="row text-center">
+    <div class="col-12 col-md-4">
+        <a href="/.well-known/openid-configuration" title="Discovery Document">
+            <img alt="Discovery Document" src="favicon.ico" height="16" width="16"> Discovery Document
+        </a>
+    </div>
+    <div class="col-12 col-md-4">
+        <a href="https://openid.net/connect/" title="OpenId Connect">
+            <img alt="OpenId Connect" src="https://openid.net/favicon.ico" height="16" width="16"> OpenId Connect
+        </a>
+    </div>
+    <div class="col-12 col-md-4">
+        <a href="https://identityserver4.readthedocs.io/" title="IdentityServer4">
+            <img alt="IdentityServer4" src="https://identityserver4.readthedocs.io/en/latest/_static/favicon.ico" height="16" width="16"> IdentityServer4
+        </a>
     </div>
 </div>
+<hr />

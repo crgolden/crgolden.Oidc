@@ -20,86 +20,72 @@
     <div class="col">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="row">
-                <div class="col">
-                    <div class="form-group">
-                        <label asp-for="Role.Name"></label>
-                        <input asp-for="Role.Name" class="form-control" required />
-                        <span asp-validation-for="Role.Name" class="text-danger"></span>
-                    </div>
-                </div>
+            <div class="form-group">
+                <label asp-for="Role.Name"></label>
+                <input asp-for="Role.Name" class="form-control" required />
+                <span asp-validation-for="Role.Name" class="text-danger"></span>
             </div>
-            <div class="row">
-                <div class="col-12 col-md-6">
-                    <hr />
-                    @(Html.Kendo().Grid(Model.Users)
-                          .Name("usersGrid")
-                          .ToolBar(toolbar => toolbar.ClientTemplateId("usersToolbarTemplate"))
-                          .Columns(columns =>
-                          {
-                              columns.Select().Width(50);
-                              columns.Bound(c => c.UserName);
-                          })
-                          .Sortable(sort => sort.AllowUnsort(false))
-                          .Filterable(filterable => filterable.Mode(GridFilterMode.Menu))
-                          .Pageable(pageable => pageable.ButtonCount(5))
-                          .PersistSelection()
-                          .Events(events => events.Change("usersChange"))
-                          .DataSource(dataSource => dataSource
-                              .Ajax()
-                              .Model(model => model.Id(p => p.Id))
-                              .Sort(sort => sort.Add(nameof(Models.User.UserName)).Ascending())
-                              .PageSize(5)
-                              .ServerOperation(false))
-                          .ClientRowTemplate(
-                              @"<tr data-uid='#:uid#' role='row'>" +
-                              "<td role='gridcell'>" +
-                              "<input class='k-checkbox' data-role='checkbox' type='checkbox' id='cb_#:data.uid#'>" +
-                              "<label class='k-checkbox-label k-no-text' for='cb_#:data.uid#'>​</label>" +
-                              "</td>" +
-                              "<td role='gridcell'>" +
-                              "<a href='/users/details/#:data.Id#'>#:data.UserName#</a>" +
-                              "</td>" +
-                              "</tr>"))
-                </div>
-                <div class="col-12 col-md-6">
-                    <hr />
-                    @(Html.Kendo().Grid(new List<RoleClaim>())
-                          .Name("claimsGrid")
-                          .ToolBar(toolbar => toolbar.ClientTemplateId("claimsToolbarTemplate"))
-                          .Editable(editable => editable
-                              .Mode(GridEditMode.InCell)
-                              .DisplayDeleteConfirmation(false))
-                          .Columns(columns =>
-                          {
-                              columns.Bound(c => c.ClaimType);
-                              columns.Bound(c => c.ClaimValue);
-                              columns.Command(command => command.Destroy());
-                          })
-                          .Filterable(filterable => filterable.Mode(GridFilterMode.Menu))
-                          .Pageable(pageable => pageable.ButtonCount(5))
-                          .DataSource(dataSource => dataSource
-                              .Ajax()
-                              .Events(events => events.Change("claimsChange"))
-                              .PageSize(5)
-                              .Batch(true)
-                              .ServerOperation(false)))
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <div class="form-group">
-                        <hr />
-                        <h4>
-                            <button type="submit" title="Create Role" class="btn btn-primary">
-                                Create
-                            </button> |
-                            <a asp-page="./Index" title="Roles">
-                                <i class="fal fa-list"></i> List
-                            </a>
-                        </h4>
-                    </div>
-                </div>
+            <hr />
+            @(Html.Kendo().Grid(Model.Users)
+                  .Name("usersGrid")
+                  .ToolBar(toolbar => toolbar.ClientTemplateId("usersToolbarTemplate"))
+                  .Columns(columns =>
+                  {
+                      columns.Select().Width(50);
+                      columns.Bound(c => c.UserName);
+                  })
+                  .Sortable(sort => sort.AllowUnsort(false))
+                  .Filterable(filterable => filterable.Mode(GridFilterMode.Menu))
+                  .Pageable(pageable => pageable.ButtonCount(5))
+                  .PersistSelection()
+                  .Events(events => events.Change("usersChange"))
+                  .DataSource(dataSource => dataSource
+                      .Ajax()
+                      .Model(model => model.Id(p => p.Id))
+                      .Sort(sort => sort.Add(nameof(Models.User.UserName)).Ascending())
+                      .PageSize(5)
+                      .ServerOperation(false))
+                  .ClientRowTemplate(
+                      @"<tr data-uid='#:uid#' role='row'>" +
+                      "<td role='gridcell'>" +
+                      "<input class='k-checkbox' data-role='checkbox' type='checkbox' id='cb_#:data.uid#'>" +
+                      "<label class='k-checkbox-label k-no-text' for='cb_#:data.uid#'>​</label>" +
+                      "</td>" +
+                      "<td role='gridcell'>" +
+                      "<a href='/users/details/#:data.Id#'>#:data.Email#</a>" +
+                      "</td>" +
+                      "</tr>"))
+            <hr />
+            @(Html.Kendo().Grid(new List<RoleClaim>())
+                  .Name("claimsGrid")
+                  .ToolBar(toolbar => toolbar.ClientTemplateId("claimsToolbarTemplate"))
+                  .Editable(editable => editable
+                      .Mode(GridEditMode.InCell)
+                      .DisplayDeleteConfirmation(false))
+                  .Columns(columns =>
+                  {
+                      columns.Bound(c => c.ClaimType);
+                      columns.Bound(c => c.ClaimValue);
+                      columns.Command(command => command.Destroy());
+                  })
+                  .Filterable(filterable => filterable.Mode(GridFilterMode.Menu))
+                  .Pageable(pageable => pageable.ButtonCount(5))
+                  .DataSource(dataSource => dataSource
+                      .Ajax()
+                      .Events(events => events.Change("claimsChange"))
+                      .PageSize(5)
+                      .Batch(true)
+                      .ServerOperation(false)))
+            <div class="form-group">
+                <hr />
+                <h4>
+                    <button type="submit" title="Create Role" class="btn btn-primary">
+                        Create
+                    </button> |
+                    <a asp-page="./Index" title="Roles">
+                        <i class="fal fa-list"></i> List
+                    </a>
+                </h4>
             </div>
         </form>
         <hr />

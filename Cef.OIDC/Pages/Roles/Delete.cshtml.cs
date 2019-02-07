@@ -1,6 +1,6 @@
 ﻿namespace Cef.OIDC.Pages.Roles
 {
-    using System.Collections.Generic;
+    using System;
     using System.Security.Claims;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Authorization;
@@ -26,42 +26,41 @@
         [BindProperty]
         public Role Role { get; set; }
 
-        public IEnumerable<User> Users { get; set; }
-
-        public IEnumerable<Claim> Claims { get; set; }
-
-        public async Task<IActionResult> OnGetAsync([FromRoute] string id)
+        public async Task<IActionResult> OnGetAsync([FromRoute] Guid id)
         {
-            if (string.IsNullOrEmpty(id))
+            if (id.Equals(Guid.Empty))
             {
                 return NotFound();
             }
 
-            Role = await _roleManager.FindByIdAsync(id);
+            Role = await _roleManager.FindByIdAsync($"{id}");
             if (Role == null)
             {
                 return NotFound();
             }
 
-            Users = await _userManager.GetUsersInRoleAsync(Role.Name);
-            Claims = await _roleManager.GetClaimsAsync(Role);
-
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(string id)
+        public async Task<IActionResult> OnPostAsync()
         {
-            if (string.IsNullOrEmpty(id))
+            if (Role.Id.Equals(Guid.Empty))
             {
                 return NotFound();
             }
 
-            Role = await _roleManager.FindByIdAsync(id);
-            if (Role != null)
+            var role = await _roleManager.FindByIdAsync($"{Role.Id}");
+            if (role == null)
             {
-                await _roleManager.DeleteAsync(Role);
+                return Page();
             }
 
+            foreach (var user in await _userManager.GetUsersInRoleAsync(role.Name))
+            {
+                await _userManager.RemoveClaimAsync(user, new Claim(ClaimTypes.Role, role.Name));
+            }
+
+            await _roleManager.DeleteAsync(role);
             return RedirectToPage("./Index");
         }
     }

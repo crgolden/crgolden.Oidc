@@ -4,26 +4,25 @@
 @model ClaimsModel
 
 @{
-    Layout = "_DetailsLayout";
     ViewData["Title"] = "Role Claims";
 }
 
 @(Html.Kendo().Grid(Model.Claims)
-          .Name("claimsGrid")
-          .ToolBar(toolbar => toolbar.ClientTemplateId("claimsToolbarTemplate"))
-          .Columns(columns =>
-          {
-              columns.Bound(c => c.ClaimType);
-              columns.Bound(c => c.ClaimValue);
-          })
-          .Sortable(sort => sort.AllowUnsort(false))
-          .Filterable(filterable => filterable.Mode(GridFilterMode.Menu))
-          .Pageable(pageable => pageable.ButtonCount(5))
-          .DataSource(dataSource => dataSource
-              .Ajax()
-              .Sort(sort => sort.Add(nameof(RoleClaim.ClaimType)).Ascending())
-              .PageSize(5)
-              .ServerOperation(false)))
+      .Name("claimsGrid")
+      .ToolBar(toolbar => toolbar.ClientTemplateId("claimsToolbarTemplate"))
+      .Columns(columns =>
+      {
+          columns.Bound(c => c.ClaimType);
+          columns.Bound(c => c.ClaimValue);
+      })
+      .Sortable(sort => sort.AllowUnsort(false))
+      .Filterable(filterable => filterable.Mode(GridFilterMode.Menu))
+      .Pageable(pageable => pageable.ButtonCount(5))
+      .DataSource(dataSource => dataSource
+          .Ajax()
+          .Sort(sort => sort.Add(nameof(RoleClaim.ClaimType)).Ascending())
+          .PageSize(5)
+          .ServerOperation(false)))
 <hr />
 <h4>
     <a asp-page="../Index" title="Roles">

@@ -40,6 +40,7 @@
                 .ConfigureLogging((context, loggingBuilder) =>
                 {
                     loggingBuilder.AddAzureWebAppDiagnostics();
+                    loggingBuilder.AddApplicationInsights();
                 })
                 .UseStartup<Startup>();
     }

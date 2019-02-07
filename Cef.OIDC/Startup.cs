@@ -96,8 +96,6 @@
             app.UseHealthChecks("/health");
             app.UseCors(_configuration);
             app.UseMvcWithDefaultRoute();
-
-            loggerFactory.AddApplicationInsights(app.ApplicationServices, LogLevel.Warning);
         }
     }
 }

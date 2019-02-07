@@ -7,7 +7,7 @@
 
 <div class="row">
     <div class="col">
-        <hr/>
+        <hr />
         <div class="row">
             <div class="col">
                 <h2>
@@ -15,42 +15,38 @@
                 </h2>
             </div>
         </div>
+        <hr />
     </div>
 </div>
 <div class="row">
     <div class="col">
-        <hr/>
         <dl>
-            <dt class="col-sm-2">
+            <dt>
                 @Html.DisplayNameFor(model => model.UserModel.Email)
             </dt>
-            <dd class="col-sm-10">
+            <dd>
                 @Html.DisplayFor(model => model.UserModel.Email)
             </dd>
         </dl>
+        <hr />
     </div>
 </div>
 <div class="row">
     <div class="col">
         <form method="post">
-            <input type="hidden" asp-for="UserModel.Id"/>
-            <div class="row">
-                <div class="col">
-                    <hr/>
-                    <h4>
-                        <button type="submit" class="btn btn-danger" title="Delete User">
-                            Delete
-                        </button> |
-                        <a asp-page="./Details" asp-route-id="@Model.UserModel.Id" title="User Details">
-                            <i class="fal fa-info-square"></i> Details
-                        </a> |
-                        <a asp-page="./Index" title="Users">
-                            <i class="fal fa-list"></i> List
-                        </a>
-                    </h4>
-                </div>
-            </div>
+            <input type="hidden" asp-for="UserModel.Id" />
+            <h4>
+                <button type="submit" class="btn btn-danger" title="Delete User">
+                    Delete
+                </button> |
+                <a asp-page="./Details/Index" asp-route-id="@Model.UserModel.Id" title="User Details">
+                    <i class="fal fa-info-square"></i> Details
+                </a> |
+                <a asp-page="./Index" title="Users">
+                    <i class="fal fa-list"></i> List
+                </a>
+            </h4>
         </form>
-        <hr/>
+        <hr />
     </div>
 </div>
