@@ -1,4 +1,4 @@
-﻿namespace Cef.OIDC.Pages.IdentityResources
+﻿namespace Cef.OIDC.Pages.DeviceFlowCodes
 {
     using System.Threading.Tasks;
     using IdentityServer4.EntityFramework.Entities;
@@ -10,25 +10,25 @@
     [Authorize(Roles = "Admin")]
     public class DeleteModel : PageModel
     {
-        private readonly IConfigurationDbContext _context;
+        private readonly IPersistedGrantDbContext _context;
 
-        public DeleteModel(IConfigurationDbContext context)
+        public DeleteModel(IPersistedGrantDbContext context)
         {
             _context = context;
         }
 
         [BindProperty]
-        public IdentityResource IdentityResource { get; set; }
+        public DeviceFlowCodes DeviceFlowCode { get; set; }
 
-        public async Task<IActionResult> OnGetAsync([FromRoute] int id)
+        public async Task<IActionResult> OnGetAsync([FromRoute] string userCode)
         {
-            if (id <= 0)
+            if (string.IsNullOrEmpty(userCode))
             {
                 return NotFound();
             }
 
-            IdentityResource = await _context.IdentityResources.FindAsync(id);
-            if (IdentityResource == null)
+            DeviceFlowCode = await _context.DeviceFlowCodes.FindAsync(userCode);
+            if (DeviceFlowCode == null)
             {
                 return NotFound();
             }
@@ -38,18 +38,18 @@
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (IdentityResource.Id <= 0)
+            if (string.IsNullOrEmpty(DeviceFlowCode.UserCode))
             {
                 return Page();
             }
 
-            var identityResource = await _context.IdentityResources.FindAsync(IdentityResource.Id);
-            if (identityResource == null)
+            var deviceFlowCode = await _context.DeviceFlowCodes.FindAsync(DeviceFlowCode.UserCode);
+            if (deviceFlowCode == null)
             {
                 return Page();
             }
 
-            _context.IdentityResources.Remove(identityResource);
+            _context.DeviceFlowCodes.Remove(deviceFlowCode);
             await _context.SaveChangesAsync();
             return RedirectToPage("./Index");
         }

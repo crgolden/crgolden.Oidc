@@ -46,7 +46,6 @@
                 .Select(x => new RoleClaim
                 {
                     Id = x.Id,
-                    RoleId = x.RoleId,
                     ClaimType = x.ClaimType,
                     ClaimValue = x.ClaimValue
                 });
@@ -71,12 +70,12 @@
 
             if (Role.RoleClaims != null)
             {
-                foreach (var roleClaim in Role.RoleClaims.Where(x => !role.RoleClaims.Any(y => y.ClaimType.Equals(x.ClaimType))))
+                foreach (var roleClaim in Role.RoleClaims.Where(x => x.Id == 0))
                 {
                     await _roleManager.AddClaimAsync(role, roleClaim.ToClaim());
                 }
 
-                var roleClaims = role.RoleClaims.Where(x => !Role.RoleClaims.Any(y => y.ClaimType.Equals(x.ClaimType))).ToHashSet();
+                var roleClaims = role.RoleClaims.Where(x => !Role.RoleClaims.Any(y => y.Id.Equals(x.Id))).ToHashSet();
                 foreach (var roleClaim in roleClaims)
                 {
                     await _roleManager.RemoveClaimAsync(role, roleClaim.ToClaim());

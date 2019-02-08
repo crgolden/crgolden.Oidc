@@ -4,7 +4,7 @@
 @model ClaimsModel
 
 @{
-    ViewData["Title"] = "Role Claims";
+    ViewData["Title"] = $"\"{Model.Role.Name}\" Claims";
 }
 
 @(Html.Kendo().Grid(Model.Claims)
@@ -12,8 +12,8 @@
       .ToolBar(toolbar => toolbar.ClientTemplateId("claimsToolbarTemplate"))
       .Columns(columns =>
       {
-          columns.Bound(c => c.ClaimType);
-          columns.Bound(c => c.ClaimValue);
+          columns.Bound(roleClaim => roleClaim.ClaimType);
+          columns.Bound(roleClaim => roleClaim.ClaimValue);
       })
       .Sortable(sort => sort.AllowUnsort(false))
       .Filterable(filterable => filterable.Mode(GridFilterMode.Menu))

@@ -3,7 +3,7 @@
 @model UsersModel
 
 @{
-    ViewData["Title"] = "Edit Role Users";
+    ViewData["Title"] = $"Edit \"{Model.Role.Name}\" Users";
 }
 
 <form method="post">
@@ -21,7 +21,7 @@
           .Columns(columns =>
           {
               columns.Select().Width(50);
-              columns.Bound(c => c.Email);
+              columns.Bound(roleUser => roleUser.Email);
           })
           .Sortable(sort => sort.AllowUnsort(false))
           .Filterable(filterable => filterable.Mode(GridFilterMode.Menu))
@@ -32,7 +32,7 @@
               .DataBound("usersDataBound"))
           .DataSource(dataSource => dataSource
               .Ajax()
-              .Model(model => model.Id(p => p.Id))
+              .Model(model => model.Id(roleUser => roleUser.Id))
               .Sort(sort => sort.Add(nameof(Models.User.Email)).Ascending())
               .PageSize(5)
               .ServerOperation(false))

@@ -3,13 +3,13 @@
 @model UsersModel
 
 @{
-    ViewData["Title"] = "Role Users";
+    ViewData["Title"] = $"\"{Model.Role.Name}\" Users";
 }
 
 @(Html.Kendo().Grid(Model.Users)
       .Name("usersGrid")
       .ToolBar(toolbar => toolbar.ClientTemplateId("usersToolbarTemplate"))
-      .Columns(columns => columns.Bound(c => c.Email))
+      .Columns(columns => columns.Bound(roleUser => roleUser.Email))
       .Sortable(sort => sort.AllowUnsort(false))
       .Filterable(filterable => filterable.Mode(GridFilterMode.Menu))
       .Pageable(pageable => pageable.ButtonCount(5))

@@ -6,7 +6,6 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
-    using Microsoft.EntityFrameworkCore;
 
     [Authorize(Roles = "Admin")]
     public class DeleteModel : PageModel
@@ -28,7 +27,7 @@
                 return NotFound();
             }
 
-            Client = await _context.Clients.SingleOrDefaultAsync(x => x.Id.Equals(id));
+            Client = await _context.Clients.FindAsync(id);
             if (Client == null)
             {
                 return NotFound();
@@ -41,10 +40,10 @@
         {
             if (Client.Id <= 0)
             {
-                return NotFound();
+                return Page();
             }
 
-            var client = await _context.Clients.SingleOrDefaultAsync(x => x.Id == Client.Id);
+            var client = await _context.Clients.FindAsync(Client.Id);
             if (client == null)
             {
                 return Page();

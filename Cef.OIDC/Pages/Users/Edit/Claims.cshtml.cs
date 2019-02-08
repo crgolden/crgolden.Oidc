@@ -48,7 +48,6 @@
                 .Select(x => new UserClaim
                 {
                     Id = x.Id,
-                    UserId = x.UserId,
                     ClaimType = x.ClaimType,
                     ClaimValue = x.ClaimValue
                 });
@@ -73,13 +72,20 @@
 
             if (UserModel.Claims != null)
             {
+                foreach (var userModelClaim in UserModel.Claims.Where(x => x.Id > 0))
+                {
+                    var claim = user.Claims.SingleOrDefault(x => x.Id.Equals(userModelClaim.Id));
+                    if (claim == null) continue;
+                    claim.ClaimValue = userModelClaim.ClaimValue;
+                }
+
                 await _userManager.AddClaimsAsync(user, UserModel.Claims
-                    .Where(x => !user.Claims.Any(y => y.ClaimType.Equals(x.ClaimType)))
+                    .Where(x => x.Id == 0)
                     .Select(x => x.ToClaim()));
 
                 await _userManager.RemoveClaimsAsync(user, user.Claims
                     .Where(x => !x.ClaimType.Equals(ClaimTypes.Role) &&
-                                !UserModel.Claims.Any(y => y.ClaimType.Equals(x.ClaimType)))
+                                !UserModel.Claims.Any(y => y.Id.Equals(x.Id)))
                     .Select(x => x.ToClaim()));
             }
             else

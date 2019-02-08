@@ -2,19 +2,15 @@
 @model DeleteModel
 
 @{
-    ViewData["Title"] = "Delete Role";
+    ViewData["Title"] = $"Delete \"{Model.Role.Name}\"";
 }
 
 <div class="row">
     <div class="col">
         <hr />
-        <div class="row">
-            <div class="col">
-                <h2>
-                    <i class="fal fa-id-badge"></i> @ViewData["Title"]
-                </h2>
-            </div>
-        </div>
+        <h2>
+            <i class="fal fa-id-badge"></i> @ViewData["Title"]
+        </h2>
         <hr />
     </div>
 </div>

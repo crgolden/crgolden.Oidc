@@ -31,7 +31,7 @@
     <div class="col">
         @(Html.Kendo().Grid(Model.Roles)
               .Name("rolesGrid")
-              .Columns(columns => columns.Bound(c => c.Name))
+              .Columns(columns => columns.Bound(role => role.Name))
               .Sortable(sort => sort.AllowUnsort(false))
               .Filterable(filterable => filterable.Mode(GridFilterMode.Menu))
               .Pageable(pageable => pageable.ButtonCount(5))

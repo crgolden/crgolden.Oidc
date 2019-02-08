@@ -4,13 +4,13 @@
 @model RolesModel
 
 @{
-    ViewData["Title"] = "User Roles";
+    ViewData["Title"] = $"\"{Model.UserModel.Email}\" Roles";
 }
 
 @(Html.Kendo().Grid(Model.Roles)
       .Name("rolesGrid")
       .ToolBar(toolbar => toolbar.ClientTemplateId("rolesToolbarTemplate"))
-      .Columns(columns => columns.Bound(c => c.Name))
+      .Columns(columns => columns.Bound(userRole => userRole.Name))
       .Sortable(sort => sort.AllowUnsort(false))
       .Filterable(filterable => filterable.Mode(GridFilterMode.Menu))
       .Pageable(pageable => pageable.ButtonCount(5))

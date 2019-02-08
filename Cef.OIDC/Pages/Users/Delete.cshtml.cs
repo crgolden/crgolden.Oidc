@@ -41,7 +41,7 @@
         {
             if (UserModel.Id.Equals(Guid.Empty))
             {
-                return NotFound();
+                return Page();
             }
 
             var user = await _userManager.FindByIdAsync($"{UserModel.Id}");

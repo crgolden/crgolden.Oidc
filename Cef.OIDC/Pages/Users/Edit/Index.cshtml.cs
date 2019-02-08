@@ -50,8 +50,14 @@
                 return Page();
             }
 
+            user.EmailConfirmed = UserModel.EmailConfirmed;
+            user.TwoFactorEnabled = UserModel.TwoFactorEnabled;
+            user.PhoneNumberConfirmed = UserModel.PhoneNumberConfirmed;
+            user.LockoutEnabled = UserModel.LockoutEnabled;
             user.Email = UserModel.Email;
             user.UserName = UserModel.Email;
+            user.PhoneNumber = UserModel.PhoneNumber;
+            user.AccessFailedCount = UserModel.AccessFailedCount;
             await _userManager.UpdateAsync(user);
             return RedirectToPage("../Details/Index", new { UserModel.Id });
         }

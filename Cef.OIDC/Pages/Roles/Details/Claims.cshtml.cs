@@ -45,8 +45,6 @@
             Claims = Role.RoleClaims
                 .Select(x => new RoleClaim
                 {
-                    Id = x.Id,
-                    RoleId = x.RoleId,
                     ClaimType = x.ClaimType,
                     ClaimValue = x.ClaimValue
                 });

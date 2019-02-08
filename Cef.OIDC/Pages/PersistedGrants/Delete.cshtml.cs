@@ -1,4 +1,4 @@
-﻿namespace Cef.OIDC.Pages.IdentityResources
+﻿namespace Cef.OIDC.Pages.PersistedGrants
 {
     using System.Threading.Tasks;
     using IdentityServer4.EntityFramework.Entities;
@@ -10,25 +10,25 @@
     [Authorize(Roles = "Admin")]
     public class DeleteModel : PageModel
     {
-        private readonly IConfigurationDbContext _context;
+        private readonly IPersistedGrantDbContext _context;
 
-        public DeleteModel(IConfigurationDbContext context)
+        public DeleteModel(IPersistedGrantDbContext context)
         {
             _context = context;
         }
 
         [BindProperty]
-        public IdentityResource IdentityResource { get; set; }
+        public PersistedGrant PersistedGrant { get; set; }
 
-        public async Task<IActionResult> OnGetAsync([FromRoute] int id)
+        public async Task<IActionResult> OnGetAsync([FromRoute] string key)
         {
-            if (id <= 0)
+            if (string.IsNullOrEmpty(key))
             {
                 return NotFound();
             }
 
-            IdentityResource = await _context.IdentityResources.FindAsync(id);
-            if (IdentityResource == null)
+            PersistedGrant = await _context.PersistedGrants.FindAsync(key);
+            if (PersistedGrant == null)
             {
                 return NotFound();
             }
@@ -38,18 +38,18 @@
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (IdentityResource.Id <= 0)
+            if (string.IsNullOrEmpty(PersistedGrant.Key))
             {
                 return Page();
             }
 
-            var identityResource = await _context.IdentityResources.FindAsync(IdentityResource.Id);
-            if (identityResource == null)
+            var persistedGrant = await _context.PersistedGrants.FindAsync(PersistedGrant.Key);
+            if (persistedGrant == null)
             {
                 return Page();
             }
 
-            _context.IdentityResources.Remove(identityResource);
+            _context.PersistedGrants.Remove(persistedGrant);
             await _context.SaveChangesAsync();
             return RedirectToPage("./Index");
         }

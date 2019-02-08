@@ -4,7 +4,7 @@
 @model ClaimsModel
 
 @{
-    ViewData["Title"] = "Edit Role Claims";
+    ViewData["Title"] = $"Edit \"{Model.Role.Name}\" Claims";
 }
 
 <form method="post">
@@ -13,6 +13,7 @@
         var roleClaims = Model.Claims.ToArray();
         for (var i = 0; i < roleClaims.Length; i++)
         {
+            <input type="hidden" name="Role.RoleClaims[@i].Id" value="@roleClaims[i].Id" />
             <input type="hidden" name="Role.RoleClaims[@i].ClaimType" value="@roleClaims[i].ClaimType" />
             <input type="hidden" name="Role.RoleClaims[@i].ClaimValue" value="@roleClaims[i].ClaimValue" />
         }
@@ -25,16 +26,16 @@
               .DisplayDeleteConfirmation(false))
           .Columns(columns =>
           {
-              columns.Bound(c => c.ClaimType);
-              columns.Bound(c => c.ClaimValue);
-              columns.Command(command => command.Destroy());
+              columns.Bound(roleClaim => roleClaim.ClaimType);
+              columns.Bound(roleClaim => roleClaim.ClaimValue);
+              columns.Command(command => command.Destroy()).Width(200);
           })
           .Sortable(sort => sort.AllowUnsort(false))
           .Filterable(filterable => filterable.Mode(GridFilterMode.Menu))
           .Pageable(pageable => pageable.ButtonCount(5))
           .DataSource(dataSource => dataSource
               .Ajax()
-              .Model(model => model.Id(p => p.Id))
+              .Model(model => model.Id(roleClaim => roleClaim.Id))
               .Events(events => events.Change("claimsChange"))
               .Sort(sort => sort.Add(nameof(RoleClaim.ClaimType)).Ascending())
               .PageSize(5)
@@ -73,6 +74,11 @@
             $('form').append(event.sender.data().filter(claim => {
                 return claim.ClaimType.length > 0 && claim.ClaimValue.length > 0;
             }).reduce((inputs, claim, index) => {
+                inputs.push($('<input>', {
+                    type: 'hidden',
+                    name: `Role.RoleClaims[${index}].Id`,
+                    value: claim.Id
+                }));
                 inputs.push($('<input>', {
                     type: 'hidden',
                     name: `Role.RoleClaims[${index}].ClaimType`,

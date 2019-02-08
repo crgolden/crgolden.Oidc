@@ -44,7 +44,6 @@
 
             Users = Role.UserRoles.Select(x => new User
             {
-                Id = x.User.Id,
                 Email = x.User.Email
             });
 

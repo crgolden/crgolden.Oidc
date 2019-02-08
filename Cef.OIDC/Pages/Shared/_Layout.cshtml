@@ -117,6 +117,13 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link @(string.Equals(activePath, "/ApiResources/Index", StringComparison.OrdinalIgnoreCase) ? "active" : null)"
+                               asp-page="/ApiResources/Index"
+                               title="API Resources">
+                                <i class="fal fa-database"></i> API Resources
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link @(string.Equals(activePath, "/Clients/Index", StringComparison.OrdinalIgnoreCase) ? "active" : null)"
                                asp-page="/Clients/Index"
                                title="Clients">
@@ -124,10 +131,17 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link @(string.Equals(activePath, "/ApiResources/Index", StringComparison.OrdinalIgnoreCase) ? "active" : null)"
-                               asp-page="/ApiResources/Index"
-                               title="API Resources">
-                                <i class="fal fa-database"></i> API Resources
+                            <a class="nav-link @(string.Equals(activePath, "/DeviceFlowCodes/Index", StringComparison.OrdinalIgnoreCase) ? "active" : null)"
+                               asp-page="/DeviceFlowCodes/Index"
+                               title="Device Flow Codes">
+                                <i class="fal fa-passport"></i> Device Flow Codes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(string.Equals(activePath, "/PersistedGrants/Index", StringComparison.OrdinalIgnoreCase) ? "active" : null)"
+                               asp-page="/PersistedGrants/Index"
+                               title="Persisted Grants">
+                                <i class="fal fa-handshake"></i> Persisted Grants
                             </a>
                         </li>
                         <li class="nav-item">

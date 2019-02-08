@@ -30,6 +30,7 @@
 
         public IActionResult OnGet()
         {
+            Role = new Role();
             Users = _userManager.Users;
 
             return Page();

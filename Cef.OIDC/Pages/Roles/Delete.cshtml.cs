@@ -46,7 +46,7 @@
         {
             if (Role.Id.Equals(Guid.Empty))
             {
-                return NotFound();
+                return Page();
             }
 
             var role = await _roleManager.FindByIdAsync($"{Role.Id}");

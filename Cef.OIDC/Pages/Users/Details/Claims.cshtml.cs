@@ -47,8 +47,6 @@
                 .Where(x => !x.ClaimType.Equals(ClaimTypes.Role))
                 .Select(x => new UserClaim
                 {
-                    Id = x.Id,
-                    UserId = x.UserId,
                     ClaimType = x.ClaimType,
                     ClaimValue = x.ClaimValue
                 });

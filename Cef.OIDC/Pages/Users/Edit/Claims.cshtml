@@ -4,7 +4,7 @@
 @model ClaimsModel
 
 @{
-    ViewData["Title"] = "Edit User Claims";
+    ViewData["Title"] = $"Edit \"{Model.UserModel.Email}\" Claims";
 }
 
 <form method="post">
@@ -13,6 +13,7 @@
         var userClaims = Model.Claims.ToArray();
         for (var i = 0; i < userClaims.Length; i++)
         {
+            <input type="hidden" name="UserModel.Claims[@i].Id" value="@userClaims[i].Id" />
             <input type="hidden" name="UserModel.Claims[@i].ClaimType" value="@userClaims[i].ClaimType" />
             <input type="hidden" name="UserModel.Claims[@i].ClaimValue" value="@userClaims[i].ClaimValue" />
         }
@@ -25,16 +26,16 @@
               .DisplayDeleteConfirmation(false))
           .Columns(columns =>
           {
-              columns.Bound(c => c.ClaimType);
-              columns.Bound(c => c.ClaimValue);
-              columns.Command(command => command.Destroy());
+              columns.Bound(userClaim => userClaim.ClaimType);
+              columns.Bound(userClaim => userClaim.ClaimValue);
+              columns.Command(command => command.Destroy()).Width(200);
           })
           .Sortable(sort => sort.AllowUnsort(false))
           .Filterable(filterable => filterable.Mode(GridFilterMode.Menu))
           .Pageable(pageable => pageable.ButtonCount(5))
           .DataSource(dataSource => dataSource
               .Ajax()
-              .Model(model => model.Id(p => p.Id))
+              .Model(model => model.Id(userClaim => userClaim.Id))
               .Events(events => events.Change("claimsChange"))
               .Sort(sort => sort.Add(nameof(UserClaim.ClaimType)).Ascending())
               .PageSize(5)
@@ -62,7 +63,7 @@
         <h4>
             <i class="fal fa-id-card"></i> Claims
             <button class="k-button k-button-icontext k-grid-add float-right">
-                <span class="k-icon k-i-plus"></span>Add Claim
+                <span class="k-icon k-i-plus"></span>Add
             </button>
         </h4>
     </script>
@@ -73,6 +74,11 @@
             $('form').append(event.sender.data().filter(claim => {
                 return claim.ClaimType.length > 0 && claim.ClaimValue.length > 0;
             }).reduce((inputs, claim, index) => {
+                inputs.push($('<input>', {
+                    type: 'hidden',
+                    name: `UserModel.Claims[${index}].Id`,
+                    value: claim.Id
+                }));
                 inputs.push($('<input>', {
                     type: 'hidden',
                     name: `UserModel.Claims[${index}].ClaimType`,
