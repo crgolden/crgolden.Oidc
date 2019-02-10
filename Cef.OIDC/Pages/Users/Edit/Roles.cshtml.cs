@@ -16,12 +16,12 @@
     [Authorize(Roles = "Admin")]
     public class RolesModel : PageModel
     {
-        private readonly RoleManager<Role> _roleManager;
         private readonly UserManager<User> _userManager;
+        private readonly RoleManager<Role> _roleManager;
 
         public RolesModel(
-            RoleManager<Role> roleManager,
-            UserManager<User> userManager)
+            UserManager<User> userManager,
+            RoleManager<Role> roleManager)
         {
             _roleManager = roleManager;
             _userManager = userManager;
@@ -42,6 +42,7 @@
             UserModel = await _userManager.Users
                 .Include(x => x.UserRoles)
                 .SingleOrDefaultAsync(x => x.Id.Equals(id));
+
             if (UserModel == null)
             {
                 return NotFound();
@@ -58,7 +59,7 @@
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid || UserModel.Id.Equals(Guid.Empty))
+            if (UserModel.Id.Equals(Guid.Empty))
             {
                 return Page();
             }
@@ -67,6 +68,7 @@
                 .Include(x => x.UserRoles)
                 .Include(x => x.Claims)
                 .SingleOrDefaultAsync(x => x.Id.Equals(UserModel.Id));
+
             if (user == null)
             {
                 return Page();

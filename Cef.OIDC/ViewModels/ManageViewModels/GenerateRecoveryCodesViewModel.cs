@@ -1,7 +1,9 @@
 ﻿namespace Cef.OIDC.ViewModels.ManageViewModels
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
+    [ExcludeFromCodeCoverage]
     public class GenerateRecoveryCodesViewModel
     {
         public IEnumerable<string> RecoveryCodes { get; set; }

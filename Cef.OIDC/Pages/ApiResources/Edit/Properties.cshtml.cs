@@ -36,6 +36,7 @@
             ApiResource = await _context.ApiResources
                 .Include(x => x.Properties)
                 .SingleOrDefaultAsync(x => x.Id.Equals(id));
+
             if (ApiResource == null)
             {
                 return NotFound();
@@ -54,7 +55,7 @@
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid || ApiResource.Id <= 0)
+            if (ApiResource.Id <= 0)
             {
                 return Page();
             }
@@ -62,6 +63,7 @@
             var apiResource = await _context.ApiResources
                 .Include(x => x.Properties)
                 .SingleOrDefaultAsync(x => x.Id.Equals(ApiResource.Id));
+
             if (apiResource == null)
             {
                 return Page();
@@ -71,8 +73,7 @@
             {
                 foreach (var apiResourceProperty in ApiResource.Properties.Where(x => x.Id > 0))
                 {
-                    var property = apiResource.Properties.SingleOrDefault(x => x.Id.Equals(apiResourceProperty.Id));
-                    if (property == null) continue;
+                    var property = apiResource.Properties.Single(x => x.Id.Equals(apiResourceProperty.Id));
                     property.Key = apiResourceProperty.Key;
                     property.Value = apiResourceProperty.Value;
                 }

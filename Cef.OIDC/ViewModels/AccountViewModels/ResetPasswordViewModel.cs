@@ -1,7 +1,9 @@
 ﻿namespace Cef.OIDC.ViewModels.AccountViewModels
 {
     using System.ComponentModel.DataAnnotations;
+    using System.Diagnostics.CodeAnalysis;
 
+    [ExcludeFromCodeCoverage]
     public class ResetPasswordViewModel
     {
         [Required]

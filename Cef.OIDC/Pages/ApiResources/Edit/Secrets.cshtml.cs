@@ -26,7 +26,7 @@
 
         public IEnumerable<ApiSecret> Secrets { get; set; }
 
-        public async Task<IActionResult> OnGet([FromRoute] int id)
+        public async Task<IActionResult> OnGetAsync([FromRoute] int id)
         {
             if (id <= 0)
             {
@@ -36,6 +36,11 @@
             ApiResource = await _context.ApiResources
                 .Include(x => x.Secrets)
                 .SingleOrDefaultAsync(x => x.Id == id);
+
+            if (ApiResource == null)
+            {
+                return NotFound();
+            }
 
             Secrets = ApiResource.Secrets
                 .Select(x => new ApiSecret
@@ -53,7 +58,7 @@
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid || ApiResource.Id <= 0)
+            if (ApiResource.Id <= 0)
             {
                 return Page();
             }
@@ -61,6 +66,7 @@
             var apiResource = await _context.ApiResources
                 .Include(x => x.Secrets)
                 .SingleOrDefaultAsync(x => x.Id == ApiResource.Id);
+
             if (apiResource == null)
             {
                 return Page();
@@ -70,8 +76,7 @@
             {
                 foreach (var apiSecret in ApiResource.Secrets.Where(x => x.Id > 0))
                 {
-                    var secret = apiResource.Secrets.SingleOrDefault(x => x.Id.Equals(apiSecret.Id));
-                    if (secret == null) continue;
+                    var secret = apiResource.Secrets.Single(x => x.Id.Equals(apiSecret.Id));
                     secret.Type = apiSecret.Type;
                     secret.Value = apiSecret.Value;
                     secret.Description = apiSecret.Description;

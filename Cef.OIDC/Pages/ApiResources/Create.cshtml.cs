@@ -29,11 +29,6 @@
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
             ApiResource.Created = DateTime.UtcNow;
             _context.ApiResources.Add(ApiResource);
             await _context.SaveChangesAsync();

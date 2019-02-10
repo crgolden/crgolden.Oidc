@@ -29,11 +29,6 @@
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
             Client.Created = DateTime.UtcNow;
             _context.Clients.Add(Client);
             await _context.SaveChangesAsync();

@@ -29,11 +29,6 @@
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
             IdentityResource.Created = DateTime.UtcNow;
             _context.IdentityResources.Add(IdentityResource);
             await _context.SaveChangesAsync();

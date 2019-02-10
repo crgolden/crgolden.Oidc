@@ -1,6 +1,7 @@
 ﻿namespace Cef.OIDC.Extensions
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Security.Claims;
     using System.Security.Cryptography.X509Certificates;
     using System.Threading.Tasks;
@@ -13,6 +14,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using Options;
 
+    [ExcludeFromCodeCoverage]
     public static class ServiceCollectionExtensions
     {
         public static void AddIdentityServer(this IServiceCollection services,

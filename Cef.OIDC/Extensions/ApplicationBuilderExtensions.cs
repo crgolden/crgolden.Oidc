@@ -1,9 +1,11 @@
 ﻿namespace Cef.OIDC.Extensions
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.Configuration;
 
+    [ExcludeFromCodeCoverage]
     public static class ApplicationBuilderExtensions
     {
         public static void UseCors(this IApplicationBuilder app, IConfiguration configuration)

@@ -36,6 +36,7 @@
             Client = await _context.Clients
                 .Include(x => x.Claims)
                 .SingleOrDefaultAsync(x => x.Id.Equals(id));
+
             if (Client == null)
             {
                 return NotFound();
@@ -54,7 +55,7 @@
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid || Client.Id <= 0)
+            if (Client.Id <= 0)
             {
                 return Page();
             }
@@ -62,6 +63,7 @@
             var client = await _context.Clients
                 .Include(x => x.Claims)
                 .SingleOrDefaultAsync(x => x.Id.Equals(Client.Id));
+
             if (client == null)
             {
                 return Page();
@@ -70,21 +72,26 @@
             client.Updated = DateTime.UtcNow;
             if (Client.Claims != null)
             {
+                foreach (var clientClaim in Client.Claims.Where(x => x.Id > 0))
+                {
+                    var claim = client.Claims.Single(x => x.Id.Equals(clientClaim.Id));
+                    claim.Type = clientClaim.Type;
+                    claim.Value = clientClaim.Value;
+                }
 
-                client.Claims.AddRange(Client.Claims.Where(x => !client.Claims.Any(y => y.Type.Equals(x.Type))));
-                var claims = client.Claims.Where(x => !Client.Claims.Any(y => y.Type.Equals(x.Type))).ToHashSet();
+                client.Claims.AddRange(Client.Claims.Where(x => x.Id == 0));
+                var claims = client.Claims.Where(x => !Client.Claims.Any(y => y.Id.Equals(x.Id))).ToHashSet();
                 foreach (var claim in claims)
                 {
                     client.Claims.Remove(claim);
                 }
-                await _context.SaveChangesAsync();
             }
             else
             {
                 client.Claims = new List<ClientClaim>();
-                await _context.SaveChangesAsync();
             }
 
+            await _context.SaveChangesAsync();
             return RedirectToPage("../Details/Claims", new { Client.Id });
         }
     }

@@ -36,6 +36,7 @@
             Client = await _context.Clients
                 .Include(x => x.Properties)
                 .SingleOrDefaultAsync(x => x.Id.Equals(id));
+
             if (Client == null)
             {
                 return NotFound();
@@ -54,7 +55,7 @@
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid || Client.Id <= 0)
+            if (Client.Id <= 0)
             {
                 return Page();
             }
@@ -62,6 +63,7 @@
             var client = await _context.Clients
                 .Include(x => x.Properties)
                 .SingleOrDefaultAsync(x => x.Id.Equals(Client.Id));
+
             if (client == null)
             {
                 return Page();
@@ -71,8 +73,7 @@
             {
                 foreach (var clientProperty in Client.Properties.Where(x => x.Id > 0))
                 {
-                    var property = client.Properties.SingleOrDefault(x => x.Id.Equals(clientProperty.Id));
-                    if (property == null) continue;
+                    var property = client.Properties.Single(x => x.Id.Equals(clientProperty.Id));
                     property.Key = clientProperty.Key;
                     property.Value = clientProperty.Value;
                 }

@@ -39,7 +39,7 @@
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid || Role.Id.Equals(Guid.Empty))
+            if (Role.Id.Equals(Guid.Empty))
             {
                 return Page();
             }

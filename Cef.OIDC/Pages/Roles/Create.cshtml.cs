@@ -38,11 +38,6 @@
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
             if (Role.UserRoles != null)
             {
                 foreach (var userRole in Role.UserRoles)

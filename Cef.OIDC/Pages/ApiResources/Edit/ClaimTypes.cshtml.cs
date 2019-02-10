@@ -36,6 +36,7 @@
             ApiResource = await _context.ApiResources
                 .Include(x => x.UserClaims)
                 .SingleOrDefaultAsync(x => x.Id.Equals(id));
+
             if (ApiResource == null)
             {
                 return NotFound();
@@ -53,7 +54,7 @@
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid || ApiResource.Id <= 0)
+            if (ApiResource.Id <= 0)
             {
                 return Page();
             }
@@ -61,6 +62,7 @@
             var apiResource = await _context.ApiResources
                 .Include(x => x.UserClaims)
                 .SingleOrDefaultAsync(x => x.Id.Equals(ApiResource.Id));
+
             if (apiResource == null)
             {
                 return Page();
@@ -68,18 +70,17 @@
 
             if (ApiResource.UserClaims != null)
             {
-                foreach (var apiResourceClaim in ApiResource.UserClaims.Where(x => x.Id > 0))
+                foreach (var apiResourceClaimType in ApiResource.UserClaims.Where(x => x.Id > 0))
                 {
-                    var claim = apiResource.UserClaims.SingleOrDefault(x => x.Id.Equals(apiResourceClaim.Id));
-                    if (claim == null) continue;
-                    claim.Type = apiResourceClaim.Type;
+                    var claimType = apiResource.UserClaims.Single(x => x.Id.Equals(apiResourceClaimType.Id));
+                    claimType.Type = apiResourceClaimType.Type;
                 }
 
                 apiResource.UserClaims.AddRange(ApiResource.UserClaims.Where(x => x.Id == 0));
-                var claims = apiResource.UserClaims.Where(x => !ApiResource.UserClaims.Any(y => y.Id.Equals(x.Id))).ToHashSet();
-                foreach (var claim in claims)
+                var claimTypes = apiResource.UserClaims.Where(x => !ApiResource.UserClaims.Any(y => y.Id.Equals(x.Id))).ToHashSet();
+                foreach (var claimType in claimTypes)
                 {
-                    apiResource.UserClaims.Remove(claim);
+                    apiResource.UserClaims.Remove(claimType);
                 }
             }
             else

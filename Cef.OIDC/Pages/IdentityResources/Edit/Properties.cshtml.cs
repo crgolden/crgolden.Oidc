@@ -36,6 +36,7 @@
             IdentityResource = await _context.IdentityResources
                 .Include(x => x.Properties)
                 .SingleOrDefaultAsync(x => x.Id.Equals(id));
+
             if (IdentityResource == null)
             {
                 return NotFound();
@@ -54,7 +55,7 @@
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid || IdentityResource.Id <= 0)
+            if (IdentityResource.Id <= 0)
             {
                 return Page();
             }
@@ -62,6 +63,7 @@
             var identityResource = await _context.IdentityResources
                 .Include(x => x.Properties)
                 .SingleOrDefaultAsync(x => x.Id.Equals(IdentityResource.Id));
+
             if (identityResource == null)
             {
                 return Page();
@@ -71,8 +73,7 @@
             {
                 foreach (var identityResourceProperty in IdentityResource.Properties.Where(x => x.Id > 0))
                 {
-                    var property = identityResource.Properties.SingleOrDefault(x => x.Id.Equals(identityResourceProperty.Id));
-                    if (property == null) continue;
+                    var property = identityResource.Properties.Single(x => x.Id.Equals(identityResourceProperty.Id));
                     property.Key = identityResourceProperty.Key;
                     property.Value = identityResourceProperty.Value;
                 }

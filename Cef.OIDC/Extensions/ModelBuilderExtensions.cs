@@ -1,9 +1,11 @@
 ﻿namespace Cef.OIDC.Extensions
 {
+    using System.Diagnostics.CodeAnalysis;
     using Models;
     using Relationships;
     using Microsoft.EntityFrameworkCore;
 
+    [ExcludeFromCodeCoverage]
     public static class ModelBuilderExtensions
     {
         public static void ConfigureIdentityContext(this ModelBuilder modelBuilder)

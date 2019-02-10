@@ -26,7 +26,7 @@
 
         public IEnumerable<ApiScope> Scopes { get; set; }
 
-        public async Task<IActionResult> OnGet([FromRoute] int id)
+        public async Task<IActionResult> OnGetAsync([FromRoute] int id)
         {
             if (id <= 0)
             {
@@ -36,6 +36,11 @@
             ApiResource = await _context.ApiResources
                 .Include(x => x.Scopes)
                 .SingleOrDefaultAsync(x => x.Id == id);
+
+            if (ApiResource == null)
+            {
+                return NotFound();
+            }
 
             Scopes = ApiResource.Scopes.Select(x => new ApiScope
                 {
@@ -53,7 +58,7 @@
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid || ApiResource.Id <= 0)
+            if (ApiResource.Id <= 0)
             {
                 return Page();
             }
@@ -61,6 +66,7 @@
             var apiResource = await _context.ApiResources
                 .Include(x => x.Scopes)
                 .SingleOrDefaultAsync(x => x.Id == ApiResource.Id);
+
             if (apiResource == null)
             {
                 return Page();
@@ -70,8 +76,7 @@
             {
                 foreach (var apiResourceScope in ApiResource.Scopes.Where(x => x.Id > 0))
                 {
-                    var scope = apiResource.Scopes.SingleOrDefault(x => x.Id == apiResourceScope.Id);
-                    if (scope == null) continue;
+                    var scope = apiResource.Scopes.Single(x => x.Id == apiResourceScope.Id);
                     scope.Name = apiResourceScope.Name;
                     scope.DisplayName = apiResourceScope.DisplayName;
                     scope.Description = apiResourceScope.Description;

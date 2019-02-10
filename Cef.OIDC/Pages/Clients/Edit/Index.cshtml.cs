@@ -7,7 +7,6 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
-    using Microsoft.EntityFrameworkCore;
 
     [Authorize(Roles = "Admin")]
     public class IndexModel : PageModel
@@ -29,7 +28,7 @@
                 return NotFound();
             }
 
-            Client = await _context.Clients.SingleOrDefaultAsync(x => x.Id == id);
+            Client = await _context.Clients.FindAsync(id);
             if (Client == null)
             {
                 return NotFound();
@@ -40,12 +39,12 @@
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid || Client.Id <= 0)
+            if (Client.Id <= 0)
             {
                 return Page();
             }
 
-            var client = await _context.Clients.SingleOrDefaultAsync(x => x.Id == Client.Id);
+            var client = await _context.Clients.FindAsync(Client.Id);
             if (client == null)
             {
                 return Page();

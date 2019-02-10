@@ -6,7 +6,6 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
-    using Microsoft.EntityFrameworkCore;
 
     [Authorize(Roles = "Admin")]
     public class IndexModel : PageModel
@@ -28,7 +27,7 @@
                 return NotFound();
             }
 
-            Client = await _context.Clients.SingleOrDefaultAsync(x => x.Id == id);
+            Client = await _context.Clients.FindAsync(id);
             if (Client == null)
             {
                 return NotFound();

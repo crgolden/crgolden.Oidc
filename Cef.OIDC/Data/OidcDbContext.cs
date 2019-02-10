@@ -1,6 +1,7 @@
 ﻿namespace Cef.OIDC.Data
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Extensions;
     using Models;
@@ -12,6 +13,7 @@
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 
+    [ExcludeFromCodeCoverage]
     public class OidcDbContext : IdentityDbContext<User, Role, Guid, Relationships.UserClaim, UserRole, UserLogin, RoleClaim, UserToken>,
         IConfigurationDbContext,
         IPersistedGrantDbContext

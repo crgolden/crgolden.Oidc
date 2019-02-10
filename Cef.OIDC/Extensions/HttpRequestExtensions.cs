@@ -1,8 +1,10 @@
 ﻿namespace Cef.OIDC.Extensions
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using Microsoft.AspNetCore.Http;
 
+    [ExcludeFromCodeCoverage]
     public static class HttpRequestExtensions
     {
         public static string GetOrigin(this HttpRequest request)

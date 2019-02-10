@@ -1,10 +1,12 @@
 ﻿namespace Cef.OIDC.Extensions
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Text.Encodings.Web;
     using System.Threading.Tasks;
     using Core.Interfaces;
 
+    [ExcludeFromCodeCoverage]
     public static class EmailSenderExtensions
     {
         public static async Task SendConfirmationEmailAsync(this IEmailSender emailSender,

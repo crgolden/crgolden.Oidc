@@ -42,6 +42,7 @@
             Role = await _roleManager.Roles
                 .Include(x => x.UserRoles)
                 .SingleOrDefaultAsync(x => x.Id.Equals(id));
+
             if (Role == null)
             {
                 return NotFound();
@@ -58,7 +59,7 @@
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid || Role.Id.Equals(Guid.Empty))
+            if (Role.Id.Equals(Guid.Empty))
             {
                 return Page();
             }
@@ -66,6 +67,7 @@
             var role = await _roleManager.Roles
                 .Include(x => x.UserRoles)
                 .SingleOrDefaultAsync(x => x.Id.Equals(Role.Id));
+
             if (role == null)
             {
                 return Page();

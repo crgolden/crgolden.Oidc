@@ -13,6 +13,7 @@
         var clientClaims = Model.Claims.ToArray();
         for (var i = 0; i < clientClaims.Length; i++)
         {
+            <input type="hidden" name="Client.Claims[@i].Type" value="@clientClaims[i].Id" />
             <input type="hidden" name="Client.Claims[@i].Type" value="@clientClaims[i].Type" />
             <input type="hidden" name="Client.Claims[@i].Value" value="@clientClaims[i].Value" />
         }
@@ -73,6 +74,11 @@
             $('form').append(event.sender.data().filter(claim => {
                 return claim.Type.length > 0 && claim.Value.length > 0;
             }).reduce((inputs, claim, index) => {
+                inputs.push($('<input>', {
+                    type: 'hidden',
+                    name: `Client.Claims[${index}].Id`,
+                    value: claim.Id
+                }));
                 inputs.push($('<input>', {
                     type: 'hidden',
                     name: `Client.Claims[${index}].Type`,

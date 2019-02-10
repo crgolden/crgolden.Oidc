@@ -26,7 +26,7 @@
 
         public IEnumerable<ClientSecret> Secrets { get; set; }
 
-        public async Task<IActionResult> OnGet([FromRoute] int id)
+        public async Task<IActionResult> OnGetAsync([FromRoute] int id)
         {
             if (id <= 0)
             {
@@ -36,6 +36,11 @@
             Client = await _context.Clients
                 .Include(x => x.ClientSecrets)
                 .SingleOrDefaultAsync(x => x.Id == id);
+
+            if (Client == null)
+            {
+                return NotFound();
+            }
 
             Secrets = Client.ClientSecrets
                 .Select(x => new ClientSecret
@@ -53,7 +58,7 @@
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid || Client.Id <= 0)
+            if (Client.Id <= 0)
             {
                 return Page();
             }
@@ -61,6 +66,7 @@
             var client = await _context.Clients
                 .Include(x => x.ClientSecrets)
                 .SingleOrDefaultAsync(x => x.Id == Client.Id);
+
             if (client == null)
             {
                 return Page();
@@ -70,8 +76,7 @@
             {
                 foreach (var clientSecret in Client.ClientSecrets.Where(x => x.Id > 0))
                 {
-                    var secret = client.ClientSecrets.SingleOrDefault(x => x.Id.Equals(clientSecret.Id));
-                    if (secret == null) continue;
+                    var secret = client.ClientSecrets.Single(x => x.Id.Equals(clientSecret.Id));
                     secret.Type = clientSecret.Type;
                     secret.Value = clientSecret.Value;
                     secret.Description = clientSecret.Description;

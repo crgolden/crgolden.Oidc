@@ -2,9 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using Microsoft.AspNetCore.Identity;
     using Relationships;
 
+    [ExcludeFromCodeCoverage]
     public class Role : IdentityRole<Guid>
     {
         public Role()

@@ -38,6 +38,7 @@
             UserModel = await _userManager.Users
                 .Include(x => x.Claims)
                 .SingleOrDefaultAsync(x => x.Id.Equals(id));
+
             if (UserModel == null)
             {
                 return NotFound();
@@ -57,7 +58,7 @@
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid || UserModel.Id.Equals(Guid.Empty))
+            if (UserModel.Id.Equals(Guid.Empty))
             {
                 return Page();
             }
@@ -65,6 +66,7 @@
             var user = await _userManager.Users
                 .Include(x => x.Claims)
                 .SingleOrDefaultAsync(x => x.Id.Equals(UserModel.Id));
+
             if (user == null)
             {
                 return Page();
@@ -74,9 +76,13 @@
             {
                 foreach (var userModelClaim in UserModel.Claims.Where(x => x.Id > 0))
                 {
-                    var claim = user.Claims.SingleOrDefault(x => x.Id.Equals(userModelClaim.Id));
-                    if (claim == null) continue;
-                    claim.ClaimValue = userModelClaim.ClaimValue;
+                    var claim = user.Claims.Single(x => x.Id.Equals(userModelClaim.Id));
+                    if (claim.ClaimType.Equals(userModelClaim.ClaimType) && claim.ClaimValue.Equals(userModelClaim.ClaimValue))
+                    {
+                        continue;
+                    }
+
+                    await _userManager.ReplaceClaimAsync(user, claim.ToClaim(), userModelClaim.ToClaim());
                 }
 
                 await _userManager.AddClaimsAsync(user, UserModel.Claims

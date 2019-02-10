@@ -39,7 +39,7 @@
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid || IdentityResource.Id <= 0)
+            if (IdentityResource.Id <= 0)
             {
                 return Page();
             }

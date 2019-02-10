@@ -1,12 +1,15 @@
 ﻿namespace Cef.OIDC.Options
 {
+    using System.Diagnostics.CodeAnalysis;
     using Core;
 
+    [ExcludeFromCodeCoverage]
     public class UserOptions
     {
         public UserOption[] Users { get; set; }
     }
 
+    [ExcludeFromCodeCoverage]
     public class UserOption
     {
         public string Email { get; set; }

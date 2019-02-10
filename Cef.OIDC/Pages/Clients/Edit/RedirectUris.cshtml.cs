@@ -36,6 +36,7 @@
             Client = await _context.Clients
                 .Include(x => x.RedirectUris)
                 .SingleOrDefaultAsync(x => x.Id.Equals(id));
+
             if (Client == null)
             {
                 return NotFound();
@@ -53,7 +54,7 @@
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid || Client.Id <= 0)
+            if (Client.Id <= 0)
             {
                 return Page();
             }
@@ -61,6 +62,7 @@
             var client = await _context.Clients
                 .Include(x => x.RedirectUris)
                 .SingleOrDefaultAsync(x => x.Id.Equals(Client.Id));
+
             if (client == null)
             {
                 return Page();
@@ -70,8 +72,7 @@
             {
                 foreach (var clientRedirectUri in Client.RedirectUris.Where(x => x.Id > 0))
                 {
-                    var redirectUri = client.RedirectUris.SingleOrDefault(x => x.Id.Equals(clientRedirectUri.Id));
-                    if (redirectUri == null) continue;
+                    var redirectUri = client.RedirectUris.Single(x => x.Id.Equals(clientRedirectUri.Id));
                     redirectUri.RedirectUri = clientRedirectUri.RedirectUri;
                 }
 

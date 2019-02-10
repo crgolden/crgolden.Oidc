@@ -1,5 +1,8 @@
 ﻿namespace Cef.OIDC.ViewModels.ManageViewModels
 {
+    using System.Diagnostics.CodeAnalysis;
+
+    [ExcludeFromCodeCoverage]
     public class TwoFactorAuthenticationViewModel
     {
         public bool HasAuthenticator { get; set; }

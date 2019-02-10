@@ -26,7 +26,7 @@
 
         public IEnumerable<ClientScope> Scopes { get; set; }
 
-        public async Task<IActionResult> OnGet([FromRoute] int id)
+        public async Task<IActionResult> OnGetAsync([FromRoute] int id)
         {
             if (id <= 0)
             {
@@ -36,6 +36,11 @@
             Client = await _context.Clients
                 .Include(x => x.AllowedScopes)
                 .SingleOrDefaultAsync(x => x.Id == id);
+
+            if (Client == null)
+            {
+                return NotFound();
+            }
 
             Scopes = Client.AllowedScopes.Select(x => new ClientScope
                 {
@@ -48,7 +53,7 @@
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid || Client.Id <= 0)
+            if (Client.Id <= 0)
             {
                 return Page();
             }
@@ -56,6 +61,7 @@
             var client = await _context.Clients
                 .Include(x => x.AllowedScopes)
                 .SingleOrDefaultAsync(x => x.Id == Client.Id);
+
             if (client == null)
             {
                 return Page();
@@ -65,8 +71,7 @@
             {
                 foreach (var clientScope in Client.AllowedScopes.Where(x => x.Id > 0))
                 {
-                    var scope = client.AllowedScopes.SingleOrDefault(x => x.Id == clientScope.Id);
-                    if (scope == null) continue;
+                    var scope = client.AllowedScopes.Single(x => x.Id == clientScope.Id);
                     scope.Scope = clientScope.Scope;
                 }
 

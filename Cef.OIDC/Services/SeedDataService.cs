@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
@@ -19,6 +20,7 @@
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
 
+    [ExcludeFromCodeCoverage]
     public class SeedDataService : ISeedService
     {
         private readonly IConfigurationDbContext _configurationDbContext;
@@ -149,6 +151,7 @@
         }
     }
 
+    [ExcludeFromCodeCoverage]
     public static class SeedData
     {
         public static readonly IEnumerable<Claim> Claims = new Claim[]
