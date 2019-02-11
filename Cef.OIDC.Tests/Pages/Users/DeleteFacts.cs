@@ -109,8 +109,8 @@
         {
             // Arrange
             var user = new User {Id = Guid.NewGuid()};
-           _userManager.Setup(x => x.FindByIdAsync($"{user.Id}")).ReturnsAsync(user);
-           var id = Guid.Empty;
+            _userManager.Setup(x => x.FindByIdAsync($"{user.Id}")).ReturnsAsync(user);
+            var id = Guid.Empty;
             var delete = new DeleteModel(_userManager.Object)
             {
                 UserModel = new User {Id = id}

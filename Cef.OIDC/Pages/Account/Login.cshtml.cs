@@ -57,14 +57,14 @@
             public bool RememberMe { get; set; }
         }
 
-        public async void OnGetAsync(string returnUrl = null)
+        public async Task<IActionResult> OnGetAsync(string returnUrl = null)
         {
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
                 ModelState.AddModelError(string.Empty, ErrorMessage);
             }
 
-            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+            await _signInManager.SignOutAsync();
 
             ExternalLogins = await _signInManager.GetExternalAuthenticationSchemesAsync();
             ReturnUrl = returnUrl ?? Url.Content("~/");
@@ -72,12 +72,12 @@
             {
                 Origin = Request.GetOrigin();
             }
+
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null, string origin = null)
         {
-            if (!ModelState.IsValid) { return Page(); }
-
             returnUrl = returnUrl ?? Url.Content("~/");
             TempData[nameof(Origin)] = origin;
 

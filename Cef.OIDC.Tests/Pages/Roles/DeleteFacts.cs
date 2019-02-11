@@ -135,9 +135,9 @@
         {
             // Arrange
             var role = new Role {Id = Guid.NewGuid()};
-           _roleManager.Setup(x => x.FindByIdAsync($"{role.Id}")).ReturnsAsync(role);
-           var id = Guid.Empty;
-           var delete = new DeleteModel(_roleManager.Object, _userManager.Object)
+            _roleManager.Setup(x => x.FindByIdAsync($"{role.Id}")).ReturnsAsync(role);
+            var id = Guid.Empty;
+            var delete = new DeleteModel(_roleManager.Object, _userManager.Object)
             {
                 Role = new Role {Id = id}
             };
