@@ -44,6 +44,7 @@
                     loggingBuilder.AddAzureWebAppDiagnostics();
                     loggingBuilder.AddApplicationInsights();
                 })
+                .UseApplicationInsights()
                 .UseStartup<Startup>();
     }
 }

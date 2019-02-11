@@ -100,7 +100,7 @@
 
             if (result.RequiresTwoFactor)
             {
-                return RedirectToPage("./LoginWith2fa", new { returnUrl, Input.RememberMe,  });
+                return RedirectToPage("./LoginWith2fa", new { returnUrl, Input.RememberMe  });
             }
 
             if (result.IsLockedOut)
