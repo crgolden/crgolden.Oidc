@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2050
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clarity.Oidc", "Clarity.Oidc\Clarity.Oidc.csproj", "{5DBA4B60-8E1B-4E86-9F13-1E133CF34E75}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EDEAAEE3-ECF6-461F-92E7-B61C40947890}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		NuGet.Config = NuGet.Config
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clarity.Oidc.Tests", "Clarity.Oidc.Tests\Clarity.Oidc.Tests.csproj", "{4634B427-DDE7-4F56-BED0-A76C06A86ED9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5DBA4B60-8E1B-4E86-9F13-1E133CF34E75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DBA4B60-8E1B-4E86-9F13-1E133CF34E75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DBA4B60-8E1B-4E86-9F13-1E133CF34E75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DBA4B60-8E1B-4E86-9F13-1E133CF34E75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4634B427-DDE7-4F56-BED0-A76C06A86ED9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4634B427-DDE7-4F56-BED0-A76C06A86ED9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4634B427-DDE7-4F56-BED0-A76C06A86ED9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4634B427-DDE7-4F56-BED0-A76C06A86ED9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {75CFB888-3A1A-454C-823C-4368A803FBAD}
+	EndGlobalSection
+EndGlobal
