@@ -20,29 +20,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Clarity.Core.Claims" Version="2019.2.17.5" />
-    <PackageReference Include="Clarity.Core.Extensions" Version="2019.2.17.5" />
-    <PackageReference Include="Clarity.Core.Factories" Version="2019.2.17.5" />
-    <PackageReference Include="Clarity.Core.Filters" Version="2019.2.17.5" />
-    <PackageReference Include="Clarity.Core.Options" Version="2019.2.17.5" />
-    <PackageReference Include="Clarity.Core.Services" Version="2019.2.17.5" />
-    <PackageReference Include="Clarity.Core.Transformers" Version="2019.2.17.5" />
+    <PackageReference Include="Clarity.Core.Extensions" Version="1.1.0-CI-20190226-234042" />
+    <PackageReference Include="Clarity.Core.Factories" Version="1.1.0-CI-20190223-130656" />
+    <PackageReference Include="Clarity.Core.QueueClients" Version="1.0.0-CI-20190226-114152" />
+    <PackageReference Include="Clarity.Core.Transformers" Version="1.1.0-CI-20190223-132521" />
     <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="2.7.0" />
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="2.3.0" />
     <PackageReference Include="IdentityServer4.EntityFramework" Version="2.3.2" />
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.6.1" />
-    <PackageReference Include="Microsoft.ApplicationInsights.SnapshotCollector" Version="1.3.3" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="2.6.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="2.10.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.AzureKeyVault" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.ApplicationInsights" Version="2.9.0-beta3" />
-    <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="2.2.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.2" PrivateAssets="All" />
-    <PackageReference Include="Telerik.UI.for.AspNet.Core" Version="2019.1.115" />
+    <PackageReference Include="Telerik.UI.for.AspNet.Core" Version="2019.1.220" />
   </ItemGroup>
 
 </Project>

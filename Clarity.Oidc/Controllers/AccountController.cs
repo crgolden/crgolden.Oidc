@@ -1,6 +1,7 @@
 namespace Clarity.Oidc.Controllers
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
     using Core;
@@ -9,7 +10,9 @@ namespace Clarity.Oidc.Controllers
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Azure.ServiceBus;
     using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
     using Models;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
@@ -22,16 +25,17 @@ namespace Clarity.Oidc.Controllers
     public class AccountController : ControllerBase
     {
         private readonly ILogger<AccountController> _logger;
-        private readonly IEmailService _emailService;
+        private readonly IQueueClient _emailQueueClient;
         private readonly UserManager<User> _userManager;
 
         public AccountController(
             ILogger<AccountController> logger,
-            IEmailService emailService,
+            IEnumerable<IQueueClient> queueClients,
+            IOptions<ServiceBusOptions> serviceBusOptions,
             UserManager<User> userManager)
         {
             _logger = logger;
-            _emailService = emailService;
+            _emailQueueClient = queueClients.Single(x => x.QueueName == serviceBusOptions.Value.EmailQueueName);
             _userManager = userManager;
         }
 
@@ -41,7 +45,7 @@ namespace Clarity.Oidc.Controllers
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user != null && await _userManager.IsEmailConfirmedAsync(user))
             {
-                await _emailService.SendPasswordResetEmailAsync(
+                await _emailQueueClient.SendPasswordResetEmailAsync(
                     email: user.Email,
                     origin: Request.GetOrigin(),
                     code: await _userManager.GeneratePasswordResetTokenAsync(user));
@@ -74,7 +78,7 @@ namespace Clarity.Oidc.Controllers
                 claims.Add(new Claim(JwtClaimTypes.Address, address));
             }
             await _userManager.AddClaimsAsync(user, claims);
-            await _emailService.SendConfirmationEmailAsync(
+            await _emailQueueClient.SendConfirmationEmailAsync(
                 userId: user.Id,
                 email: user.Email,
                 origin: Request.GetOrigin(),

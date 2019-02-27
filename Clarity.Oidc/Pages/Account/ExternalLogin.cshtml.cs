@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
     using Core;
@@ -11,7 +12,9 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
+    using Microsoft.Azure.ServiceBus;
     using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
     using Models;
 
     [AllowAnonymous]
@@ -19,18 +22,19 @@
     {
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
-        private readonly IEmailService _emailService;
+        private readonly IQueueClient _emailQueueClient;
         private readonly ILogger<ExternalLoginModel> _logger;
 
         public ExternalLoginModel(
             SignInManager<User> signInManager,
             UserManager<User> userManager,
-            IEmailService emailService,
+            IEnumerable<IQueueClient> emailQueueClients,
+            IOptions<ServiceBusOptions> serviceBusOptions,
             ILogger<ExternalLoginModel> logger)
         {
             _signInManager = signInManager;
             _userManager = userManager;
-            _emailService = emailService;
+            _emailQueueClient = emailQueueClients.Single(x => x.QueueName == serviceBusOptions.Value.EmailQueueName);
             _logger = logger;
         }
 
@@ -227,7 +231,7 @@
                         if (result.Succeeded)
                         {
                             await _userManager.AddToRoleAsync(user, "User");
-                            await _emailService.SendConfirmationEmailAsync(
+                            await _emailQueueClient.SendConfirmationEmailAsync(
                                 userId: user.Id,
                                 email: user.Email,
                                 origin: origin,

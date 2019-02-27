@@ -13,7 +13,9 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Azure.ServiceBus;
     using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
     using Models;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
@@ -27,7 +29,7 @@
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly IEmailService _emailService;
+        private readonly IQueueClient _emailQueueClient;
         private readonly ILogger<ManageController> _logger;
         private readonly UrlEncoder _urlEncoder;
 
@@ -36,13 +38,14 @@
         public ManageController(
           UserManager<User> userManager,
           SignInManager<User> signInManager,
-          IEmailService emailService,
+          IEnumerable<IQueueClient> queueClients,
+          IOptions<ServiceBusOptions> serviceBusOptions,
           ILogger<ManageController> logger,
           UrlEncoder urlEncoder)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _emailService = emailService;
+            _emailQueueClient = queueClients.Single(x => x.QueueName == serviceBusOptions.Value.EmailQueueName);
             _logger = logger;
             _urlEncoder = urlEncoder;
         }
@@ -280,7 +283,7 @@
                 else
                 {
                     model.EmailConfirmed = false;
-                    await _emailService.SendConfirmationEmailAsync(
+                    await _emailQueueClient.SendConfirmationEmailAsync(
                         userId: user.Id,
                         email: user.Email,
                         origin: Request.GetOrigin(),
@@ -420,7 +423,7 @@
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            await _emailService.SendConfirmationEmailAsync(
+            await _emailQueueClient.SendConfirmationEmailAsync(
                 userId: user.Id,
                 email: user.Email,
                 origin: origin ?? Request.GetOrigin(),
