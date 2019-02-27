@@ -1,10 +1,7 @@
-﻿namespace Clarity.Oidc
+namespace Clarity.Oidc
 {
     using Core;
-    using Data;
-    using Extensions;
     using IdentityServer4.EntityFramework.Interfaces;
-    using Interfaces;
     using Microsoft.ApplicationInsights.AspNetCore;
     using Microsoft.ApplicationInsights.SnapshotCollector;
     using Microsoft.AspNetCore.Builder;
@@ -17,8 +14,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Options;
-    using Models;
-    using Services;
+    using Options;
 
     public class Startup
     {
@@ -35,12 +31,13 @@
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddApplicationInsightsTelemetry(_configuration)
-                .AddDbContext<OidcDbContext>(_configuration.GetDbContextOptions())
+                .AddDbContext<OidcDbContext>(_configuration.GetDbContextOptions(assemblyName: "Clarity.Oidc.Data"))
                 .Configure<SnapshotCollectorConfiguration>(_configuration.GetSection(nameof(SnapshotCollectorConfiguration)))
                 .Configure<CookieTempDataProviderOptions>(options => options.Cookie.IsEssential = true)
                 .Configure<EmailOptions>(_configuration.GetSection(nameof(EmailOptions)))
-                .Configure<Options.UserOptions>(_configuration.GetSection(nameof(Options.UserOptions)))
+                .Configure<UserOptions>(_configuration.GetSection(nameof(UserOptions)))
                 .Configure<CorsOptions>(_configuration.GetSection(nameof(CorsOptions)))
+                .ConfigureOptions<StaticFilesPostConfigureOptions>()
                 .AddScoped<DbContext, OidcDbContext>()
                 .AddScoped<IConfigurationDbContext, OidcDbContext>()
                 .AddScoped<IPersistedGrantDbContext, OidcDbContext>()
@@ -62,11 +59,11 @@
                 .AddEntityFrameworkStores<OidcDbContext>()
                 .AddDefaultTokenProviders();
             services.AddMvc(setup =>
-                {
-                    setup.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
-                    setup.Filters.Add<ModelStateActionFilter>();
-                    setup.Filters.Add<ModelStatePageFilter>();
-                })
+            {
+                setup.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
+                setup.Filters.Add<ModelStateActionFilter>();
+                setup.Filters.Add<ModelStatePageFilter>();
+            })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddRazorPagesOptions(setup => setup.Conventions.Add(new PageRouteTransformerConvention(new SlugifyParameterTransformer())));
             services.AddIdentityServer(_configuration, _environment);

@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <RootNamespace>Clarity.Oidc</RootNamespace>
+    <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+    <IncludeRazorContentInPack>true</IncludeRazorContentInPack>
+    <PackageId>Clarity.Oidc.Pages</PackageId>
+    <Version>1.0.1</Version>
+    <Company>Clarity</Company>
+    <Authors>Chris Golden</Authors>
+    <RepositoryUrl>https://crgolden.visualstudio.com/Clarity/_git/Clarity.Oidc</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BuildBundlerMinifier" Version="2.8.391" />
+    <PackageReference Include="Clarity.Oidc.Extensions" Version="1.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.Extensions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.TagHelpers" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.2.0" />
+    <PackageReference Include="Telerik.UI.for.AspNet.Core" Version="2019.1.220" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="wwwroot\**\*" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <RootNamespace>Clarity.Oidc</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <PackageId>Clarity.Oidc.Interfaces</PackageId>
+    <Version>1.0.0</Version>
+    <Company>Clarity</Company>
+    <Authors>Chris Golden</Authors>
+    <RepositoryUrl>https://crgolden.visualstudio.com/Clarity/_git/Clarity.Oidc</RepositoryUrl>
+  </PropertyGroup>
+
+</Project>
