@@ -4,7 +4,6 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RootNamespace>Clarity.Oidc</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
-    <IncludeRazorContentInPack>true</IncludeRazorContentInPack>
     <PackageId>Clarity.Oidc.Pages</PackageId>
     <Version>1.0.1</Version>
     <Company>Clarity</Company>
