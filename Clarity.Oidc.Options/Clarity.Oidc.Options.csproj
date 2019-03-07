@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Clarity.Core.Claims" Version="1.2.0" />
+    <PackageReference Include="Clarity.Core.Claims" Version="1.4.0-CI-20190303-155019" />
   </ItemGroup>
 
 </Project>

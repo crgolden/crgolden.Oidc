@@ -37,6 +37,7 @@ namespace Clarity.Oidc
                 .Configure<EmailOptions>(_configuration.GetSection(nameof(EmailOptions)))
                 .Configure<UserOptions>(_configuration.GetSection(nameof(UserOptions)))
                 .Configure<CorsOptions>(_configuration.GetSection(nameof(CorsOptions)))
+                .Configure<ServiceBusOptions>(_configuration.GetSection(nameof(ServiceBusOptions)))
                 .ConfigureOptions<StaticFilesPostConfigureOptions>()
                 .AddScoped<DbContext, OidcDbContext>()
                 .AddScoped<IConfigurationDbContext, OidcDbContext>()
@@ -50,6 +51,7 @@ namespace Clarity.Oidc
                     options.SlidingExpiration = true;
                 })
                 .AddScoped<ISeedService, SeedDataService>()
+                .AddSingleton<IEmailService, SendGridEmailService>()
                 .AddSingleton<ITelemetryProcessorFactory>(sp => new SnapshotCollectorTelemetryProcessorFactory(sp))
                 .AddSingleton<IQueueClient, EmailQueueClient>()
                 .AddCors()

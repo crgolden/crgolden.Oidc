@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Clarity.Core.Options" Version="1.5.2" />
+    <PackageReference Include="Clarity.Core.Options" Version="1.7.0-CI-20190303-162455" />
     <PackageReference Include="Clarity.Oidc.Entities" Version="1.0.0" />
     <PackageReference Include="Clarity.Oidc.Interfaces" Version="1.0.0" />
     <PackageReference Include="Clarity.Oidc.Options" Version="1.0.0" />
