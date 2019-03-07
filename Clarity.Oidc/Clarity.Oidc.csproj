@@ -24,11 +24,11 @@
     <PackageReference Include="Clarity.Core.QueueClients" Version="1.2.0-CI-20190303-215130" />
     <PackageReference Include="Clarity.Core.Services" Version="1.2.0-CI-20190307-113954" />
     <PackageReference Include="Clarity.Core.Transformers" Version="1.2.0-CI-20190303-163734" />
-    <PackageReference Include="Clarity.Oidc.Controllers" Version="1.0.0" />
+    <PackageReference Include="Clarity.Oidc.Controllers" Version="1.1.0-CI-20190307-122112" />
     <PackageReference Include="Clarity.Oidc.Data" Version="1.0.0" />
-    <PackageReference Include="Clarity.Oidc.Extensions" Version="1.1.0-CI-20190307-115710" />
-    <PackageReference Include="Clarity.Oidc.Pages" Version="1.1.0-CI-20190302-142900" />
-    <PackageReference Include="Clarity.Oidc.Services" Version="1.1.0-CI-20190307-121021" />
+    <PackageReference Include="Clarity.Oidc.Extensions" Version="1.1.0-CI-20190307-122415" />
+    <PackageReference Include="Clarity.Oidc.Pages" Version="1.1.0-CI-20190307-122801" />
+    <PackageReference Include="Clarity.Oidc.Services" Version="1.1.0-CI-20190307-123551" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
