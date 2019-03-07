@@ -15,7 +15,7 @@
     <PackageReference Include="Clarity.Core.Options" Version="1.7.0-CI-20190303-162455" />
     <PackageReference Include="Clarity.Oidc.Entities" Version="1.0.0" />
     <PackageReference Include="Clarity.Oidc.Interfaces" Version="1.0.0" />
-    <PackageReference Include="Clarity.Oidc.Options" Version="1.0.0" />
+    <PackageReference Include="Clarity.Oidc.Options" Version="1.1.0-CI-20190307-120258" />
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="2.3.0" />
     <PackageReference Include="IdentityServer4.EntityFramework" Version="2.3.2" />
   </ItemGroup>

@@ -12,8 +12,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Clarity.Oidc.Extensions" Version="1.0.0" />
-    <PackageReference Include="Clarity.Oidc.Models" Version="1.0.0" />
+    <PackageReference Include="Clarity.Oidc.Extensions" Version="1.1.0-CI-20190307-115710" />
+    <PackageReference Include="Clarity.Oidc.Models" Version="1.1.0-CI-20190307-120008" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.2" />
   </ItemGroup>
 

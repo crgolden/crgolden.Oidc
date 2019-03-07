@@ -26,9 +26,9 @@
     <PackageReference Include="Clarity.Core.Transformers" Version="1.2.0-CI-20190303-163734" />
     <PackageReference Include="Clarity.Oidc.Controllers" Version="1.0.0" />
     <PackageReference Include="Clarity.Oidc.Data" Version="1.0.0" />
-    <PackageReference Include="Clarity.Oidc.Extensions" Version="1.0.0" />
+    <PackageReference Include="Clarity.Oidc.Extensions" Version="1.1.0-CI-20190307-115710" />
     <PackageReference Include="Clarity.Oidc.Pages" Version="1.1.0-CI-20190302-142900" />
-    <PackageReference Include="Clarity.Oidc.Services" Version="1.0.0" />
+    <PackageReference Include="Clarity.Oidc.Services" Version="1.1.0-CI-20190307-121021" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
