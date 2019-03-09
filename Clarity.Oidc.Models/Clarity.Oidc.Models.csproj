@@ -5,14 +5,14 @@
     <RootNamespace>Clarity.Oidc</RootNamespace>
     <LangVersion>latest</LangVersion>
     <PackageId>Clarity.Oidc.Models</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.1.0</Version>
     <Company>Clarity</Company>
     <Authors>Chris Golden</Authors>
     <RepositoryUrl>https://crgolden.visualstudio.com/Clarity/_git/Clarity.Oidc</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Clarity.Core.Claims" Version="1.4.0-CI-20190303-155019" />
+    <PackageReference Include="Clarity.Core.Claims" Version="1.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Core" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
   </ItemGroup>

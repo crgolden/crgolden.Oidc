@@ -5,7 +5,7 @@
     <RootNamespace>Clarity.Oidc</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
     <PackageId>Clarity.Oidc.Pages</PackageId>
-    <Version>1.0.1</Version>
+    <Version>1.1.0</Version>
     <Company>Clarity</Company>
     <Authors>Chris Golden</Authors>
     <RepositoryUrl>https://crgolden.visualstudio.com/Clarity/_git/Clarity.Oidc</RepositoryUrl>
@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="2.8.391" />
-    <PackageReference Include="Clarity.Oidc.Extensions" Version="1.1.0-CI-20190307-122415" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.Extensions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.TagHelpers" Version="2.2.0" />
@@ -25,6 +24,10 @@
 
   <ItemGroup>
     <EmbeddedResource Include="wwwroot\**\*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Clarity.Oidc.Extensions\Clarity.Oidc.Extensions.csproj" />
   </ItemGroup>
 
 </Project>

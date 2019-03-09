@@ -20,16 +20,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Clarity.Core.Factories" Version="1.2.0-CI-20190303-160550" />
-    <PackageReference Include="Clarity.Core.QueueClients" Version="1.2.0-CI-20190303-215130" />
-    <PackageReference Include="Clarity.Core.Services" Version="1.2.0-CI-20190307-113954" />
-    <PackageReference Include="Clarity.Core.Transformers" Version="1.2.0-CI-20190303-163734" />
-    <PackageReference Include="Clarity.Oidc.Controllers" Version="1.1.0-CI-20190307-130751" />
-    <PackageReference Include="Clarity.Oidc.Data" Version="1.0.0" />
-    <PackageReference Include="Clarity.Oidc.Extensions" Version="1.1.0-CI-20190307-122415" />
-    <PackageReference Include="Clarity.Oidc.Pages" Version="1.1.0-CI-20190307-130401" />
-    <PackageReference Include="Clarity.Oidc.Services" Version="1.1.0-CI-20190307-123551" />
+    <PackageReference Include="Clarity.Core.Factories" Version="1.2.0" />
+    <PackageReference Include="Clarity.Core.QueueClients" Version="1.2.0" />
+    <PackageReference Include="Clarity.Core.Services" Version="1.2.0" />
+    <PackageReference Include="Clarity.Core.Transformers" Version="1.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Clarity.Oidc.Controllers\Clarity.Oidc.Controllers.csproj" />
+    <ProjectReference Include="..\Clarity.Oidc.Data\Clarity.Oidc.Data.csproj" />
+    <ProjectReference Include="..\Clarity.Oidc.Extensions\Clarity.Oidc.Extensions.csproj" />
+    <ProjectReference Include="..\Clarity.Oidc.Pages\Clarity.Oidc.Pages.csproj" />
+    <ProjectReference Include="..\Clarity.Oidc.Services\Clarity.Oidc.Services.csproj" />
   </ItemGroup>
 
 </Project>
