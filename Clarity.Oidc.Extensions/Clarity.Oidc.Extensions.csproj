@@ -5,14 +5,14 @@
     <RootNamespace>Clarity.Oidc</RootNamespace>
     <LangVersion>latest</LangVersion>
     <PackageId>Clarity.Oidc.Extensions</PackageId>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
     <Company>Clarity</Company>
     <Authors>Chris Golden</Authors>
     <RepositoryUrl>https://crgolden.visualstudio.com/Clarity/_git/Clarity.Oidc</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Clarity.Core.Extensions" Version="1.4.0" />
+    <PackageReference Include="Clarity.Core.Extensions" Version="1.6.1" />
     <PackageReference Include="IdentityServer4.EntityFramework" Version="2.3.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
