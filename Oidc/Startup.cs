@@ -32,7 +32,7 @@ namespace Clarity.Oidc
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddApplicationInsightsTelemetry(_configuration)
-                .AddDbContext<OidcDbContext>(_configuration.GetDbContextOptions(assemblyName: "Clarity.Oidc.Data"))
+                .AddDbContext<OidcDbContext>(_configuration.GetDbContextOptions(assemblyName: "Oidc.Data"))
                 .Configure<SnapshotCollectorConfiguration>(_configuration.GetSection(nameof(SnapshotCollectorConfiguration)))
                 .Configure<CookieTempDataProviderOptions>(options => options.Cookie.IsEssential = true)
                 .Configure<EmailOptions>(_configuration.GetSection(nameof(EmailOptions)))
