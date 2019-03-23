@@ -20,17 +20,9 @@
             if (environment.IsDevelopment())
             {
                 services
-                    .AddIdentityServer(config =>
-                    {
-                        config.Authentication.CookieLifetime = TimeSpan.FromHours(2);
-                    })
+                    .AddIdentityServer(config => config.Authentication.CookieLifetime = TimeSpan.FromHours(2))
                     .AddConfigurationStore(options => options.ConfigureDbContext = dbContextOptions)
-                    .AddOperationalStore(options =>
-                    {
-                        options.ConfigureDbContext = dbContextOptions;
-                        options.EnableTokenCleanup = true;
-                        options.TokenCleanupInterval = 30;
-                    })
+                    .AddOperationalStore(options => options.ConfigureDbContext = dbContextOptions)
                     .AddDeveloperSigningCredential()
                     .AddAspNetIdentity<User>();
             }

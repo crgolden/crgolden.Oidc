@@ -15,6 +15,7 @@ namespace Clarity.Oidc
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Options;
     using Options;
+    using Shared;
 
     public class Startup
     {
