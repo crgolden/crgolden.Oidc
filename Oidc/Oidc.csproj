@@ -3,8 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RootNamespace>Clarity.Oidc</RootNamespace>
-    <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
-    <AspNetCoreModuleName>AspNetCoreModule</AspNetCoreModuleName>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <UserSecretsId>67b77ad0-95d6-4b9d-960d-e31607ac82cc</UserSecretsId>
     <ApplicationInsightsResourceId>/subscriptions/71eb0568-25ab-4be5-b85a-a043d609410f/resourcegroups/Default-ApplicationInsights-WestUS2/providers/microsoft.insights/components/DotNetCore</ApplicationInsightsResourceId>
     <ApplicationInsightsAnnotationResourceId>/subscriptions/71eb0568-25ab-4be5-b85a-a043d609410f/resourcegroups/Default-ApplicationInsights-WestUS2/providers/microsoft.insights/components/DotNetCore</ApplicationInsightsAnnotationResourceId>
