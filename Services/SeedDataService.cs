@@ -6,7 +6,6 @@
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
-    using Core;
     using IdentityModel;
     using IdentityServer4;
     using IdentityServer4.EntityFramework.Interfaces;
@@ -17,6 +16,7 @@
     using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
+    using Shared;
 
     [ExcludeFromCodeCoverage]
     public class SeedDataService : ISeedService
@@ -52,45 +52,39 @@
 
         private async Task SeedRolesAsync()
         {
-            using (_roleManager)
+            foreach (var role in SeedData.Roles)
             {
-                foreach (var role in SeedData.Roles)
-                {
-                    await _roleManager.CreateAsync(role);
-                }
+                await _roleManager.CreateAsync(role);
             }
         }
 
         private async Task SeedUsersAsync()
         {
-            using (_userManager)
+            foreach (var userOption in _userOptions.Users)
             {
-                foreach (var userOption in _userOptions.Users)
+                var user = new User
                 {
-                    var user = new User
+                    UserName = userOption.Email,
+                    Email = userOption.Email,
+                    SecurityStamp = $"{Guid.NewGuid()}",
+                    EmailConfirmed = true,
+                    PhoneNumberConfirmed = true,
+                    PhoneNumber = userOption.PhoneNumber
+                };
+                var claims = new List<Claim>
+                {
+                    new Claim(JwtClaimTypes.GivenName, userOption.FirstName),
+                    new Claim(JwtClaimTypes.FamilyName, userOption.LastName),
+                    new Claim(JwtClaimTypes.Address, JsonConvert.SerializeObject(userOption.Address, new JsonSerializerSettings
                     {
-                        UserName = userOption.Email,
-                        Email = userOption.Email,
-                        SecurityStamp = $"{Guid.NewGuid()}",
-                        EmailConfirmed = true,
-                        PhoneNumberConfirmed = true,
-                        PhoneNumber = userOption.PhoneNumber
-                    };
-                    var claims = new List<Claim>
-                    {
-                        new Claim(JwtClaimTypes.GivenName, userOption.FirstName),
-                        new Claim(JwtClaimTypes.FamilyName, userOption.LastName),
-                        new Claim(JwtClaimTypes.Address, JsonConvert.SerializeObject(userOption.Address, new JsonSerializerSettings
-                        {
-                            ContractResolver = new CamelCasePropertyNamesContractResolver()
-                        }))
-                    };
-                    claims.AddRange(SeedData.Roles.Select(x => new Claim(ClaimTypes.Role, x.Name)));
+                        ContractResolver = new CamelCasePropertyNamesContractResolver()
+                    }))
+                };
+                claims.AddRange(SeedData.Roles.Select(x => new Claim(ClaimTypes.Role, x.Name)));
 
-                    await _userManager.CreateAsync(user, userOption.Password);
-                    await _userManager.AddToRolesAsync(user, SeedData.Roles.Select(role => role.Name));
-                    await _userManager.AddClaimsAsync(user, claims.Union(SeedData.Claims));
-                }
+                await _userManager.CreateAsync(user, userOption.Password);
+                await _userManager.AddToRolesAsync(user, SeedData.Roles.Select(role => role.Name));
+                await _userManager.AddClaimsAsync(user, claims.Union(SeedData.Claims));
             }
         }
 
@@ -130,6 +124,7 @@
                     _configurationDbContext.Clients.Add(client.ToEntity());
                 }
             }
+
             await _configurationDbContext.SaveChangesAsync();
         }
 

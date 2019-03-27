@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RootNamespace>Clarity.Oidc</RootNamespace>
     <PackageId>Clarity.Oidc.Services</PackageId>
-    <Version>1.1.1</Version>
+    <Version>1.1.2</Version>
     <Company>Clarity</Company>
     <Authors>Chris Golden</Authors>
     <RepositoryUrl>https://crgolden.visualstudio.com/Clarity/_git/Clarity.Oidc</RepositoryUrl>
@@ -22,7 +22,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Clarity.Core.Options" Version="1.9.0" />
+    <PackageReference Include="Clarity.Shared.Options" Version="1.2.1" />
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="2.4.0" />
     <PackageReference Include="IdentityServer4.EntityFramework" Version="2.4.0" />
   </ItemGroup>

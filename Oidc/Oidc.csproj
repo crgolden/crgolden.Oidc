@@ -21,8 +21,8 @@
 
   <ItemGroup>
     <PackageReference Include="Clarity.Core.Factories" Version="1.3.0" />
-    <PackageReference Include="Clarity.Core.QueueClients" Version="1.7.1" />
-    <PackageReference Include="Clarity.Core.Services" Version="1.5.2" />
+    <PackageReference Include="Clarity.Core.QueueClients" Version="1.7.2" />
+    <PackageReference Include="Clarity.Core.Services" Version="1.5.4" />
     <PackageReference Include="Clarity.Core.Transformers" Version="1.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>

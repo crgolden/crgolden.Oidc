@@ -3,7 +3,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Core;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
@@ -11,6 +10,7 @@
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
+    using Shared;
 
     [AllowAnonymous]
     public class VerifyEmailModel : PageModel

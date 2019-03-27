@@ -24,7 +24,7 @@
             WebHost
                 .CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration(configBuilder => configBuilder.AddAzureKeyVault())
-                .UseSerilog("Clarity.Oidc")
+                .UseSerilog("Clarity.Oidc", true)
                 .UseStartup<Startup>()
                 .Build();
     }

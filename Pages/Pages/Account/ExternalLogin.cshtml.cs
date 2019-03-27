@@ -5,7 +5,6 @@
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
-    using Core;
     using IdentityModel;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
@@ -14,6 +13,7 @@
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
+    using Shared;
 
     [AllowAnonymous]
     public class ExternalLoginModel : PageModel

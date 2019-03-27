@@ -14,6 +14,7 @@ namespace Clarity.Oidc
     using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
+    using Shared;
 
     [AllowAnonymous]
     [ApiController]
