@@ -1,11 +1,13 @@
 ﻿namespace Clarity.Oidc
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using System.Text.Encodings.Web;
     using System.Threading.Tasks;
     using Microsoft.Azure.ServiceBus;
 
+    [ExcludeFromCodeCoverage]
     public static class EmailQueueClientExtensions
     {
         public static async Task SendConfirmationEmailAsync(this IQueueClient emailQueueClient,
@@ -19,7 +21,7 @@
             var message = new Message(body);
             message.UserProperties.Add("email", email);
             message.UserProperties.Add("subject", "Confirm your email");
-            await emailQueueClient.SendAsync(message);
+            await emailQueueClient.SendAsync(message).ConfigureAwait(false);
         }
 
         public static async Task SendPasswordResetEmailAsync(this IQueueClient emailQueueClient,
@@ -34,7 +36,7 @@
             var message = new Message(body);
             message.UserProperties.Add("email", email);
             message.UserProperties.Add("subject", "Reset Password");
-            await emailQueueClient.SendAsync(message);
+            await emailQueueClient.SendAsync(message).ConfigureAwait(false);
         }
     }
 }

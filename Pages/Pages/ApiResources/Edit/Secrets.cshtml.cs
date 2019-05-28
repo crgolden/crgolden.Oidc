@@ -91,7 +91,7 @@
                     Expiration = x.Expiration,
                     Created = DateTime.UtcNow
                 }));
-                var secrets = apiResource.Secrets.Where(x => !ApiResource.Secrets.Any(y => y.Id.Equals(x.Id))).ToHashSet();
+                var secrets = apiResource.Secrets.Where(x => !ApiResource.Secrets.Any(y => y.Id.Equals(x.Id))).ToArray();
                 foreach (var secret in secrets)
                 {
                     apiResource.Secrets.Remove(secret);

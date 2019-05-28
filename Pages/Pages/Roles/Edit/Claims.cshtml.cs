@@ -87,7 +87,7 @@
                     await _roleManager.AddClaimAsync(role, roleClaim.ToClaim());
                 }
 
-                var roleClaims = role.RoleClaims.Where(x => !Role.RoleClaims.Any(y => y.Id.Equals(x.Id))).ToHashSet();
+                var roleClaims = role.RoleClaims.Where(x => !Role.RoleClaims.Any(y => y.Id.Equals(x.Id))).ToArray();
                 foreach (var roleClaim in roleClaims)
                 {
                     await _roleManager.RemoveClaimAsync(role, roleClaim.ToClaim());
@@ -95,7 +95,7 @@
             }
             else
             {
-                var roleClaims = role.RoleClaims.ToHashSet();
+                var roleClaims = role.RoleClaims.ToArray();
                 foreach (var roleClaim in roleClaims)
                 {
                     await _roleManager.RemoveClaimAsync(role, roleClaim.ToClaim());

@@ -225,19 +225,19 @@
                 @Html.LabelFor(model => model.Client.RefreshTokenUsage, "Refresh Token Usage")
             </dt>
             <dd>
-                @($"{Enum.Parse<TokenUsage>(Model.Client.RefreshTokenUsage.ToString())}")
+                @($"{(TokenUsage)Enum.Parse(typeof(TokenUsage), Model.Client.RefreshTokenUsage.ToString())}")
             </dd>
             <dt>
                 @Html.LabelFor(model => model.Client.RefreshTokenExpiration, "Refresh Token Expiration")
             </dt>
             <dd>
-                @($"{Enum.Parse<TokenExpiration>(Model.Client.RefreshTokenExpiration.ToString())}")
+                @($"{(TokenExpiration)Enum.Parse(typeof(TokenExpiration), Model.Client.RefreshTokenExpiration.ToString())}")
             </dd>
             <dt>
                 @Html.LabelFor(model => model.Client.AccessTokenType, "Access Token Type")
             </dt>
             <dd>
-                @($"{Enum.Parse<AccessTokenType>(Model.Client.AccessTokenType.ToString())}")
+                @($"{(AccessTokenType)Enum.Parse(typeof(AccessTokenType), Model.Client.AccessTokenType.ToString())}")
             </dd>
             @{
                 if (!string.IsNullOrEmpty(Model.Client.ClientClaimsPrefix))

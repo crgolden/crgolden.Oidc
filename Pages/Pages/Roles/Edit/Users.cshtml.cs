@@ -80,7 +80,7 @@
                     role.UserRoles.Add(roleUser);
                 }
 
-                var roleUsers = role.UserRoles.Where(x => !Role.UserRoles.Any(y => y.UserId.Equals(x.UserId))).ToHashSet();
+                var roleUsers = role.UserRoles.Where(x => !Role.UserRoles.Any(y => y.UserId.Equals(x.UserId))).ToArray();
                 foreach (var roleUser in roleUsers)
                 {
                     var user = await _userManager.FindByIdAsync($"{roleUser.UserId}");

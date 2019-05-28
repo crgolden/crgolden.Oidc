@@ -79,7 +79,7 @@
                 }
 
                 client.Properties.AddRange(Client.Properties.Where(x => x.Id == 0));
-                var properties = client.Properties.Where(x => !Client.Properties.Any(y => y.Id.Equals(x.Id))).ToHashSet();
+                var properties = client.Properties.Where(x => !Client.Properties.Any(y => y.Id.Equals(x.Id))).ToArray();
                 foreach (var property in properties)
                 {
                     client.Properties.Remove(property);

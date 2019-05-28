@@ -77,7 +77,7 @@
                 }
 
                 client.AllowedGrantTypes.AddRange(Client.AllowedGrantTypes.Where(x => x.Id == 0));
-                var grantTypes = client.AllowedGrantTypes.Where(x => !Client.AllowedGrantTypes.Any(y => y.Id.Equals(x.Id))).ToHashSet();
+                var grantTypes = client.AllowedGrantTypes.Where(x => !Client.AllowedGrantTypes.Any(y => y.Id.Equals(x.Id))).ToArray();
                 foreach (var grantType in grantTypes)
                 {
                     client.AllowedGrantTypes.Remove(grantType);

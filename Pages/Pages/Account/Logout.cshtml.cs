@@ -58,7 +58,7 @@
         {
             var idp = User?.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;
 
-            if (idp != null && !idp.Equals(IdentityServerConstants.LocalIdentityProvider))
+            if (idp != null && idp != IdentityServerConstants.LocalIdentityProvider)
             {
                 if (string.IsNullOrEmpty(logoutId))
                 {

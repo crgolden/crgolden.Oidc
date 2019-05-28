@@ -79,7 +79,7 @@
                 }
 
                 identityResource.Properties.AddRange(IdentityResource.Properties.Where(x => x.Id == 0));
-                var properties = identityResource.Properties.Where(x => !IdentityResource.Properties.Any(y => y.Id.Equals(x.Id))).ToHashSet();
+                var properties = identityResource.Properties.Where(x => !IdentityResource.Properties.Any(y => y.Id.Equals(x.Id))).ToArray();
                 foreach (var property in properties)
                 {
                     identityResource.Properties.Remove(property);

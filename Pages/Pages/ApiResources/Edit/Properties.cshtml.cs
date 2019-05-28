@@ -79,7 +79,7 @@
                 }
 
                 apiResource.Properties.AddRange(ApiResource.Properties.Where(x => x.Id == 0));
-                var properties = apiResource.Properties.Where(x => !ApiResource.Properties.Any(y => y.Id.Equals(x.Id))).ToHashSet();
+                var properties = apiResource.Properties.Where(x => !ApiResource.Properties.Any(y => y.Id.Equals(x.Id))).ToArray();
                 foreach (var property in properties)
                 {
                     apiResource.Properties.Remove(property);

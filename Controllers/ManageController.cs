@@ -13,6 +13,7 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.ServiceBus;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
@@ -29,6 +30,7 @@
         private readonly SignInManager<User> _signInManager;
         private readonly IQueueClient _emailQueueClient;
         private readonly ILogger<ManageController> _logger;
+        private readonly IConfiguration _configuration;
         private readonly UrlEncoder _urlEncoder;
 
         private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}";
@@ -39,72 +41,77 @@
           IEnumerable<IQueueClient> queueClients,
           IOptions<ServiceBusOptions> serviceBusOptions,
           ILogger<ManageController> logger,
+          IConfiguration configuration,
           UrlEncoder urlEncoder)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailQueueClient = queueClients.Single(x => x.QueueName == serviceBusOptions.Value.EmailQueueName);
             _logger = logger;
+            _configuration = configuration;
             _urlEncoder = urlEncoder;
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordModel model)
+        public virtual async Task<IActionResult> ChangePassword([FromBody] ChangePasswordModel model)
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+            var changePasswordResult = await _userManager.ChangePasswordAsync(
+                user: user,
+                currentPassword: model.OldPassword,
+                newPassword: model.NewPassword).ConfigureAwait(false);
             if (!changePasswordResult.Succeeded)
             {
                 return BadRequest(changePasswordResult.Errors);
             }
 
-            await _signInManager.RefreshSignInAsync(user);
+            await _signInManager.RefreshSignInAsync(user).ConfigureAwait(false);
             _logger.LogInformation($"User with email {user.Email} changed their password successfully.");
             return Ok("Your password has been changed.");
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeletePersonalData([FromBody] DeletePersonalDataModel model)
+        public virtual async Task<IActionResult> DeletePersonalData([FromBody] DeletePersonalDataModel model)
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            if (await _userManager.HasPasswordAsync(user) &&
-                !await _userManager.CheckPasswordAsync(user, model.Password))
+            if (await _userManager.HasPasswordAsync(user).ConfigureAwait(false) &&
+                !await _userManager.CheckPasswordAsync(user, model.Password).ConfigureAwait(false))
             {
                 return BadRequest("Password not correct.");
             }
 
-            var userId = await _userManager.GetUserIdAsync(user);
-            var result = await _userManager.DeleteAsync(user);
+            var userId = await _userManager.GetUserIdAsync(user).ConfigureAwait(false);
+            var result = await _userManager.DeleteAsync(user).ConfigureAwait(false);
             if (!result.Succeeded)
             {
                 return BadRequest($"Unexpected error occurred deleting user with ID '{userId}'.");
             }
 
-            await _signInManager.SignOutAsync();
+            await _signInManager.SignOutAsync().ConfigureAwait(false);
             _logger.LogInformation($"User with ID '{userId}' deleted themselves.");
             return Ok();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Disable2fa()
+        public virtual async Task<IActionResult> Disable2fa()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            var disable2faResult = await _userManager.SetTwoFactorEnabledAsync(user, false);
+            var disable2faResult = await _userManager.SetTwoFactorEnabledAsync(user, false).ConfigureAwait(false);
             if (!disable2faResult.Succeeded)
             {
                 return BadRequest(disable2faResult.Errors);
@@ -115,9 +122,9 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> DownloadPersonalData()
+        public virtual async Task<IActionResult> DownloadPersonalData()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
@@ -144,45 +151,48 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> EnableAuthenticator()
+        public virtual async Task<IActionResult> EnableAuthenticator()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
+            var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user).ConfigureAwait(false);
             if (string.IsNullOrEmpty(unformattedKey))
             {
-                await _userManager.ResetAuthenticatorKeyAsync(user);
-                unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
+                await _userManager.ResetAuthenticatorKeyAsync(user).ConfigureAwait(false);
+                unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user).ConfigureAwait(false);
             }
 
             return Ok(new EnableAuthenticatorModel
             {
                 SharedKey = FormatKey(unformattedKey),
-                AuthenticatorUri = GenerateQrCodeUri(await _userManager.GetEmailAsync(user), unformattedKey)
+                AuthenticatorUri = GenerateQrCodeUri(
+                    issuer: _configuration.GetValue<string>("IdentityServerAddress"),
+                    email: await _userManager.GetEmailAsync(user).ConfigureAwait(false),
+                    secret: unformattedKey)
             });
         }
 
         [HttpGet]
-        public async Task<IActionResult> ExternalAuthenticationSchemes()
+        public virtual async Task<IActionResult> ExternalAuthenticationSchemes()
         {
-            return Ok(await _signInManager.GetExternalAuthenticationSchemesAsync());
+            return Ok(await _signInManager.GetExternalAuthenticationSchemesAsync().ConfigureAwait(false));
         }
 
         [HttpGet]
-        public async Task<IActionResult> ExternalLogins()
+        public virtual async Task<IActionResult> ExternalLogins()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            var currentLogins = await _userManager.GetLoginsAsync(user);
-            var externalAuthenticationSchemes = await _signInManager.GetExternalAuthenticationSchemesAsync();
+            var currentLogins = await _userManager.GetLoginsAsync(user).ConfigureAwait(false);
+            var externalAuthenticationSchemes = await _signInManager.GetExternalAuthenticationSchemesAsync().ConfigureAwait(false);
 
             return new OkObjectResult(new ExternalLoginsModel
             {
@@ -195,29 +205,29 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> ForgetTwoFactorClient()
+        public virtual async Task<IActionResult> ForgetTwoFactorClient()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            await _signInManager.ForgetTwoFactorClientAsync();
+            await _signInManager.ForgetTwoFactorClientAsync().ConfigureAwait(false);
             return Ok("The current browser has been forgotten. When you login again from this browser you will be prompted for your 2fa code.");
         }
 
         [HttpGet]
-        public async Task<IActionResult> GenerateRecoveryCodes()
+        public virtual async Task<IActionResult> GenerateRecoveryCodes()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            var isTwoFactorEnabled = await _userManager.GetTwoFactorEnabledAsync(user);
-            var userId = await _userManager.GetUserIdAsync(user);
+            var isTwoFactorEnabled = await _userManager.GetTwoFactorEnabledAsync(user).ConfigureAwait(false);
+            var userId = await _userManager.GetUserIdAsync(user).ConfigureAwait(false);
             if (!isTwoFactorEnabled)
             {
                 return BadRequest($"Cannot generate recovery codes for user with ID '{userId}' as they do not have 2FA enabled.");
@@ -229,38 +239,38 @@
                 Message = "You have generated new recovery codes.",
                 RecoveryCodes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(
                     user: user,
-                    number: 10)
+                    number: 10).ConfigureAwait(false)
             });
         }
 
         [HttpGet]
-        public async Task<IActionResult> HasPassword()
+        public virtual async Task<IActionResult> HasPassword()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            return Ok(await _userManager.HasPasswordAsync(user));
+            return Ok(await _userManager.HasPasswordAsync(user).ConfigureAwait(false));
         }
 
         [HttpGet]
-        public async Task<IActionResult> IsTwoFactorEnabled()
+        public virtual async Task<IActionResult> IsTwoFactorEnabled()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            return Ok(await _userManager.GetTwoFactorEnabledAsync(user));
+            return Ok(await _userManager.GetTwoFactorEnabledAsync(user).ConfigureAwait(false));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Profile([FromBody] ProfileModel model)
+        public virtual async Task<IActionResult> Profile([FromBody] ProfileModel model)
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
@@ -273,7 +283,7 @@
                 user.Email = model.Email;
                 user.EmailConfirmed = false;
 
-                var updateResult = await _userManager.UpdateAsync(user);
+                var updateResult = await _userManager.UpdateAsync(user).ConfigureAwait(false);
                 if (!updateResult.Succeeded)
                 {
                     errors.AddRange(updateResult.Errors);
@@ -281,11 +291,12 @@
                 else
                 {
                     model.EmailConfirmed = false;
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user).ConfigureAwait(false);
                     await _emailQueueClient.SendConfirmationEmailAsync(
                         userId: user.Id,
                         email: user.Email,
                         origin: Request.GetOrigin(),
-                        code: await _userManager.GenerateEmailConfirmationTokenAsync(user));
+                        code: code).ConfigureAwait(false);
                 }
             }
 
@@ -294,7 +305,7 @@
                 user.PhoneNumber = model.PhoneNumber;
                 user.PhoneNumberConfirmed = false;
 
-                var updateResult = await _userManager.UpdateAsync(user);
+                var updateResult = await _userManager.UpdateAsync(user).ConfigureAwait(false);
                 if (!updateResult.Succeeded)
                 {
                     errors.AddRange(updateResult.Errors);
@@ -305,24 +316,30 @@
                 }
             }
 
-            var userClaims = await _userManager.GetClaimsAsync(user);
+            var userClaims = await _userManager.GetClaimsAsync(user).ConfigureAwait(false);
             foreach (var claim in userClaims)
             {
                 switch (claim.Type)
                 {
                     case JwtClaimTypes.GivenName:
                         {
-                            if (!model.FirstName.Equals(claim.Value))
+                            if (model.FirstName != claim.Value)
                             {
-                                await _userManager.ReplaceClaimAsync(user, claim, new Claim(JwtClaimTypes.GivenName, model.FirstName));
+                                await _userManager.ReplaceClaimAsync(
+                                    user: user,
+                                    claim: claim,
+                                    newClaim: new Claim(JwtClaimTypes.GivenName, model.FirstName)).ConfigureAwait(false);
                             }
                             break;
                         }
                     case JwtClaimTypes.FamilyName:
                         {
-                            if (!model.LastName.Equals(claim.Value))
+                            if (model.LastName != claim.Value)
                             {
-                                await _userManager.ReplaceClaimAsync(user, claim, new Claim(JwtClaimTypes.FamilyName, model.LastName));
+                                await _userManager.ReplaceClaimAsync(
+                                    user: user,
+                                    claim: claim,
+                                    newClaim: new Claim(JwtClaimTypes.FamilyName, model.LastName)).ConfigureAwait(false);
                             }
                             break;
                         }
@@ -334,39 +351,42 @@
                                 {
                                     ContractResolver = new CamelCasePropertyNamesContractResolver()
                                 });
-                                if (!string.IsNullOrEmpty(address) && !address.Equals(claim.Value))
+                                if (!string.IsNullOrEmpty(address) && address != claim.Value)
                                 {
-                                    await _userManager.ReplaceClaimAsync(user, claim, new Claim(JwtClaimTypes.Address, address));
+                                    await _userManager.ReplaceClaimAsync(
+                                        user: user,
+                                        claim: claim,
+                                        newClaim: new Claim(JwtClaimTypes.Address, address)).ConfigureAwait(false);
                                 }
                             }
                             else
                             {
-                                await _userManager.RemoveClaimAsync(user, claim);
+                                await _userManager.RemoveClaimAsync(user, claim).ConfigureAwait(false);
                             }
                             break;
                         }
                 }
             }
 
-            if (model.Address != null && !userClaims.Any(x => x.Type.Equals(JwtClaimTypes.Address)))
+            if (model.Address != null && userClaims.All(x => x.Type != JwtClaimTypes.Address))
             {
                 var addressClaim = new Claim(JwtClaimTypes.Address, JsonConvert.SerializeObject(model.Address, new JsonSerializerSettings
                 {
                     ContractResolver = new CamelCasePropertyNamesContractResolver()
                 }));
-                await _userManager.AddClaimAsync(user, addressClaim);
+                await _userManager.AddClaimAsync(user, addressClaim).ConfigureAwait(false);
             }
 
             if (errors.Any()) { return BadRequest(errors); }
 
-            await _signInManager.RefreshSignInAsync(user);
+            await _signInManager.RefreshSignInAsync(user).ConfigureAwait(false);
             return Ok(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> RemoveLogin([FromBody] RemoveLoginModel model)
+        public virtual async Task<IActionResult> RemoveLogin([FromBody] RemoveLoginModel model)
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
@@ -375,16 +395,16 @@
             var result = await _userManager.RemoveLoginAsync(
                 user: user,
                 loginProvider: model.LoginProvider,
-                providerKey: model.ProviderKey);
+                providerKey: model.ProviderKey).ConfigureAwait(false);
             if (!result.Succeeded)
             {
-                var userId = await _userManager.GetUserIdAsync(user);
+                var userId = await _userManager.GetUserIdAsync(user).ConfigureAwait(false);
                 return BadRequest($"Unexpected error occurred removing external login for user with ID '{userId}'.");
             }
 
-            await _signInManager.RefreshSignInAsync(user);
-            var currentLogins = await _userManager.GetLoginsAsync(user);
-            var externalAuthenticationSchemes = await _signInManager.GetExternalAuthenticationSchemesAsync();
+            await _signInManager.RefreshSignInAsync(user).ConfigureAwait(false);
+            var currentLogins = await _userManager.GetLoginsAsync(user).ConfigureAwait(false);
+            var externalAuthenticationSchemes = await _signInManager.GetExternalAuthenticationSchemesAsync().ConfigureAwait(false);
             return new OkObjectResult(new ExternalLoginsModel
             {
                 CurrentLogins = currentLogins,
@@ -396,64 +416,65 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> ResetAuthenticator()
+        public virtual async Task<IActionResult> ResetAuthenticator()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            await _userManager.SetTwoFactorEnabledAsync(user, false);
-            await _userManager.ResetAuthenticatorKeyAsync(user);
+            await _userManager.SetTwoFactorEnabledAsync(user, false).ConfigureAwait(false);
+            await _userManager.ResetAuthenticatorKeyAsync(user).ConfigureAwait(false);
             _logger.LogInformation($"User with id '{user.Id}' has reset their authentication app key.");
 
-            await _signInManager.RefreshSignInAsync(user);
+            await _signInManager.RefreshSignInAsync(user).ConfigureAwait(false);
             return Ok("Your authenticator app key has been reset, you will need to configure your authenticator app using the new key.");
         }
 
         [HttpGet]
-        public async Task<IActionResult> SendVerificationEmail(string origin = null)
+        public virtual async Task<IActionResult> SendVerificationEmail(string origin = null)
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user).ConfigureAwait(false);
             await _emailQueueClient.SendConfirmationEmailAsync(
                 userId: user.Id,
                 email: user.Email,
                 origin: origin ?? Request.GetOrigin(),
-                code: await _userManager.GenerateEmailConfirmationTokenAsync(user));
+                code: code).ConfigureAwait(false);
 
             return Ok("Verification email sent. Please check your email.");
         }
 
         [HttpPost]
-        public async Task<IActionResult> SetPassword([FromBody] SetPasswordModel model)
+        public virtual async Task<IActionResult> SetPassword([FromBody] SetPasswordModel model)
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            var addPasswordResult = await _userManager.AddPasswordAsync(user, model.NewPassword);
+            var addPasswordResult = await _userManager.AddPasswordAsync(user, model.NewPassword).ConfigureAwait(false);
             if (!addPasswordResult.Succeeded)
             {
                 return BadRequest(addPasswordResult.Errors);
             }
 
-            await _signInManager.RefreshSignInAsync(user);
+            await _signInManager.RefreshSignInAsync(user).ConfigureAwait(false);
             _logger.LogInformation($"User with email '{user.Email}' set their password successfully.");
             return Ok("Your password has been set.");
         }
 
         [HttpGet]
-        public async Task<IActionResult> TwoFactorAuthentication()
+        public virtual async Task<IActionResult> TwoFactorAuthentication()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
@@ -461,19 +482,19 @@
 
             var model = new TwoFactorAuthenticationModel
             {
-                HasAuthenticator = await _userManager.GetAuthenticatorKeyAsync(user) != null,
-                Is2faEnabled = await _userManager.GetTwoFactorEnabledAsync(user),
-                IsMachineRemembered = await _signInManager.IsTwoFactorClientRememberedAsync(user),
-                RecoveryCodesLeft = await _userManager.CountRecoveryCodesAsync(user)
+                HasAuthenticator = await _userManager.GetAuthenticatorKeyAsync(user).ConfigureAwait(false) != null,
+                Is2faEnabled = await _userManager.GetTwoFactorEnabledAsync(user).ConfigureAwait(false),
+                IsMachineRemembered = await _signInManager.IsTwoFactorClientRememberedAsync(user).ConfigureAwait(false),
+                RecoveryCodesLeft = await _userManager.CountRecoveryCodesAsync(user).ConfigureAwait(false)
             };
 
             return Ok(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> VerifyAuthenticator([FromBody] EnableAuthenticatorModel model)
+        public virtual async Task<IActionResult> VerifyAuthenticator([FromBody] EnableAuthenticatorModel model)
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User).ConfigureAwait(false);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
@@ -482,22 +503,22 @@
             if (!await _userManager.VerifyTwoFactorTokenAsync(
                 user: user,
                 tokenProvider: _userManager.Options.Tokens.AuthenticatorTokenProvider,
-                token: model.Code.Replace(" ", string.Empty).Replace("-", string.Empty)))
+                token: model.Code.Replace(" ", string.Empty).Replace("-", string.Empty)).ConfigureAwait(false))
             {
                 return BadRequest("Verification code is invalid.");
             }
 
             await _userManager.SetTwoFactorEnabledAsync(
                 user: user,
-                enabled: true);
+                enabled: true).ConfigureAwait(false);
             _logger.LogInformation($"User with ID '{user.Id}' has enabled 2FA with an authenticator app.");
             return Ok(new EnableAuthenticatorModel
             {
                 Message = "Your authenticator app has been verified.",
-                RecoveryCodes = await _userManager.CountRecoveryCodesAsync(user) == 0
+                RecoveryCodes = await _userManager.CountRecoveryCodesAsync(user).ConfigureAwait(false) == 0
                     ? await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(
                         user: user,
-                        number: 10)
+                        number: 10).ConfigureAwait(false)
                     : new List<string>()
             });
         }
@@ -521,13 +542,13 @@
             return result.ToString().ToLowerInvariant();
         }
 
-        private string GenerateQrCodeUri(string email, string unformattedKey)
+        private string GenerateQrCodeUri(string issuer, string email, string secret)
         {
             return string.Format(
-                AuthenticatorUriFormat,
-                _urlEncoder.Encode("Cef.OIDC"),
-                _urlEncoder.Encode(email),
-                unformattedKey);
+                format: AuthenticatorUriFormat,
+                arg0: _urlEncoder.Encode(issuer),
+                arg1: _urlEncoder.Encode(email),
+                arg2: secret);
         }
 
         #endregion

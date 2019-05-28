@@ -31,8 +31,9 @@ namespace Clarity.Oidc
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var dbContextOptions = _configuration.GetDbContextOptions(useLazyLoadingProxies: false, assemblyName: "Oidc.Data");
             services.AddApplicationInsightsTelemetry(_configuration)
-                .AddDbContext<OidcDbContext>(_configuration.GetDbContextOptions(assemblyName: "Oidc.Data"))
+                .AddDbContext<OidcDbContext>(dbContextOptions)
                 .Configure<SnapshotCollectorConfiguration>(_configuration.GetSection(nameof(SnapshotCollectorConfiguration)))
                 .Configure<CookieTempDataProviderOptions>(options => options.Cookie.IsEssential = true)
                 .Configure<EmailOptions>(_configuration.GetSection(nameof(EmailOptions)))
@@ -69,8 +70,8 @@ namespace Clarity.Oidc
             })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddRazorPagesOptions(setup => setup.Conventions.Add(new PageRouteTransformerConvention(new SlugifyParameterTransformer())));
-            services.AddIdentityServer(_configuration, _environment);
-            services.AddAuthentication(_configuration);
+            services.AddIdentityServer(_configuration, _environment, dbContextOptions);
+            services.AddAuthentication(_configuration, "api1");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

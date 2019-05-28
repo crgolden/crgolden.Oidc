@@ -77,7 +77,7 @@
                 }
 
                 client.IdentityProviderRestrictions.AddRange(Client.IdentityProviderRestrictions.Where(x => x.Id == 0));
-                var idPRestrictions = client.IdentityProviderRestrictions.Where(x => !Client.IdentityProviderRestrictions.Any(y => y.Id.Equals(x.Id))).ToHashSet();
+                var idPRestrictions = client.IdentityProviderRestrictions.Where(x => !Client.IdentityProviderRestrictions.Any(y => y.Id.Equals(x.Id))).ToArray();
                 foreach (var idPRestriction in idPRestrictions)
                 {
                     client.IdentityProviderRestrictions.Remove(idPRestriction);

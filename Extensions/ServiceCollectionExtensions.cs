@@ -1,22 +1,26 @@
 ﻿namespace Clarity.Oidc
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Security.Claims;
     using System.Security.Cryptography.X509Certificates;
     using System.Threading.Tasks;
-    using Core;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
+    [ExcludeFromCodeCoverage]
     public static class ServiceCollectionExtensions
     {
-        public static void AddIdentityServer(this IServiceCollection services,
-            IConfiguration configuration, IHostingEnvironment environment)
+        public static void AddIdentityServer(
+            this IServiceCollection services,
+            IConfiguration configuration,
+            IHostingEnvironment environment,
+            Action<DbContextOptionsBuilder> dbContextOptions)
         {
-            var dbContextOptions = configuration.GetDbContextOptions();
             if (environment.IsDevelopment())
             {
                 services
@@ -48,27 +52,29 @@
             }
         }
 
-        public static void AddAuthentication(this IServiceCollection services, IConfiguration configuration)
+        public static void AddAuthentication(
+            this IServiceCollection services,
+            IConfiguration configuration,
+            string apiName)
         {
-            var authenticationOptionsSection = configuration.GetSection(nameof(AuthenticationOptions));
-            var authenticationOptions = authenticationOptionsSection.Exists()
-                ? authenticationOptionsSection.Get<AuthenticationOptions>()
-                : null;
-
-            services.AddAuthentication("Bearer")
+            var authBuilder = services.AddAuthentication("Bearer")
                 .AddIdentityServerAuthentication("Bearer", options =>
                 {
                     var identityServerAddress = configuration.GetValue<string>("IdentityServerAddress");
                     if (string.IsNullOrEmpty(identityServerAddress)) return;
 
                     options.Authority = identityServerAddress;
-                    options.ApiName = "api1";
+                    options.ApiName = apiName;
                     options.RoleClaimType = ClaimTypes.Role;
-                })
-                .AddFacebook(options =>
+                });
+            var authenticationOptionsSection = configuration.GetSection(nameof(AuthenticationOptions));
+            var authenticationOptions = authenticationOptionsSection.Exists()
+                ? authenticationOptionsSection.Get<AuthenticationOptions>()
+                : null;
+            if (authenticationOptions?.FacebookOptions != null)
+            {
+                authBuilder.AddFacebook(options =>
                 {
-                    if (authenticationOptions?.FacebookOptions == null) return;
-
                     options.AppId = authenticationOptions.FacebookOptions.AppId;
                     options.AppSecret = authenticationOptions.FacebookOptions.AppSecret;
                     options.SignInScheme = IdentityConstants.ExternalScheme;
@@ -79,6 +85,7 @@
                         return Task.CompletedTask;
                     };
                 });
+            }
         }
     }
 }

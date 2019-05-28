@@ -82,7 +82,7 @@
 
             var user = await _userManager.FindByEmailAsync(Input.Email);
             if (user == null ||
-                returnUrl.Equals(Url.Content("~/")) && !await _userManager.IsInRoleAsync(user, "Admin"))
+                returnUrl == Url.Content("~/") && !await _userManager.IsInRoleAsync(user, "Admin"))
             {
                 return Page();
             }

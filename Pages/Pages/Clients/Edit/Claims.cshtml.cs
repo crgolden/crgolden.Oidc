@@ -80,7 +80,7 @@
                 }
 
                 client.Claims.AddRange(Client.Claims.Where(x => x.Id == 0));
-                var claims = client.Claims.Where(x => !Client.Claims.Any(y => y.Id.Equals(x.Id))).ToHashSet();
+                var claims = client.Claims.Where(x => !Client.Claims.Any(y => y.Id.Equals(x.Id))).ToArray();
                 foreach (var claim in claims)
                 {
                     client.Claims.Remove(claim);

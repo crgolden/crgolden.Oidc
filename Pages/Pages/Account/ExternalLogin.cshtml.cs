@@ -116,7 +116,7 @@
                 providerKey: info.ProviderKey);
             if (user != null)
             {
-                if (returnUrl.Equals(Url.Content("~/")) && !await _userManager.IsInRoleAsync(user, "Admin"))
+                if (returnUrl == Url.Content("~/") && !await _userManager.IsInRoleAsync(user, "Admin"))
                 {
                     return RedirectToPage("./Login");
                 }
@@ -144,7 +144,7 @@
                     return RedirectToPage("./VerifyEmail", new { returnUrl });
                 }
             }
-            else if (info.Principal.HasClaim(x => x.Type.Equals(ClaimTypes.Email)))
+            else if (info.Principal.HasClaim(x => x.Type == ClaimTypes.Email))
             {
                 user = await _userManager.FindByEmailAsync(info.Principal.FindFirstValue(ClaimTypes.Email));
                 if (user != null)
@@ -165,17 +165,17 @@
             // If the user does not have an account, then ask the user to create an account.
             Input = new InputModel();
 
-            if (info.Principal.HasClaim(x => x.Type.Equals(ClaimTypes.Email)))
+            if (info.Principal.HasClaim(x => x.Type == ClaimTypes.Email))
             {
                 Input.Email = info.Principal.FindFirstValue(ClaimTypes.Email);
             }
 
-            if (info.Principal.HasClaim(x => x.Type.Equals(ClaimTypes.GivenName)))
+            if (info.Principal.HasClaim(x => x.Type == ClaimTypes.GivenName))
             {
                 Input.FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName);
             }
 
-            if (info.Principal.HasClaim(x => x.Type.Equals(ClaimTypes.Surname)))
+            if (info.Principal.HasClaim(x => x.Type == ClaimTypes.Surname))
             {
                 Input.LastName = info.Principal.FindFirstValue(ClaimTypes.Surname);
             }
@@ -216,7 +216,7 @@
                             updateClaims: true);
                     }
                 }
-                else if (!returnUrl.Equals(Url.Content("~/")))
+                else if (returnUrl != Url.Content("~/"))
                 {
                     user = new User { UserName = Input.Email, Email = Input.Email };
                     var result = await _userManager.CreateAsync(user);
@@ -274,7 +274,7 @@
                 return RedirectToPage("./VerifyEmail", new { returnUrl });
             }
 
-            if (returnUrl.Equals(Url.Content("~/")) && !await _userManager.IsInRoleAsync(user, "Admin"))
+            if (returnUrl == Url.Content("~/") && !await _userManager.IsInRoleAsync(user, "Admin"))
             {
                 return RedirectToPage("./Login");
             }

@@ -1,6 +1,7 @@
 ﻿namespace Clarity.Oidc
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using IdentityServer4.EntityFramework.Entities;
     using IdentityServer4.EntityFramework.Extensions;
@@ -9,6 +10,7 @@
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 
+    [ExcludeFromCodeCoverage]
     public class OidcDbContext : IdentityDbContext<User, Role, Guid, UserClaim, UserRole, UserLogin, RoleClaim, UserToken>,
         IConfigurationDbContext,
         IPersistedGrantDbContext

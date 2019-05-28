@@ -1,7 +1,9 @@
 ﻿namespace Clarity.Oidc
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
+    [ExcludeFromCodeCoverage]
     public class GenerateRecoveryCodesModel
     {
         public IEnumerable<string> RecoveryCodes { get; set; }

@@ -2,8 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using Microsoft.AspNetCore.Identity;
 
+    [ExcludeFromCodeCoverage]
     public class User : IdentityUser<Guid>
     {
         public User()

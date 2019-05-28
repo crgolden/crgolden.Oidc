@@ -76,7 +76,7 @@
                 }
 
                 client.AllowedScopes.AddRange(Client.AllowedScopes.Where(x => x.Id == 0));
-                var scopes = client.AllowedScopes.Where(x => !Client.AllowedScopes.Any(y => y.Id.Equals(x.Id))).ToHashSet();
+                var scopes = client.AllowedScopes.Where(x => !Client.AllowedScopes.Any(y => y.Id.Equals(x.Id))).ToArray();
                 foreach (var scope in scopes)
                 {
                     client.AllowedScopes.Remove(scope);

@@ -77,7 +77,7 @@
                 }
 
                 apiResource.UserClaims.AddRange(ApiResource.UserClaims.Where(x => x.Id == 0));
-                var claimTypes = apiResource.UserClaims.Where(x => !ApiResource.UserClaims.Any(y => y.Id.Equals(x.Id))).ToHashSet();
+                var claimTypes = apiResource.UserClaims.Where(x => !ApiResource.UserClaims.Any(y => y.Id.Equals(x.Id))).ToArray();
                 foreach (var claimType in claimTypes)
                 {
                     apiResource.UserClaims.Remove(claimType);

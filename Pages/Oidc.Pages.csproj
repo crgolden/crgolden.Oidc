@@ -1,9 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Clarity.Oidc</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+    <LangVersion>latest</LangVersion>
     <PackageId>Clarity.Oidc.Pages</PackageId>
     <Version>1.1.2</Version>
     <Company>Clarity</Company>

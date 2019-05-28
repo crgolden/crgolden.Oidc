@@ -77,7 +77,7 @@
                 }
 
                 client.AllowedCorsOrigins.AddRange(Client.AllowedCorsOrigins.Where(x => x.Id == 0));
-                var corsOrigins = client.AllowedCorsOrigins.Where(x => !Client.AllowedCorsOrigins.Any(y => y.Id.Equals(x.Id))).ToHashSet();
+                var corsOrigins = client.AllowedCorsOrigins.Where(x => !Client.AllowedCorsOrigins.Any(y => y.Id.Equals(x.Id))).ToArray();
                 foreach (var corsOrigin in corsOrigins)
                 {
                     client.AllowedCorsOrigins.Remove(corsOrigin);

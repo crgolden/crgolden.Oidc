@@ -1,8 +1,10 @@
 ﻿namespace Clarity.Oidc
 {
     using System.ComponentModel.DataAnnotations;
+    using System.Diagnostics.CodeAnalysis;
     using Core;
 
+    [ExcludeFromCodeCoverage]
     public class ProfileModel
     {
         [Required]

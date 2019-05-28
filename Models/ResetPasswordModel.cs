@@ -1,7 +1,9 @@
 ﻿namespace Clarity.Oidc
 {
     using System.ComponentModel.DataAnnotations;
-    
+    using System.Diagnostics.CodeAnalysis;
+
+    [ExcludeFromCodeCoverage]
     public class ResetPasswordModel
     {
         [Required]

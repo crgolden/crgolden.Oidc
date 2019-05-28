@@ -91,7 +91,7 @@
                     Expiration = x.Expiration,
                     Created = DateTime.UtcNow
                 }));
-                var secrets = client.ClientSecrets.Where(x => !Client.ClientSecrets.Any(y => y.Id.Equals(x.Id))).ToHashSet();
+                var secrets = client.ClientSecrets.Where(x => !Client.ClientSecrets.Any(y => y.Id.Equals(x.Id))).ToArray();
                 foreach (var secret in secrets)
                 {
                     client.ClientSecrets.Remove(secret);

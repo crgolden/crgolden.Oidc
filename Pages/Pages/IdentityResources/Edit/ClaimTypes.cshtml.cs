@@ -77,7 +77,7 @@
                 }
 
                 identityResource.UserClaims.AddRange(IdentityResource.UserClaims.Where(x => x.Id == 0));
-                var claims = identityResource.UserClaims.Where(x => !IdentityResource.UserClaims.Any(y => y.Id.Equals(x.Id))).ToHashSet();
+                var claims = identityResource.UserClaims.Where(x => !IdentityResource.UserClaims.Any(y => y.Id.Equals(x.Id))).ToArray();
                 foreach (var claim in claims)
                 {
                     identityResource.UserClaims.Remove(claim);

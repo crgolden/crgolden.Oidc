@@ -77,7 +77,7 @@
                 }
 
                 client.RedirectUris.AddRange(Client.RedirectUris.Where(x => x.Id == 0));
-                var redirectUris = client.RedirectUris.Where(x => !Client.RedirectUris.Any(y => y.Id.Equals(x.Id))).ToHashSet();
+                var redirectUris = client.RedirectUris.Where(x => !Client.RedirectUris.Any(y => y.Id.Equals(x.Id))).ToArray();
                 foreach (var redirectUri in redirectUris)
                 {
                     client.RedirectUris.Remove(redirectUri);

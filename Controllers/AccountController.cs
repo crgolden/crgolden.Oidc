@@ -38,29 +38,30 @@ namespace Clarity.Oidc
         }
 
         [HttpPost]
-        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordModel model)
+        public virtual async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordModel model)
         {
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user != null && await _userManager.IsEmailConfirmedAsync(user))
+            var user = await _userManager.FindByEmailAsync(model.Email).ConfigureAwait(false);
+            if (user != null && await _userManager.IsEmailConfirmedAsync(user).ConfigureAwait(false))
             {
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user).ConfigureAwait(false);
                 await _emailQueueClient.SendPasswordResetEmailAsync(
                     email: user.Email,
                     origin: Request.GetOrigin(),
-                    code: await _userManager.GeneratePasswordResetTokenAsync(user));
+                    code: code).ConfigureAwait(false);
             }
 
             return Ok("Please check your email to reset your password.");
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody] RegisterModel model)
+        public virtual async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
             var user = new User { UserName = model.Email, Email = model.Email };
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _userManager.CreateAsync(user, model.Password).ConfigureAwait(false);
             if (!result.Succeeded) { return BadRequest(result.Errors); }
 
             _logger.LogInformation($"User with email '{user.Email}' created a new account with password.");
-            await _userManager.AddToRoleAsync(user, "User");
+            await _userManager.AddToRoleAsync(user, "User").ConfigureAwait(false);
             var claims = new List<Claim>
             {
                 new Claim(JwtClaimTypes.GivenName, model.FirstName),
@@ -75,20 +76,21 @@ namespace Clarity.Oidc
                 });
                 claims.Add(new Claim(JwtClaimTypes.Address, address));
             }
-            await _userManager.AddClaimsAsync(user, claims);
+            await _userManager.AddClaimsAsync(user, claims).ConfigureAwait(false);
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user).ConfigureAwait(false);
             await _emailQueueClient.SendConfirmationEmailAsync(
                 userId: user.Id,
                 email: user.Email,
                 origin: Request.GetOrigin(),
-                code: await _userManager.GenerateEmailConfirmationTokenAsync(user));
+                code: code).ConfigureAwait(false);
             return Ok("Registration successful! Please check your email for the confirmation link");
         }
 
         [HttpPost]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
+        public virtual async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
         {
             const string success = "Your password has been reset.";
-            var user = await _userManager.FindByEmailAsync(model.Email);
+            var user = await _userManager.FindByEmailAsync(model.Email).ConfigureAwait(false);
             if (user == null)
             {
                 return Ok(success);
@@ -97,7 +99,7 @@ namespace Clarity.Oidc
             var result = await _userManager.ResetPasswordAsync(
                 user: user,
                 token: model.Code,
-                newPassword: model.Password);
+                newPassword: model.Password).ConfigureAwait(false);
             if (result.Succeeded)
             {
                 _logger.LogInformation($"Password reset successfully for user with email '{model.Email}'");
@@ -109,15 +111,15 @@ namespace Clarity.Oidc
         }
 
         [HttpPost]
-        public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailModel model)
+        public virtual async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailModel model)
         {
-            var user = await _userManager.FindByIdAsync(model.UserId);
+            var user = await _userManager.FindByIdAsync(model.UserId).ConfigureAwait(false);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{model.UserId}'.");
             }
 
-            var result = await _userManager.ConfirmEmailAsync(user, model.Code);
+            var result = await _userManager.ConfirmEmailAsync(user, model.Code).ConfigureAwait(false);
             if (result.Succeeded)
             {
                 _logger.LogInformation($"Email confirmed for user with ID '{user.Id}'");

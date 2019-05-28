@@ -1,8 +1,10 @@
 ﻿namespace Clarity.Oidc
 {
+    using System.Diagnostics.CodeAnalysis;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
+    [ExcludeFromCodeCoverage]
     public class RoleConfiguration : IEntityTypeConfiguration<Role>
     {
         public void Configure(EntityTypeBuilder<Role> role)

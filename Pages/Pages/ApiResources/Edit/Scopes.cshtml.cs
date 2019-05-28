@@ -86,7 +86,7 @@
                 }
 
                 apiResource.Scopes.AddRange(ApiResource.Scopes.Where(x => x.Id == 0));
-                var scopes = apiResource.Scopes.Where(x => !ApiResource.Scopes.Any(y => y.Id.Equals(x.Id))).ToHashSet();
+                var scopes = apiResource.Scopes.Where(x => !ApiResource.Scopes.Any(y => y.Id.Equals(x.Id))).ToArray();
                 foreach (var scope in scopes)
                 {
                     apiResource.Scopes.Remove(scope);

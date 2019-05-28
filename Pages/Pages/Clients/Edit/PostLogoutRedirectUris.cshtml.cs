@@ -77,7 +77,7 @@
                 }
 
                 client.PostLogoutRedirectUris.AddRange(Client.PostLogoutRedirectUris.Where(x => x.Id == 0));
-                var postLogoutRedirectUris = client.PostLogoutRedirectUris.Where(x => !Client.PostLogoutRedirectUris.Any(y => y.Id.Equals(x.Id))).ToHashSet();
+                var postLogoutRedirectUris = client.PostLogoutRedirectUris.Where(x => !Client.PostLogoutRedirectUris.Any(y => y.Id.Equals(x.Id))).ToArray();
                 foreach (var postLogoutRedirectUri in postLogoutRedirectUris)
                 {
                     client.PostLogoutRedirectUris.Remove(postLogoutRedirectUri);

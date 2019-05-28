@@ -58,7 +58,7 @@
         @{
             if (Model.ExternalLogins != null && Model.ExternalLogins.Any())
             {
-                var facebook = Model.ExternalLogins?.SingleOrDefault(x => x.Name.Equals("Facebook"));
+                var facebook = Model.ExternalLogins?.SingleOrDefault(x => x.Name == "Facebook");
                 if (facebook != null)
                 {
                     <form asp-page="./ExternalLogin" method="post" asp-all-route-data="@routeData">
@@ -81,7 +81,7 @@
     </div>
 </div>
 @{
-    if (!Model.ReturnUrl.Equals(Url.Content("~/")))
+    if (Model.ReturnUrl != Url.Content("~/"))
     {
         <div class="row">
             <div class="col">
