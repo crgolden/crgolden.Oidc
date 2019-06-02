@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.Users
+﻿namespace crgolden.Oidc.Pages.Tests.Users
 {
     using System;
     using System.Collections.Generic;
@@ -39,7 +39,7 @@
             var delete = new DeleteModel(_userManager.Object);
 
             // Act
-            var get = await delete.OnGetAsync(user.Id);
+            var get = await delete.OnGetAsync(user.Id).ConfigureAwait(false);
 
             // Assert
             _userManager.Verify(x => x.FindByIdAsync($"{user.Id}"), Times.Once);
@@ -57,7 +57,7 @@
             var id = Guid.Empty;
 
             // Act
-            var get = await delete.OnGetAsync(id);
+            var get = await delete.OnGetAsync(id).ConfigureAwait(false);
 
             // Assert
             _userManager.Verify(x => x.FindByIdAsync($"{id}"), Times.Never);
@@ -75,7 +75,7 @@
             var id = Guid.NewGuid();
 
             // Act
-            var get = await delete.OnGetAsync(id);
+            var get = await delete.OnGetAsync(id).ConfigureAwait(false);
 
             // Assert
             _userManager.Verify(x => x.FindByIdAsync($"{id}"), Times.Once);
@@ -92,7 +92,7 @@
             var delete = new DeleteModel(_userManager.Object) {UserModel = user};
 
             // Act
-            var post = await delete.OnPostAsync();
+            var post = await delete.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             _userManager.Verify(x => x.FindByIdAsync($"{user.Id}"), Times.Once);
@@ -114,7 +114,7 @@
             };
 
             // Act
-            var post = await delete.OnPostAsync();
+            var post = await delete.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             _userManager.Verify(x => x.FindByIdAsync($"{id}"), Times.Never);
@@ -135,7 +135,7 @@
             };
 
             // Act
-            var post = await delete.OnPostAsync();
+            var post = await delete.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             _userManager.Verify(x => x.FindByIdAsync($"{id}"), Times.Once);

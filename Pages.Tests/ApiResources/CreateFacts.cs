@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.ApiResources
+﻿namespace crgolden.Oidc.Pages.Tests.ApiResources
 {
     using System;
     using System.Threading.Tasks;
@@ -46,7 +46,7 @@
             };
 
             // Act
-            var post = await create.OnPostAsync();
+            var post = await create.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             apiResources.Verify(

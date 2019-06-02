@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.ApiResources.Details
+﻿namespace crgolden.Oidc.Pages.Tests.ApiResources.Details
 {
     using System;
     using System.Threading.Tasks;
@@ -27,7 +27,7 @@
             var index = new IndexModel(context.Object);
 
             // Act
-            var get = await index.OnGetAsync(apiResource.Id);
+            var get = await index.OnGetAsync(apiResource.Id).ConfigureAwait(false);
 
             // Assert
             apiResources.Verify(x => x.FindAsync(apiResource.Id), Times.Once);
@@ -48,7 +48,7 @@
             var index = new IndexModel(context.Object);
 
             // Act
-            var get = await index.OnGetAsync(id);
+            var get = await index.OnGetAsync(id).ConfigureAwait(false);
 
             // Assert
             apiResources.Verify(x => x.FindAsync(id), Times.Never);
@@ -69,7 +69,7 @@
             var index = new IndexModel(context.Object);
 
             // Act
-            var get = await index.OnGetAsync(id);
+            var get = await index.OnGetAsync(id).ConfigureAwait(false);
 
             // Assert
             apiResources.Verify(x => x.FindAsync(id), Times.Once);

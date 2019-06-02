@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.Clients
+﻿namespace crgolden.Oidc.Pages.Tests.Clients
 {
     using System;
     using System.Threading.Tasks;
@@ -27,7 +27,7 @@
             var delete = new DeleteModel(context.Object);
 
             // Act
-            var get = await delete.OnGetAsync(client.Id);
+            var get = await delete.OnGetAsync(client.Id).ConfigureAwait(false);
 
             // Assert
             clients.Verify(x => x.FindAsync(client.Id), Times.Once);
@@ -47,7 +47,7 @@
             var delete = new DeleteModel(context.Object);
 
             // Act
-            var get = await delete.OnGetAsync(0);
+            var get = await delete.OnGetAsync(0).ConfigureAwait(false);
 
             // Assert
             clients.Verify(x => x.FindAsync(client.Id), Times.Never);
@@ -68,7 +68,7 @@
             var id = Random.Next();
 
             // Act
-            var get = await delete.OnGetAsync(id);
+            var get = await delete.OnGetAsync(id).ConfigureAwait(false);
 
             // Assert
             clients.Verify(x => x.FindAsync(id), Times.Once);
@@ -88,7 +88,7 @@
             var delete = new DeleteModel(context.Object) {Client = client};
 
             // Act
-            var post = await delete.OnPostAsync();
+            var post = await delete.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             clients.Verify(x => x.FindAsync(client.Id), Times.Once);
@@ -113,7 +113,7 @@
             };
 
             // Act
-            var post = await delete.OnPostAsync();
+            var post = await delete.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             clients.Verify(x => x.FindAsync(client.Id), Times.Never);
@@ -134,7 +134,7 @@
             var delete = new DeleteModel(context.Object) {Client = client};
 
             // Act
-            var post = await delete.OnPostAsync();
+            var post = await delete.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             clients.Verify(x => x.FindAsync(client.Id), Times.Once);

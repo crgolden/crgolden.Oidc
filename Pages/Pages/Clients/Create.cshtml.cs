@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Clients
+﻿namespace crgolden.Oidc.Pages.Clients
 {
     using System;
     using System.Threading.Tasks;
@@ -31,7 +31,7 @@
         {
             Client.Created = DateTime.UtcNow;
             _context.Clients.Add(Client);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return RedirectToPage("./Details/Index", new { Client.Id });
         }
     }

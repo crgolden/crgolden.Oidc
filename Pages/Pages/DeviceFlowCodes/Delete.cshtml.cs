@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.DeviceFlowCodes
+﻿namespace crgolden.Oidc.Pages.DeviceFlowCodes
 {
     using System.Threading.Tasks;
     using IdentityServer4.EntityFramework.Entities;
@@ -27,7 +27,7 @@
                 return NotFound();
             }
 
-            DeviceFlowCode = await _context.DeviceFlowCodes.FindAsync(userCode);
+            DeviceFlowCode = await _context.DeviceFlowCodes.FindAsync(userCode).ConfigureAwait(false);
             if (DeviceFlowCode == null)
             {
                 return NotFound();
@@ -43,14 +43,14 @@
                 return Page();
             }
 
-            var deviceFlowCode = await _context.DeviceFlowCodes.FindAsync(DeviceFlowCode.UserCode);
+            var deviceFlowCode = await _context.DeviceFlowCodes.FindAsync(DeviceFlowCode.UserCode).ConfigureAwait(false);
             if (deviceFlowCode == null)
             {
                 return Page();
             }
 
             _context.DeviceFlowCodes.Remove(deviceFlowCode);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return RedirectToPage("./Index");
         }
     }

@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Roles.Edit
+﻿namespace crgolden.Oidc.Pages.Roles.Edit
 {
     using System;
     using System.Threading.Tasks;
@@ -27,7 +27,7 @@
                 return NotFound();
             }
 
-            Role = await _roleManager.FindByIdAsync($"{id}");
+            Role = await _roleManager.FindByIdAsync($"{id}").ConfigureAwait(false);
             if (Role == null)
             {
                 return NotFound();
@@ -43,7 +43,7 @@
                 return Page();
             }
 
-            var role = await _roleManager.FindByIdAsync($"{Role.Id}");
+            var role = await _roleManager.FindByIdAsync($"{Role.Id}").ConfigureAwait(false);
             if (role == null)
             {
                 return Page();
@@ -51,7 +51,7 @@
 
             role.Name = Role.Name;
 
-            await _roleManager.UpdateAsync(role);
+            await _roleManager.UpdateAsync(role).ConfigureAwait(false);
             return RedirectToPage("../Details/Index", new { Role.Id });
         }
     }

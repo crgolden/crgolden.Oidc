@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.Users.Edit
+﻿namespace crgolden.Oidc.Pages.Tests.Users.Edit
 {
     using System;
     using System.Collections.Generic;
@@ -61,8 +61,8 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(user);
-                await context.SaveChangesAsync();
-                var rolesList = await context.Roles.ToListAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
+                var rolesList = await context.Roles.ToListAsync().ConfigureAwait(false);
                 _roleManager.Setup(x => x.Roles).Returns(rolesList.AsQueryable());
             }
 
@@ -74,7 +74,7 @@
             {
                 _userManager.Setup(x => x.Users).Returns(context.Users);
                 model = new RolesModel(_userManager.Object, _roleManager.Object);
-                get = await model.OnGetAsync(user.Id);
+                get = await model.OnGetAsync(user.Id).ConfigureAwait(false);
             }
 
             // Assert
@@ -98,7 +98,7 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(user);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             RolesModel model;
@@ -109,7 +109,7 @@
             {
                 _userManager.Setup(x => x.Users).Returns(context.Users);
                 model = new RolesModel(_userManager.Object, _roleManager.Object);
-                get = await model.OnGetAsync(id);
+                get = await model.OnGetAsync(id).ConfigureAwait(false);
             }
 
             // Assert
@@ -131,7 +131,7 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(user);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             RolesModel model;
@@ -142,7 +142,7 @@
             {
                 _userManager.Setup(x => x.Users).Returns(context.Users);
                 model = new RolesModel(_userManager.Object, _roleManager.Object);
-                get = await model.OnGetAsync(id);
+                get = await model.OnGetAsync(id).ConfigureAwait(false);
             }
 
             // Assert
@@ -171,8 +171,8 @@
             {
                 context.Add(user);
                 context.Add(role2);
-                await context.SaveChangesAsync();
-                var rolesList = await context.Roles.ToListAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
+                var rolesList = await context.Roles.ToListAsync().ConfigureAwait(false);
                 _roleManager.Setup(x => x.Roles).Returns(rolesList.AsQueryable());
                 foreach (var role in context.Roles)
                 {
@@ -190,7 +190,7 @@
 
                 model.UserModel.UserRoles.Remove(userRole);
                 model.UserModel.UserRoles.Add(new UserRole {RoleId = role2.Id});
-                post = await model.OnPostAsync();
+                post = await model.OnPostAsync().ConfigureAwait(false);
             }
 
             // Assert
@@ -238,8 +238,8 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(user);
-                await context.SaveChangesAsync();
-                var rolesList = await context.Roles.ToListAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
+                var rolesList = await context.Roles.ToListAsync().ConfigureAwait(false);
                 _roleManager.Setup(x => x.Roles).Returns(rolesList.AsQueryable());
             }
 
@@ -253,7 +253,7 @@
                 {
                     UserModel = new User {Id = user.Id}
                 };
-                get = await model.OnPostAsync();
+                get = await model.OnPostAsync().ConfigureAwait(false);
             }
 
             // Assert
@@ -289,7 +289,7 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(user);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             IActionResult post;
@@ -302,7 +302,7 @@
                 {
                     UserModel = new User {Id = id}
                 };
-                post = await model.OnPostAsync();
+                post = await model.OnPostAsync().ConfigureAwait(false);
             }
 
             // Assert
@@ -323,7 +323,7 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(user);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             IActionResult post;
@@ -336,7 +336,7 @@
                 {
                     UserModel = new User {Id = id}
                 };
-                post = await model.OnPostAsync();
+                post = await model.OnPostAsync().ConfigureAwait(false);
             }
 
             // Assert

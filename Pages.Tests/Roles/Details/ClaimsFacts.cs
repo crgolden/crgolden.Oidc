@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.Roles.Details
+﻿namespace crgolden.Oidc.Pages.Tests.Roles.Details
 {
     using System;
     using System.Collections.Generic;
@@ -49,7 +49,7 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(role);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             ClaimsModel model;
@@ -60,7 +60,7 @@
             {
                 _roleManager.Setup(x => x.Roles).Returns(context.Roles);
                 model = new ClaimsModel(_roleManager.Object);
-                get = await model.OnGetAsync(role.Id);
+                get = await model.OnGetAsync(role.Id).ConfigureAwait(false);
             }
 
             // Assert
@@ -92,7 +92,7 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(role);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             ClaimsModel model;
@@ -103,7 +103,7 @@
             {
                 _roleManager.Setup(x => x.Roles).Returns(context.Roles);
                 model = new ClaimsModel(_roleManager.Object);
-                get = await model.OnGetAsync(Guid.Empty);
+                get = await model.OnGetAsync(Guid.Empty).ConfigureAwait(false);
             }
 
             // Assert
@@ -133,7 +133,7 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(role);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             ClaimsModel model;
@@ -144,7 +144,7 @@
             {
                 _roleManager.Setup(x => x.Roles).Returns(context.Roles);
                 model = new ClaimsModel(_roleManager.Object);
-                get = await model.OnGetAsync(Guid.NewGuid());
+                get = await model.OnGetAsync(Guid.NewGuid()).ConfigureAwait(false);
             }
 
             // Assert

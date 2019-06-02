@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Roles.Details
+﻿namespace crgolden.Oidc.Pages.Roles.Details
 {
     using System;
     using System.Threading.Tasks;
@@ -27,7 +27,7 @@
                 return NotFound();
             }
 
-            Role = await _roleManager.FindByIdAsync($"{id}");
+            Role = await _roleManager.FindByIdAsync($"{id}").ConfigureAwait(false);
             if (Role == null)
             {
                 return NotFound();

@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.ApiResources.Edit
+﻿namespace crgolden.Oidc.Pages.Tests.ApiResources.Edit
 {
     using System;
     using System.Collections.Generic;
@@ -41,14 +41,14 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(apiResource);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             // Act
             using (var context = new OidcDbContext(options))
             {
                 model = new ClaimTypesModel(context);
-                get = await model.OnGetAsync(apiResource.Id);
+                get = await model.OnGetAsync(apiResource.Id).ConfigureAwait(false);
             }
 
             // Assert
@@ -67,7 +67,7 @@
 
             // Act
 
-            var get = await model.OnGetAsync(0);
+            var get = await model.OnGetAsync(0).ConfigureAwait(false);
 
             // Assert
             Assert.Null(model.ApiResource);
@@ -90,7 +90,7 @@
             using (var context = new OidcDbContext(options))
             {
                 model = new ClaimTypesModel(context);
-                get = await model.OnGetAsync(Random.Next());
+                get = await model.OnGetAsync(Random.Next()).ConfigureAwait(false);
             }
 
             // Assert
@@ -130,7 +130,7 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(apiResource);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             // Act
@@ -152,7 +152,7 @@
                         }
                     }
                 };
-                post = await claims.OnPostAsync();
+                post = await claims.OnPostAsync().ConfigureAwait(false);
             }
 
             // Assert
@@ -160,7 +160,8 @@
             {
                 apiResource = await context.ApiResources
                     .Include(x => x.UserClaims)
-                    .SingleOrDefaultAsync(x => x.Id.Equals(apiResource.Id));
+                    .SingleOrDefaultAsync(x => x.Id.Equals(apiResource.Id))
+                    .ConfigureAwait(false);
                 claim1 = apiResource.UserClaims.SingleOrDefault(x => x.Id.Equals(claim1.Id));
                 claim2 = apiResource.UserClaims.SingleOrDefault(x => x.Id.Equals(claim2.Id));
                 var newClaim = apiResource.UserClaims.SingleOrDefault(x => x.Type.Equals(newClaimType));
@@ -202,7 +203,7 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(apiResource);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             // Act
@@ -212,7 +213,7 @@
                 {
                     ApiResource = new ApiResource {Id = apiResource.Id}
                 };
-                post = await claims.OnPostAsync();
+                post = await claims.OnPostAsync().ConfigureAwait(false);
             }
 
             // Assert
@@ -220,7 +221,8 @@
             {
                 apiResource = await context.ApiResources
                     .Include(x => x.UserClaims)
-                    .SingleOrDefaultAsync(x => x.Id.Equals(apiResource.Id));
+                    .SingleOrDefaultAsync(x => x.Id.Equals(apiResource.Id))
+                    .ConfigureAwait(false);
 
                 Assert.Empty(apiResource.UserClaims);
             }
@@ -246,7 +248,7 @@
             };
 
             // Act
-            var post = await claims.OnPostAsync();
+            var post = await claims.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             context.Verify(x => x.SaveChangesAsync(), Times.Never);
@@ -266,7 +268,7 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(apiResource);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             // Act
@@ -276,7 +278,7 @@
                 {
                     ApiResource = new ApiResource {Id = Random.Next()}
                 };
-                post = await claims.OnPostAsync();
+                post = await claims.OnPostAsync().ConfigureAwait(false);
             }
 
             // Assert

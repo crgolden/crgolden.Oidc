@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.ApiResources.Edit
+﻿namespace crgolden.Oidc.Pages.ApiResources.Edit
 {
     using System;
     using System.Threading.Tasks;
@@ -28,7 +28,7 @@
                 return NotFound();
             }
 
-            ApiResource = await _context.ApiResources.FindAsync(id);
+            ApiResource = await _context.ApiResources.FindAsync(id).ConfigureAwait(false);
             if (ApiResource == null)
             {
                 return NotFound();
@@ -44,7 +44,7 @@
                 return Page();
             }
 
-            var apiResource = await _context.ApiResources.FindAsync(ApiResource.Id);
+            var apiResource = await _context.ApiResources.FindAsync(ApiResource.Id).ConfigureAwait(false);
             if (apiResource == null)
             {
                 return Page();
@@ -58,7 +58,7 @@
             apiResource.NonEditable = ApiResource.NonEditable;
             apiResource.Updated = DateTime.UtcNow;
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return RedirectToPage("../Details/Index", new { ApiResource.Id });
         }
     }

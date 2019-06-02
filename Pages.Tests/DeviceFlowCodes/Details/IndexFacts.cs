@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.DeviceFlowCodes.Details
+﻿namespace crgolden.Oidc.Pages.Tests.DeviceFlowCodes.Details
 {
     using System;
     using System.Threading.Tasks;
@@ -25,7 +25,7 @@
             var index = new IndexModel(context.Object);
 
             // Act
-            var get = await index.OnGetAsync(deviceFlowCode.UserCode);
+            var get = await index.OnGetAsync(deviceFlowCode.UserCode).ConfigureAwait(false);
 
             // Assert
             deviceFlowCodes.Verify(x => x.FindAsync(deviceFlowCode.UserCode), Times.Once);
@@ -47,7 +47,7 @@
             var index = new IndexModel(context.Object);
 
             // Act
-            var get = await index.OnGetAsync(userCode);
+            var get = await index.OnGetAsync(userCode).ConfigureAwait(false);
 
             // Assert
             deviceFlowCodes.Verify(x => x.FindAsync(userCode), Times.Never);
@@ -68,7 +68,7 @@
             var index = new IndexModel(context.Object);
 
             // Act
-            var get = await index.OnGetAsync(userCode);
+            var get = await index.OnGetAsync(userCode).ConfigureAwait(false);
 
             // Assert
             deviceFlowCodes.Verify(x => x.FindAsync(userCode), Times.Once);

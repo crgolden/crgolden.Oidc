@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.ApiResources
+﻿namespace crgolden.Oidc.Pages.ApiResources
 {
     using System.Collections.Generic;
     using IdentityServer4.EntityFramework.Entities;

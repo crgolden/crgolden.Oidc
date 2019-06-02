@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.Clients.Edit
+﻿namespace crgolden.Oidc.Pages.Tests.Clients.Edit
 {
     using System;
     using System.Collections.Generic;
@@ -41,14 +41,14 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(client);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             // Act
             using (var context = new OidcDbContext(options))
             {
                 model = new GrantTypesModel(context);
-                get = await model.OnGetAsync(client.Id);
+                get = await model.OnGetAsync(client.Id).ConfigureAwait(false);
             }
 
             // Assert
@@ -67,7 +67,7 @@
 
             // Act
 
-            var get = await model.OnGetAsync(0);
+            var get = await model.OnGetAsync(0).ConfigureAwait(false);
 
             // Assert
             Assert.Null(model.Client);
@@ -90,7 +90,7 @@
             using (var context = new OidcDbContext(options))
             {
                 model = new GrantTypesModel(context);
-                get = await model.OnGetAsync(Random.Next());
+                get = await model.OnGetAsync(Random.Next()).ConfigureAwait(false);
             }
 
             // Assert
@@ -130,7 +130,7 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(client);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             // Act
@@ -152,7 +152,7 @@
                         }
                     }
                 };
-                post = await grantTypes.OnPostAsync();
+                post = await grantTypes.OnPostAsync().ConfigureAwait(false);
             }
 
             // Assert
@@ -160,7 +160,8 @@
             {
                 client = await context.Clients
                     .Include(x => x.AllowedGrantTypes)
-                    .SingleOrDefaultAsync(x => x.Id.Equals(client.Id));
+                    .SingleOrDefaultAsync(x => x.Id.Equals(client.Id))
+                    .ConfigureAwait(false);
                 grantType1 = client.AllowedGrantTypes.SingleOrDefault(x => x.Id.Equals(grantType1.Id));
                 grantType2 = client.AllowedGrantTypes.SingleOrDefault(x => x.Id.Equals(grantType2.Id));
                 var newGrantType = client.AllowedGrantTypes.SingleOrDefault(x => x.GrantType.Equals(newGrantTypeGrantType));
@@ -202,7 +203,7 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(client);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             // Act
@@ -212,7 +213,7 @@
                 {
                     Client = new Client {Id = client.Id}
                 };
-                post = await grantTypes.OnPostAsync();
+                post = await grantTypes.OnPostAsync().ConfigureAwait(false);
             }
 
             // Assert
@@ -220,7 +221,8 @@
             {
                 client = await context.Clients
                     .Include(x => x.AllowedGrantTypes)
-                    .SingleOrDefaultAsync(x => x.Id.Equals(client.Id));
+                    .SingleOrDefaultAsync(x => x.Id.Equals(client.Id))
+                    .ConfigureAwait(false);
 
                 Assert.Empty(client.AllowedGrantTypes);
             }
@@ -246,7 +248,7 @@
             };
 
             // Act
-            var post = await grantTypes.OnPostAsync();
+            var post = await grantTypes.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             context.Verify(x => x.SaveChangesAsync(), Times.Never);
@@ -266,7 +268,7 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(client);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             // Act
@@ -276,7 +278,7 @@
                 {
                     Client = new Client {Id = Random.Next()}
                 };
-                post = await grantTypes.OnPostAsync();
+                post = await grantTypes.OnPostAsync().ConfigureAwait(false);
             }
 
             // Assert

@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.Clients
+﻿namespace crgolden.Oidc.Pages.Tests.Clients
 {
     using System.Collections.Generic;
     using IdentityServer4.EntityFramework.Entities;

@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.Roles
+﻿namespace crgolden.Oidc.Pages.Tests.Roles
 {
     using System;
     using System.Collections.Generic;
@@ -75,7 +75,7 @@
             var create = new CreateModel(_roleManager.Object, _userManager.Object) {Role = role};
 
             // Act
-            var post = await create.OnPostAsync();
+            var post = await create.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             foreach (var userRole in role.UserRoles)

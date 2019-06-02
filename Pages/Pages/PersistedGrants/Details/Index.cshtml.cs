@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.PersistedGrants.Details
+﻿namespace crgolden.Oidc.Pages.PersistedGrants.Details
 {
     using System.Threading.Tasks;
     using IdentityServer4.EntityFramework.Entities;
@@ -27,7 +27,7 @@
                 return NotFound();
             }
 
-            PersistedGrant = await _context.PersistedGrants.FindAsync(key);
+            PersistedGrant = await _context.PersistedGrants.FindAsync(key).ConfigureAwait(false);
             if (PersistedGrant == null)
             {
                 return NotFound();

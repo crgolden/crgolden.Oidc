@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Clients.Details
+﻿namespace crgolden.Oidc.Pages.Clients.Details
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -34,7 +34,8 @@
 
             Client = await _context.Clients
                 .Include(x => x.AllowedCorsOrigins)
-                .SingleOrDefaultAsync(x => x.Id.Equals(id));
+                .SingleOrDefaultAsync(x => x.Id.Equals(id))
+                .ConfigureAwait(false);
             if (Client == null)
             {
                 return NotFound();

@@ -1,4 +1,4 @@
-namespace Clarity.Oidc
+namespace crgolden.Oidc
 {
     using Core;
     using IdentityServer4.EntityFramework.Interfaces;

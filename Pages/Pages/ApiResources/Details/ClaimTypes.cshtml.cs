@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.ApiResources.Details
+﻿namespace crgolden.Oidc.Pages.ApiResources.Details
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -34,7 +34,8 @@
 
             ApiResource = await _context.ApiResources
                 .Include(x => x.UserClaims)
-                .SingleOrDefaultAsync(x => x.Id.Equals(id));
+                .SingleOrDefaultAsync(x => x.Id.Equals(id))
+                .ConfigureAwait(false);
             if (ApiResource == null)
             {
                 return NotFound();

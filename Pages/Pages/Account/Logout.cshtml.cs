@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Account
+﻿namespace crgolden.Oidc.Pages.Account
 {
     using System;
     using System.Security.Claims;
@@ -36,15 +36,15 @@
             if (User.Identity.IsAuthenticated == false)
             {
                 // if the user is not authenticated, then just show logged out page
-                return await OnPostAsync(logoutId);
+                return await OnPostAsync(logoutId).ConfigureAwait(false);
             }
 
             //Test for Xamarin. 
-            var context = await _interaction.GetLogoutContextAsync(logoutId);
+            var context = await _interaction.GetLogoutContextAsync(logoutId).ConfigureAwait(false);
             if (context?.ShowSignoutPrompt == false)
             {
                 //it's safe to automatically sign-out
-                return await OnPostAsync(logoutId);
+                return await OnPostAsync(logoutId).ConfigureAwait(false);
             }
 
             // show the logout prompt. this prevents attacks where the user
@@ -65,7 +65,7 @@
                     // if there's no current logout context, we need to create one
                     // this captures necessary info from the current logged in user
                     // before we signout and redirect away to the external IdP for signout
-                    logoutId = await _interaction.CreateLogoutContextAsync();
+                    logoutId = await _interaction.CreateLogoutContextAsync().ConfigureAwait(false);
                 }
 
                 try
@@ -74,7 +74,7 @@
                     await HttpContext.SignOutAsync(idp, new AuthenticationProperties
                     {
                         RedirectUri = $"/account/logout?logoutId={logoutId}"
-                    });
+                    }).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -83,9 +83,9 @@
             }
 
             // delete authentication cookie
-            await HttpContext.SignOutAsync();
+            await HttpContext.SignOutAsync().ConfigureAwait(false);
 
-            await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+            await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme).ConfigureAwait(false);
 
             _logger.LogInformation("User logged out.");
 
@@ -93,7 +93,7 @@
             HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity());
 
             // get context information (client name, post logout redirect URI and iframe for federated signout)
-            var logout = await _interaction.GetLogoutContextAsync(logoutId);
+            var logout = await _interaction.GetLogoutContextAsync(logoutId).ConfigureAwait(false);
 
             return Redirect(logout?.PostLogoutRedirectUri ?? Url.Content("~/"));
         }

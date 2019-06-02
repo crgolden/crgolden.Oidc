@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Account
+﻿namespace crgolden.Oidc.Pages.Account
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -63,9 +63,9 @@
                 ModelState.AddModelError(string.Empty, ErrorMessage);
             }
 
-            await _signInManager.SignOutAsync();
+            await _signInManager.SignOutAsync().ConfigureAwait(false);
 
-            ExternalLogins = await _signInManager.GetExternalAuthenticationSchemesAsync();
+            ExternalLogins = await _signInManager.GetExternalAuthenticationSchemesAsync().ConfigureAwait(false);
             ReturnUrl = returnUrl ?? Url.Content("~/");
             if (string.IsNullOrEmpty(Origin))
             {
@@ -80,9 +80,9 @@
             returnUrl = returnUrl ?? Url.Content("~/");
             TempData[nameof(Origin)] = origin;
 
-            var user = await _userManager.FindByEmailAsync(Input.Email);
+            var user = await _userManager.FindByEmailAsync(Input.Email).ConfigureAwait(false);
             if (user == null ||
-                returnUrl == Url.Content("~/") && !await _userManager.IsInRoleAsync(user, "Admin"))
+                returnUrl == Url.Content("~/") && !await _userManager.IsInRoleAsync(user, "Admin").ConfigureAwait(false))
             {
                 return Page();
             }
@@ -91,7 +91,7 @@
                 userName: Input.Email,
                 password: Input.Password,
                 isPersistent: Input.RememberMe,
-                lockoutOnFailure: true);
+                lockoutOnFailure: true).ConfigureAwait(false);
             if (result.Succeeded)
             {
                 _logger.LogInformation($"User with email '{Input.Email}' logged in.");

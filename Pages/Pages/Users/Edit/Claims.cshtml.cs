@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Users.Edit
+﻿namespace crgolden.Oidc.Pages.Users.Edit
 {
     using System;
     using System.Collections.Generic;
@@ -35,7 +35,8 @@
 
             UserModel = await _userManager.Users
                 .Include(x => x.Claims)
-                .SingleOrDefaultAsync(x => x.Id.Equals(id));
+                .SingleOrDefaultAsync(x => x.Id.Equals(id))
+                .ConfigureAwait(false);
 
             if (UserModel == null)
             {
@@ -63,7 +64,8 @@
 
             var user = await _userManager.Users
                 .Include(x => x.Claims)
-                .SingleOrDefaultAsync(x => x.Id.Equals(UserModel.Id));
+                .SingleOrDefaultAsync(x => x.Id.Equals(UserModel.Id))
+                .ConfigureAwait(false);
 
             if (user == null)
             {
@@ -80,23 +82,26 @@
                         continue;
                     }
 
-                    await _userManager.ReplaceClaimAsync(user, claim.ToClaim(), userModelClaim.ToClaim());
+                    await _userManager.ReplaceClaimAsync(user, claim.ToClaim(), userModelClaim.ToClaim()).ConfigureAwait(false);
                 }
 
                 await _userManager.AddClaimsAsync(user, UserModel.Claims
                     .Where(x => x.Id == 0)
-                    .Select(x => x.ToClaim()));
+                    .Select(x => x.ToClaim()))
+                    .ConfigureAwait(false);
 
                 await _userManager.RemoveClaimsAsync(user, user.Claims
                     .Where(x => !x.ClaimType.Equals(ClaimTypes.Role) &&
                                 !UserModel.Claims.Any(y => y.Id.Equals(x.Id)))
-                    .Select(x => x.ToClaim()));
+                    .Select(x => x.ToClaim()))
+                    .ConfigureAwait(false);
             }
             else
             {
                 await _userManager.RemoveClaimsAsync(user, user.Claims
                     .Where(x => !x.ClaimType.Equals(ClaimTypes.Role))
-                    .Select(x => x.ToClaim()));
+                    .Select(x => x.ToClaim()))
+                    .ConfigureAwait(false);
             }
 
             return RedirectToPage("../Details/Claims", new { UserModel.Id });

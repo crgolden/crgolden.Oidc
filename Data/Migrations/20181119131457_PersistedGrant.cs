@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Migrations
+﻿namespace crgolden.Oidc.Migrations
 {
     using System;
     using Microsoft.EntityFrameworkCore.Migrations;

@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Roles.Details
+﻿namespace crgolden.Oidc.Pages.Roles.Details
 {
     using System;
     using System.Collections.Generic;
@@ -34,7 +34,8 @@
 
             Role = await _roleManager.Roles
                 .Include(x => x.RoleClaims)
-                .SingleOrDefaultAsync(x => x.Id.Equals(id));
+                .SingleOrDefaultAsync(x => x.Id.Equals(id))
+                .ConfigureAwait(false);
             if (Role == null)
             {
                 return NotFound();

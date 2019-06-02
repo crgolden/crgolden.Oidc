@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.PersistedGrants
+﻿namespace crgolden.Oidc.Pages.PersistedGrants
 {
     using System.Threading.Tasks;
     using IdentityServer4.EntityFramework.Entities;
@@ -27,7 +27,7 @@
                 return NotFound();
             }
 
-            PersistedGrant = await _context.PersistedGrants.FindAsync(key);
+            PersistedGrant = await _context.PersistedGrants.FindAsync(key).ConfigureAwait(false);
             if (PersistedGrant == null)
             {
                 return NotFound();
@@ -43,14 +43,14 @@
                 return Page();
             }
 
-            var persistedGrant = await _context.PersistedGrants.FindAsync(PersistedGrant.Key);
+            var persistedGrant = await _context.PersistedGrants.FindAsync(PersistedGrant.Key).ConfigureAwait(false);
             if (persistedGrant == null)
             {
                 return Page();
             }
 
             _context.PersistedGrants.Remove(persistedGrant);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return RedirectToPage("./Index");
         }
     }

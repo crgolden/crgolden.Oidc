@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.Clients.Edit
+﻿namespace crgolden.Oidc.Pages.Tests.Clients.Edit
 {
     using System;
     using System.Threading.Tasks;
@@ -27,7 +27,7 @@
             var index = new IndexModel(context.Object);
 
             // Act
-            var get = await index.OnGetAsync(client.Id);
+            var get = await index.OnGetAsync(client.Id).ConfigureAwait(false);
 
             // Assert
             clients.Verify(x => x.FindAsync(client.Id), Times.Once);
@@ -48,7 +48,7 @@
             var index = new IndexModel(context.Object);
 
             // Act
-            var get = await index.OnGetAsync(id);
+            var get = await index.OnGetAsync(id).ConfigureAwait(false);
 
             // Assert
             clients.Verify(x => x.FindAsync(id), Times.Never);
@@ -69,7 +69,7 @@
             var index = new IndexModel(context.Object);
 
             // Act
-            var get = await index.OnGetAsync(id);
+            var get = await index.OnGetAsync(id).ConfigureAwait(false);
 
             // Assert
             clients.Verify(x => x.FindAsync(id), Times.Once);
@@ -92,7 +92,7 @@
             };
 
             // Act
-            var post = await index.OnPostAsync();
+            var post = await index.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             clients.Verify(x => x.FindAsync(client.Id), Times.Once);
@@ -125,7 +125,7 @@
             };
 
             // Act
-            var post = await index.OnPostAsync();
+            var post = await index.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             clients.Verify(x => x.FindAsync(id), Times.Never);
@@ -155,7 +155,7 @@
             };
 
             // Act
-            var post = await index.OnPostAsync();
+            var post = await index.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             clients.Verify(x => x.FindAsync(id), Times.Once);

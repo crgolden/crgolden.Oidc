@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages
+﻿namespace crgolden.Oidc.Pages
 {
     using System.Diagnostics.CodeAnalysis;
     using Microsoft.AspNetCore.Authorization;

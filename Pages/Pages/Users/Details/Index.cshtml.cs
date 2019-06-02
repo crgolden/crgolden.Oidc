@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Users.Details
+﻿namespace crgolden.Oidc.Pages.Users.Details
 {
     using System;
     using System.Threading.Tasks;
@@ -27,7 +27,7 @@
                 return NotFound();
             }
 
-            UserModel = await _userManager.FindByIdAsync($"{id}");
+            UserModel = await _userManager.FindByIdAsync($"{id}").ConfigureAwait(false);
             if (UserModel == null)
             {
                 return NotFound();

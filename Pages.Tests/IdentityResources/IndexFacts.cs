@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.IdentityResources
+﻿namespace crgolden.Oidc.Pages.Tests.IdentityResources
 {
     using System.Collections.Generic;
     using IdentityServer4.EntityFramework.Entities;

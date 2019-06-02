@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.DeviceFlowCodes.Details
+﻿namespace crgolden.Oidc.Pages.DeviceFlowCodes.Details
 {
     using System.Threading.Tasks;
     using IdentityServer4.EntityFramework.Entities;
@@ -27,7 +27,7 @@
                 return NotFound();
             }
 
-            DeviceFlowCode = await _context.DeviceFlowCodes.FindAsync(userCode);
+            DeviceFlowCode = await _context.DeviceFlowCodes.FindAsync(userCode).ConfigureAwait(false);
             if (DeviceFlowCode == null)
             {
                 return NotFound();

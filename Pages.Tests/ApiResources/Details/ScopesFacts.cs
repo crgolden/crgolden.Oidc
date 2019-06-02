@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.ApiResources.Details
+﻿namespace crgolden.Oidc.Pages.Tests.ApiResources.Details
 {
     using System;
     using System.Collections.Generic;
@@ -41,14 +41,14 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(apiResource);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             // Act
             using (var context = new OidcDbContext(options))
             {
                 model = new ScopesModel(context);
-                get = await model.OnGetAsync(apiResource.Id);
+                get = await model.OnGetAsync(apiResource.Id).ConfigureAwait(false);
             }
 
             // Assert
@@ -67,7 +67,7 @@
 
             // Act
 
-            var get = await model.OnGetAsync(0);
+            var get = await model.OnGetAsync(0).ConfigureAwait(false);
 
             // Assert
             Assert.Null(model.ApiResource);
@@ -90,7 +90,7 @@
             using (var context = new OidcDbContext(options))
             {
                 model = new ScopesModel(context);
-                get = await model.OnGetAsync(Random.Next());
+                get = await model.OnGetAsync(Random.Next()).ConfigureAwait(false);
             }
 
             // Assert

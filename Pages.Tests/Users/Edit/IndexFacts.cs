@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.Users.Edit
+﻿namespace crgolden.Oidc.Pages.Tests.Users.Edit
 {
     using System;
     using System.Collections.Generic;
@@ -39,7 +39,7 @@
             var index = new IndexModel(_userManager.Object);
 
             // Act
-            var get = await index.OnGetAsync(user.Id);
+            var get = await index.OnGetAsync(user.Id).ConfigureAwait(false);
 
             // Assert
             _userManager.Verify(x => x.FindByIdAsync($"{user.Id}"), Times.Once);
@@ -56,7 +56,7 @@
             var index = new IndexModel(_userManager.Object);
 
             // Act
-            var get = await index.OnGetAsync(Guid.Empty);
+            var get = await index.OnGetAsync(Guid.Empty).ConfigureAwait(false);
 
             // Assert
             _userManager.Verify(x => x.FindByIdAsync($"{user.Id}"), Times.Never);
@@ -74,7 +74,7 @@
             var id = Guid.NewGuid();
 
             // Act
-            var get = await index.OnGetAsync(id);
+            var get = await index.OnGetAsync(id).ConfigureAwait(false);
 
             // Assert
             _userManager.Verify(x => x.FindByIdAsync($"{id}"), Times.Once);
@@ -100,7 +100,7 @@
             var index = new IndexModel(_userManager.Object) {UserModel = user2};
 
             // Act
-            var post = await index.OnPostAsync();
+            var post = await index.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             _userManager.Verify(
@@ -129,7 +129,7 @@
             };
 
             // Act
-            var post = await index.OnPostAsync();
+            var post = await index.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             _userManager.Verify(x => x.FindByIdAsync($"{id}"), Times.Never);
@@ -149,7 +149,7 @@
             };
 
             // Act
-            var post = await index.OnPostAsync();
+            var post = await index.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             _userManager.Verify(x => x.FindByIdAsync($"{id}"), Times.Once);

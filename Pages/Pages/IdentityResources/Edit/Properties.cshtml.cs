@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.IdentityResources.Edit
+﻿namespace crgolden.Oidc.Pages.IdentityResources.Edit
 {
     using System;
     using System.Collections.Generic;
@@ -35,7 +35,8 @@
 
             IdentityResource = await _context.IdentityResources
                 .Include(x => x.Properties)
-                .SingleOrDefaultAsync(x => x.Id.Equals(id));
+                .SingleOrDefaultAsync(x => x.Id.Equals(id))
+                .ConfigureAwait(false);
 
             if (IdentityResource == null)
             {
@@ -62,7 +63,8 @@
 
             var identityResource = await _context.IdentityResources
                 .Include(x => x.Properties)
-                .SingleOrDefaultAsync(x => x.Id.Equals(IdentityResource.Id));
+                .SingleOrDefaultAsync(x => x.Id.Equals(IdentityResource.Id))
+                .ConfigureAwait(false);
 
             if (identityResource == null)
             {
@@ -91,7 +93,7 @@
             }
 
             identityResource.Updated = DateTime.UtcNow;
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return RedirectToPage("../Details/Properties", new { IdentityResource.Id });
         }
     }

@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.IdentityResources.Details
+﻿namespace crgolden.Oidc.Pages.IdentityResources.Details
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -34,7 +34,8 @@
 
             IdentityResource = await _context.IdentityResources
                 .Include(x => x.UserClaims)
-                .SingleOrDefaultAsync(x => x.Id.Equals(id));
+                .SingleOrDefaultAsync(x => x.Id.Equals(id))
+                .ConfigureAwait(false);
             if (IdentityResource == null)
             {
                 return NotFound();

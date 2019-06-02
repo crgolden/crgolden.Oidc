@@ -2,29 +2,32 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>Clarity.Oidc</RootNamespace>
+    <RootNamespace>crgolden.Oidc</RootNamespace>
     <LangVersion>latest</LangVersion>
-    <PackageId>Clarity.Oidc.Models</PackageId>
-    <Version>1.1.1</Version>
-    <Company>Clarity</Company>
+    <PackageId>crgolden.Oidc.Models</PackageId>
+    <Version>1.0.0</Version>
+    <Company>crgolden</Company>
     <Authors>Chris Golden</Authors>
-    <RepositoryUrl>https://crgolden.visualstudio.com/Clarity/_git/Clarity.Oidc</RepositoryUrl>
+    <RepositoryUrl>https://github.com/crgolden/crgolden.Oidc</RepositoryUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\Clarity.Oidc.snk</AssemblyOriginatorKeyFile>
-    <PackageIconUrl>https://clarity-ui.azurewebsites.net/favicon.ico</PackageIconUrl>
-    <PackageProjectUrl>https://crgolden.visualstudio.com/Clarity</PackageProjectUrl>
+    <AssemblyOriginatorKeyFile>..\crgolden.Oidc.snk</AssemblyOriginatorKeyFile>
+    <PackageIconUrl>https://crgolden-ui.azurewebsites.net/favicon.ico</PackageIconUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Clarity.Core.Claims" Version="1.7.0" />
+    <PackageReference Include="crgolden.Core.Claims" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Core" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-19270-01">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>

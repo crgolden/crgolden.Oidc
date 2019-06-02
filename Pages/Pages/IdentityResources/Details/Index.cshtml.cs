@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.IdentityResources.Details
+﻿namespace crgolden.Oidc.Pages.IdentityResources.Details
 {
     using System.Threading.Tasks;
     using IdentityServer4.EntityFramework.Entities;
@@ -27,7 +27,7 @@
                 return NotFound();
             }
 
-            IdentityResource = await _context.IdentityResources.FindAsync(id);
+            IdentityResource = await _context.IdentityResources.FindAsync(id).ConfigureAwait(false);
             if (IdentityResource == null)
             {
                 return NotFound();

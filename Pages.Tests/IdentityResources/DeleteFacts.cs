@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.IdentityResources
+﻿namespace crgolden.Oidc.Pages.Tests.IdentityResources
 {
     using System;
     using System.Threading.Tasks;
@@ -27,7 +27,7 @@
             var delete = new DeleteModel(context.Object);
 
             // Act
-            var get = await delete.OnGetAsync(identityResource.Id);
+            var get = await delete.OnGetAsync(identityResource.Id).ConfigureAwait(false);
 
             // Assert
             identityResources.Verify(x => x.FindAsync(identityResource.Id), Times.Once);
@@ -47,7 +47,7 @@
             var delete = new DeleteModel(context.Object);
 
             // Act
-            var get = await delete.OnGetAsync(0);
+            var get = await delete.OnGetAsync(0).ConfigureAwait(false);
 
             // Assert
             identityResources.Verify(x => x.FindAsync(identityResource.Id), Times.Never);
@@ -68,7 +68,7 @@
             var id = Random.Next();
 
             // Act
-            var get = await delete.OnGetAsync(id);
+            var get = await delete.OnGetAsync(id).ConfigureAwait(false);
 
             // Assert
             identityResources.Verify(x => x.FindAsync(id), Times.Once);
@@ -88,7 +88,7 @@
             var delete = new DeleteModel(context.Object) {IdentityResource = identityResource};
 
             // Act
-            var post = await delete.OnPostAsync();
+            var post = await delete.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             identityResources.Verify(x => x.FindAsync(identityResource.Id), Times.Once);
@@ -113,7 +113,7 @@
             };
 
             // Act
-            var post = await delete.OnPostAsync();
+            var post = await delete.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             identityResources.Verify(x => x.FindAsync(identityResource.Id), Times.Never);
@@ -134,7 +134,7 @@
             var delete = new DeleteModel(context.Object) {IdentityResource = identityResource};
 
             // Act
-            var post = await delete.OnPostAsync();
+            var post = await delete.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             identityResources.Verify(x => x.FindAsync(identityResource.Id), Times.Once);

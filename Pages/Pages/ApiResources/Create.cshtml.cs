@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.ApiResources
+﻿namespace crgolden.Oidc.Pages.ApiResources
 {
     using System;
     using System.Threading.Tasks;
@@ -31,7 +31,7 @@
         {
             ApiResource.Created = DateTime.UtcNow;
             _context.ApiResources.Add(ApiResource);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return RedirectToPage("./Details/Index", new { ApiResource.Id });
         }
     }

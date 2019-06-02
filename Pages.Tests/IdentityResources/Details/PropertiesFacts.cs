@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.IdentityResources.Details
+﻿namespace crgolden.Oidc.Pages.Tests.IdentityResources.Details
 {
     using System;
     using System.Collections.Generic;
@@ -41,14 +41,14 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(identityResource);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             // Act
             using (var context = new OidcDbContext(options))
             {
                 model = new PropertiesModel(context);
-                get = await model.OnGetAsync(identityResource.Id);
+                get = await model.OnGetAsync(identityResource.Id).ConfigureAwait(false);
             }
 
             // Assert
@@ -67,7 +67,7 @@
 
             // Act
 
-            var get = await model.OnGetAsync(0);
+            var get = await model.OnGetAsync(0).ConfigureAwait(false);
 
             // Assert
             Assert.Null(model.IdentityResource);
@@ -90,7 +90,7 @@
             using (var context = new OidcDbContext(options))
             {
                 model = new PropertiesModel(context);
-                get = await model.OnGetAsync(Random.Next());
+                get = await model.OnGetAsync(Random.Next()).ConfigureAwait(false);
             }
 
             // Assert

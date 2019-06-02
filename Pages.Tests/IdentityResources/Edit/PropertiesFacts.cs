@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.IdentityResources.Edit
+﻿namespace crgolden.Oidc.Pages.Tests.IdentityResources.Edit
 {
     using System;
     using System.Collections.Generic;
@@ -41,14 +41,14 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(identityResource);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             // Act
             using (var context = new OidcDbContext(options))
             {
                 model = new PropertiesModel(context);
-                get = await model.OnGetAsync(identityResource.Id);
+                get = await model.OnGetAsync(identityResource.Id).ConfigureAwait(false);
             }
 
             // Assert
@@ -67,7 +67,7 @@
 
             // Act
 
-            var get = await model.OnGetAsync(0);
+            var get = await model.OnGetAsync(0).ConfigureAwait(false);
 
             // Assert
             Assert.Null(model.IdentityResource);
@@ -90,7 +90,7 @@
             using (var context = new OidcDbContext(options))
             {
                 model = new PropertiesModel(context);
-                get = await model.OnGetAsync(Random.Next());
+                get = await model.OnGetAsync(Random.Next()).ConfigureAwait(false);
             }
 
             // Assert
@@ -130,7 +130,7 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(identityResource);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             // Act
@@ -152,7 +152,7 @@
                         }
                     }
                 };
-                post = await properties.OnPostAsync();
+                post = await properties.OnPostAsync().ConfigureAwait(false);
             }
 
             // Assert
@@ -160,7 +160,8 @@
             {
                 identityResource = await context.IdentityResources
                     .Include(x => x.Properties)
-                    .SingleOrDefaultAsync(x => x.Id.Equals(identityResource.Id));
+                    .SingleOrDefaultAsync(x => x.Id.Equals(identityResource.Id))
+                    .ConfigureAwait(false);
                 property1 = identityResource.Properties.SingleOrDefault(x => x.Id.Equals(property1.Id));
                 property2 = identityResource.Properties.SingleOrDefault(x => x.Id.Equals(property2.Id));
                 var newProperty = identityResource.Properties.SingleOrDefault(x => x.Value.Equals(newPropertyValue));
@@ -202,7 +203,7 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(identityResource);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             // Act
@@ -212,7 +213,7 @@
                 {
                     IdentityResource = new IdentityResource {Id = identityResource.Id}
                 };
-                post = await properties.OnPostAsync();
+                post = await properties.OnPostAsync().ConfigureAwait(false);
             }
 
             // Assert
@@ -220,7 +221,8 @@
             {
                 identityResource = await context.IdentityResources
                     .Include(x => x.Properties)
-                    .SingleOrDefaultAsync(x => x.Id.Equals(identityResource.Id));
+                    .SingleOrDefaultAsync(x => x.Id.Equals(identityResource.Id))
+                    .ConfigureAwait(false);
 
                 Assert.Empty(identityResource.Properties);
             }
@@ -246,7 +248,7 @@
             };
 
             // Act
-            var post = await properties.OnPostAsync();
+            var post = await properties.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             context.Verify(x => x.SaveChangesAsync(), Times.Never);
@@ -266,7 +268,7 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(identityResource);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             // Act
@@ -276,7 +278,7 @@
                 {
                     IdentityResource = new IdentityResource {Id = Random.Next()}
                 };
-                post = await properties.OnPostAsync();
+                post = await properties.OnPostAsync().ConfigureAwait(false);
             }
 
             // Assert

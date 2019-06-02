@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Clients.Details
+﻿namespace crgolden.Oidc.Pages.Clients.Details
 {
     using System.Threading.Tasks;
     using IdentityServer4.EntityFramework.Entities;
@@ -27,7 +27,7 @@
                 return NotFound();
             }
 
-            Client = await _context.Clients.FindAsync(id);
+            Client = await _context.Clients.FindAsync(id).ConfigureAwait(false);
             if (Client == null)
             {
                 return NotFound();

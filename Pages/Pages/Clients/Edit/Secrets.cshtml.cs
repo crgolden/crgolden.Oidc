@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Clients.Edit
+﻿namespace crgolden.Oidc.Pages.Clients.Edit
 {
     using System;
     using System.Collections.Generic;
@@ -35,7 +35,8 @@
 
             Client = await _context.Clients
                 .Include(x => x.ClientSecrets)
-                .SingleOrDefaultAsync(x => x.Id == id);
+                .SingleOrDefaultAsync(x => x.Id == id)
+                .ConfigureAwait(false);
 
             if (Client == null)
             {
@@ -65,7 +66,8 @@
 
             var client = await _context.Clients
                 .Include(x => x.ClientSecrets)
-                .SingleOrDefaultAsync(x => x.Id == Client.Id);
+                .SingleOrDefaultAsync(x => x.Id == Client.Id)
+                .ConfigureAwait(false);
 
             if (client == null)
             {
@@ -103,7 +105,7 @@
             }
 
             client.Updated = DateTime.UtcNow;
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return RedirectToPage("../Details/Secrets", new { Client.Id });
         }
     }

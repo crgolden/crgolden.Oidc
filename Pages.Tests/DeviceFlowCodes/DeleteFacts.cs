@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.DeviceFlowCodes
+﻿namespace crgolden.Oidc.Pages.Tests.DeviceFlowCodes
 {
     using System;
     using System.Threading.Tasks;
@@ -25,7 +25,7 @@
             var delete = new DeleteModel(context.Object);
 
             // Act
-            var get = await delete.OnGetAsync(deviceFlowCode.UserCode);
+            var get = await delete.OnGetAsync(deviceFlowCode.UserCode).ConfigureAwait(false);
 
             // Assert
             deviceFlowCodes.Verify(x => x.FindAsync(deviceFlowCode.UserCode), Times.Once);
@@ -45,7 +45,7 @@
             var delete = new DeleteModel(context.Object);
 
             // Act
-            var get = await delete.OnGetAsync(string.Empty);
+            var get = await delete.OnGetAsync(string.Empty).ConfigureAwait(false);
 
             // Assert
             deviceFlowCodes.Verify(x => x.FindAsync(deviceFlowCode.UserCode), Times.Never);
@@ -66,7 +66,7 @@
             var userCode = $"{Guid.NewGuid()}";
 
             // Act
-            var get = await delete.OnGetAsync(userCode);
+            var get = await delete.OnGetAsync(userCode).ConfigureAwait(false);
 
             // Assert
             deviceFlowCodes.Verify(x => x.FindAsync(userCode), Times.Once);
@@ -86,7 +86,7 @@
             var delete = new DeleteModel(context.Object) {DeviceFlowCode = deviceFlowCode};
 
             // Act
-            var post = await delete.OnPostAsync();
+            var post = await delete.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             deviceFlowCodes.Verify(x => x.FindAsync(deviceFlowCode.UserCode), Times.Once);
@@ -111,7 +111,7 @@
             };
 
             // Act
-            var post = await delete.OnPostAsync();
+            var post = await delete.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             deviceFlowCodes.Verify(x => x.FindAsync(deviceFlowCode.UserCode), Times.Never);
@@ -132,7 +132,7 @@
             var delete = new DeleteModel(context.Object) {DeviceFlowCode = deviceFlowCode};
 
             // Act
-            var post = await delete.OnPostAsync();
+            var post = await delete.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             deviceFlowCodes.Verify(x => x.FindAsync(deviceFlowCode.UserCode), Times.Once);

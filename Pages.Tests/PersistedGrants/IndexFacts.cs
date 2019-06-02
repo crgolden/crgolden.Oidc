@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.PersistedGrants
+﻿namespace crgolden.Oidc.Pages.Tests.PersistedGrants
 {
     using System.Collections.Generic;
     using IdentityServer4.EntityFramework.Entities;

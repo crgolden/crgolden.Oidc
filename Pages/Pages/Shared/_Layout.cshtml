@@ -10,7 +10,7 @@
 <head>
     <meta charset="utf-8" />
     <title>
-        Clarity@{if (!string.IsNullOrEmpty((string)ViewData["Title"]))
+        crgolden@{if (!string.IsNullOrEmpty((string)ViewData["Title"]))
             { <text>: @ViewData["Title"] </text> }}
     </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -89,7 +89,7 @@
     <nav class="navbar container fixed-top navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand"
            href="@(ViewData["Origin"] ?? "/")"
-           title="Clarity">Clarity</a>
+           title="crgolden">crgolden</a>
         @{
             if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
             {
@@ -175,7 +175,7 @@
 
     <nav class="navbar container fixed-bottom navbar-light bg-light">
         <span class="navbar-brand">
-            &copy;2019 Clarity Ventures, Inc.
+            &copy;2019 Chris Golden
         </span>
     </nav>
 

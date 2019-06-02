@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.ApiResources.Edit
+﻿namespace crgolden.Oidc.Pages.ApiResources.Edit
 {
     using System;
     using System.Collections.Generic;
@@ -35,7 +35,8 @@
 
             ApiResource = await _context.ApiResources
                 .Include(x => x.Secrets)
-                .SingleOrDefaultAsync(x => x.Id == id);
+                .SingleOrDefaultAsync(x => x.Id == id)
+                .ConfigureAwait(false);
 
             if (ApiResource == null)
             {
@@ -65,7 +66,8 @@
 
             var apiResource = await _context.ApiResources
                 .Include(x => x.Secrets)
-                .SingleOrDefaultAsync(x => x.Id == ApiResource.Id);
+                .SingleOrDefaultAsync(x => x.Id == ApiResource.Id)
+                .ConfigureAwait(false);
 
             if (apiResource == null)
             {
@@ -103,7 +105,7 @@
             }
 
             apiResource.Updated = DateTime.UtcNow;
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return RedirectToPage("../Details/Secrets", new { ApiResource.Id });
         }
     }

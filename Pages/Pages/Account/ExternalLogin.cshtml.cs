@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Account
+﻿namespace crgolden.Oidc.Pages.Account
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -104,7 +104,7 @@
                 return RedirectToPage("./Login", new { returnUrl });
             }
 
-            var info = await _signInManager.GetExternalLoginInfoAsync();
+            var info = await _signInManager.GetExternalLoginInfoAsync().ConfigureAwait(false);
             if (info == null)
             {
                 ErrorMessage = "Error loading external login information.";
@@ -113,10 +113,10 @@
 
             var user = await _userManager.FindByLoginAsync(
                 loginProvider: info.LoginProvider,
-                providerKey: info.ProviderKey);
+                providerKey: info.ProviderKey).ConfigureAwait(false);
             if (user != null)
             {
-                if (returnUrl == Url.Content("~/") && !await _userManager.IsInRoleAsync(user, "Admin"))
+                if (returnUrl == Url.Content("~/") && !await _userManager.IsInRoleAsync(user, "Admin").ConfigureAwait(false))
                 {
                     return RedirectToPage("./Login");
                 }
@@ -126,7 +126,7 @@
                     loginProvider: info.LoginProvider,
                     providerKey: info.ProviderKey,
                     isPersistent: false,
-                    bypassTwoFactor: true);
+                    bypassTwoFactor: true).ConfigureAwait(false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation($"User account with email '{user.Email}' logged in with {info.LoginProvider} provider.");
@@ -146,18 +146,18 @@
             }
             else if (info.Principal.HasClaim(x => x.Type == ClaimTypes.Email))
             {
-                user = await _userManager.FindByEmailAsync(info.Principal.FindFirstValue(ClaimTypes.Email));
+                user = await _userManager.FindByEmailAsync(info.Principal.FindFirstValue(ClaimTypes.Email)).ConfigureAwait(false);
                 if (user != null)
                 {
                     var result = await _userManager.AddLoginAsync(
                         user: user,
-                        login: info);
+                        login: info).ConfigureAwait(false);
                     if (result.Succeeded)
                     {
                         return await UpdateUser(
                             user: user,
                             info: info,
-                            returnUrl: returnUrl);
+                            returnUrl: returnUrl).ConfigureAwait(false);
                     }
                 }
             }
@@ -192,7 +192,7 @@
             TempData[nameof(Origin)] = origin;
 
             // Get the information about the user from the external login provider
-            var info = await _signInManager.GetExternalLoginInfoAsync();
+            var info = await _signInManager.GetExternalLoginInfoAsync().ConfigureAwait(false);
             if (info == null)
             {
                 ErrorMessage = "Error loading external login information during confirmation.";
@@ -201,45 +201,46 @@
 
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByEmailAsync(Input.Email);
+                var user = await _userManager.FindByEmailAsync(Input.Email).ConfigureAwait(false);
                 if (user != null)
                 {
                     var result = await _userManager.AddLoginAsync(
                         user: user,
-                        login: info);
+                        login: info).ConfigureAwait(false);
                     if (result.Succeeded)
                     {
                         return await UpdateUser(
                             user: user,
                             info: info,
                             returnUrl: returnUrl,
-                            updateClaims: true);
+                            updateClaims: true).ConfigureAwait(false);
                     }
                 }
                 else if (returnUrl != Url.Content("~/"))
                 {
                     user = new User { UserName = Input.Email, Email = Input.Email };
-                    var result = await _userManager.CreateAsync(user);
+                    var result = await _userManager.CreateAsync(user).ConfigureAwait(false);
                     if (result.Succeeded)
                     {
                         _logger.LogInformation($"User with email '${user.Email}' created an account using {info.LoginProvider} provider.");
                         result = await _userManager.AddLoginAsync(
                             user: user,
-                            login: info);
+                            login: info).ConfigureAwait(false);
                         if (result.Succeeded)
                         {
-                            await _userManager.AddToRoleAsync(user, "User");
+                            await _userManager.AddToRoleAsync(user, "User").ConfigureAwait(false);
+                            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user).ConfigureAwait(false);
                             await _emailQueueClient.SendConfirmationEmailAsync(
                                 userId: user.Id,
                                 email: user.Email,
                                 origin: origin,
-                                code: await _userManager.GenerateEmailConfirmationTokenAsync(user));
+                                code: code).ConfigureAwait(false);
                             await _userManager.AddClaimsAsync(user, new List<Claim>
                             {
                                 new Claim(JwtClaimTypes.GivenName, Input.FirstName),
                                 new Claim(JwtClaimTypes.FamilyName, Input.LastName),
                                 new Claim(ClaimTypes.Role, "User")
-                            });
+                            }).ConfigureAwait(false);
                             return RedirectToPage("./VerifyEmail", new { returnUrl });
                         }
                     }
@@ -261,20 +262,20 @@
         {
             if (updateClaims)
             {
-                await UpdateClaims(user);
+                await UpdateClaims(user).ConfigureAwait(false);
             }
-            if (await _userManager.IsLockedOutAsync(user))
+            if (await _userManager.IsLockedOutAsync(user).ConfigureAwait(false))
             {
                 _logger.LogWarning($"User account with email '{user.Email}' locked out.");
                 return RedirectToPage("./Lockout");
             }
 
-            if (!await _userManager.IsEmailConfirmedAsync(user))
+            if (!await _userManager.IsEmailConfirmedAsync(user).ConfigureAwait(false))
             {
                 return RedirectToPage("./VerifyEmail", new { returnUrl });
             }
 
-            if (returnUrl == Url.Content("~/") && !await _userManager.IsInRoleAsync(user, "Admin"))
+            if (returnUrl == Url.Content("~/") && !await _userManager.IsInRoleAsync(user, "Admin").ConfigureAwait(false))
             {
                 return RedirectToPage("./Login");
             }
@@ -282,13 +283,13 @@
             _logger.LogInformation($"User account with email '{user.Email}' logged in with {info.LoginProvider} provider.");
             await _signInManager.SignInAsync(
                 user: user,
-                isPersistent: false);
+                isPersistent: false).ConfigureAwait(false);
             return LocalRedirect(returnUrl);
         }
 
         private async Task UpdateClaims(User user)
         {
-            foreach (var claim in await _userManager.GetClaimsAsync(user))
+            foreach (var claim in await _userManager.GetClaimsAsync(user).ConfigureAwait(false))
             {
                 switch (claim.Type)
                 {
@@ -297,7 +298,7 @@
                         await _userManager.ReplaceClaimAsync(
                             user: user,
                             claim: claim,
-                            newClaim: new Claim(JwtClaimTypes.GivenName, Input.FirstName));
+                            newClaim: new Claim(JwtClaimTypes.GivenName, Input.FirstName)).ConfigureAwait(false);
                         break;
                     }
                     case JwtClaimTypes.FamilyName:
@@ -305,7 +306,7 @@
                         await _userManager.ReplaceClaimAsync(
                             user: user,
                             claim: claim,
-                            newClaim: new Claim(JwtClaimTypes.FamilyName, Input.LastName));
+                            newClaim: new Claim(JwtClaimTypes.FamilyName, Input.LastName)).ConfigureAwait(false);
                         break;
                     }
                 }

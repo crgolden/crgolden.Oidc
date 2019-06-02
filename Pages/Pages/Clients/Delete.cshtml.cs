@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Clients
+﻿namespace crgolden.Oidc.Pages.Clients
 {
     using System.Threading.Tasks;
     using IdentityServer4.EntityFramework.Entities;
@@ -27,7 +27,7 @@
                 return NotFound();
             }
 
-            Client = await _context.Clients.FindAsync(id);
+            Client = await _context.Clients.FindAsync(id).ConfigureAwait(false);
             if (Client == null)
             {
                 return NotFound();
@@ -43,14 +43,14 @@
                 return Page();
             }
 
-            var client = await _context.Clients.FindAsync(Client.Id);
+            var client = await _context.Clients.FindAsync(Client.Id).ConfigureAwait(false);
             if (client == null)
             {
                 return Page();
             }
 
             _context.Clients.Remove(client);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return RedirectToPage("./Index");
         }
     }

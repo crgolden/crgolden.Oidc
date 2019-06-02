@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.PersistedGrants.Details
+﻿namespace crgolden.Oidc.Pages.Tests.PersistedGrants.Details
 {
     using System;
     using System.Threading.Tasks;
@@ -25,7 +25,7 @@
             var index = new IndexModel(context.Object);
 
             // Act
-            var get = await index.OnGetAsync(persistedGrant.Key);
+            var get = await index.OnGetAsync(persistedGrant.Key).ConfigureAwait(false);
 
             // Assert
             persistedGrants.Verify(x => x.FindAsync(persistedGrant.Key), Times.Once);
@@ -46,7 +46,7 @@
             var index = new IndexModel(context.Object);
 
             // Act
-            var get = await index.OnGetAsync(key);
+            var get = await index.OnGetAsync(key).ConfigureAwait(false);
 
             // Assert
             persistedGrants.Verify(x => x.FindAsync(key), Times.Never);
@@ -67,7 +67,7 @@
             var index = new IndexModel(context.Object);
 
             // Act
-            var get = await index.OnGetAsync(key);
+            var get = await index.OnGetAsync(key).ConfigureAwait(false);
 
             // Assert
             persistedGrants.Verify(x => x.FindAsync(key), Times.Once);

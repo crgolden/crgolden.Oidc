@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Roles.Edit
+﻿namespace crgolden.Oidc.Pages.Roles.Edit
 {
     using System;
     using System.Collections.Generic;
@@ -34,7 +34,8 @@
 
             Role = await _roleManager.Roles
                 .Include(x => x.RoleClaims)
-                .SingleOrDefaultAsync(x => x.Id.Equals(id));
+                .SingleOrDefaultAsync(x => x.Id.Equals(id))
+                .ConfigureAwait(false);
 
             if (Role == null)
             {
@@ -61,7 +62,8 @@
 
             var role = await _roleManager.Roles
                 .Include(x => x.RoleClaims)
-                .SingleOrDefaultAsync(x => x.Id.Equals(Role.Id));
+                .SingleOrDefaultAsync(x => x.Id.Equals(Role.Id))
+                .ConfigureAwait(false);
 
             if (role == null)
             {
@@ -78,19 +80,19 @@
                         continue;
                     }
 
-                    await _roleManager.RemoveClaimAsync(role, claim.ToClaim());
-                    await _roleManager.AddClaimAsync(role, roleClaim.ToClaim());
+                    await _roleManager.RemoveClaimAsync(role, claim.ToClaim()).ConfigureAwait(false);
+                    await _roleManager.AddClaimAsync(role, roleClaim.ToClaim()).ConfigureAwait(false);
                 }
 
                 foreach (var roleClaim in Role.RoleClaims.Where(x => x.Id == 0))
                 {
-                    await _roleManager.AddClaimAsync(role, roleClaim.ToClaim());
+                    await _roleManager.AddClaimAsync(role, roleClaim.ToClaim()).ConfigureAwait(false);
                 }
 
                 var roleClaims = role.RoleClaims.Where(x => !Role.RoleClaims.Any(y => y.Id.Equals(x.Id))).ToArray();
                 foreach (var roleClaim in roleClaims)
                 {
-                    await _roleManager.RemoveClaimAsync(role, roleClaim.ToClaim());
+                    await _roleManager.RemoveClaimAsync(role, roleClaim.ToClaim()).ConfigureAwait(false);
                 }
             }
             else
@@ -98,7 +100,7 @@
                 var roleClaims = role.RoleClaims.ToArray();
                 foreach (var roleClaim in roleClaims)
                 {
-                    await _roleManager.RemoveClaimAsync(role, roleClaim.ToClaim());
+                    await _roleManager.RemoveClaimAsync(role, roleClaim.ToClaim()).ConfigureAwait(false);
                 }
             }
 

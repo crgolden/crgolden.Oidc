@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.Clients
+﻿namespace crgolden.Oidc.Pages.Tests.Clients
 {
     using System;
     using System.Threading.Tasks;
@@ -44,7 +44,7 @@
             var create = new CreateModel(context.Object) {Client = client};
 
             // Act
-            var post = await create.OnPostAsync();
+            var post = await create.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             clients.Verify(

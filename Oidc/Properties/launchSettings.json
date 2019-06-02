@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Clarity.Oidc": {
+    "crgolden.Oidc": {
       "commandName": "Project",
       "launchBrowser": true,
       "applicationUrl": "https://localhost:6001",

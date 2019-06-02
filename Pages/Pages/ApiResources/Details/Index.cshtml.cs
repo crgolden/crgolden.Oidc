@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.ApiResources.Details
+﻿namespace crgolden.Oidc.Pages.ApiResources.Details
 {
     using System.Threading.Tasks;
     using IdentityServer4.EntityFramework.Entities;
@@ -27,7 +27,7 @@
                 return NotFound();
             }
 
-            ApiResource = await _context.ApiResources.FindAsync(id);
+            ApiResource = await _context.ApiResources.FindAsync(id).ConfigureAwait(false);
             if (ApiResource == null)
             {
                 return NotFound();

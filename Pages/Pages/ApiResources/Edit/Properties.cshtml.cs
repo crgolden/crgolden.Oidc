@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.ApiResources.Edit
+﻿namespace crgolden.Oidc.Pages.ApiResources.Edit
 {
     using System;
     using System.Collections.Generic;
@@ -35,7 +35,8 @@
 
             ApiResource = await _context.ApiResources
                 .Include(x => x.Properties)
-                .SingleOrDefaultAsync(x => x.Id.Equals(id));
+                .SingleOrDefaultAsync(x => x.Id.Equals(id))
+                .ConfigureAwait(false);
 
             if (ApiResource == null)
             {
@@ -62,7 +63,8 @@
 
             var apiResource = await _context.ApiResources
                 .Include(x => x.Properties)
-                .SingleOrDefaultAsync(x => x.Id.Equals(ApiResource.Id));
+                .SingleOrDefaultAsync(x => x.Id.Equals(ApiResource.Id))
+                .ConfigureAwait(false);
 
             if (apiResource == null)
             {
@@ -91,7 +93,7 @@
             }
 
             apiResource.Updated = DateTime.UtcNow;
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return RedirectToPage("../Details/Properties", new { ApiResource.Id });
         }
     }

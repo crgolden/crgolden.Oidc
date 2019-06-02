@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Users.Edit
+﻿namespace crgolden.Oidc.Pages.Users.Edit
 {
     using System;
     using System.Threading.Tasks;
@@ -27,7 +27,7 @@
                 return NotFound();
             }
 
-            UserModel = await _userManager.FindByIdAsync($"{id}");
+            UserModel = await _userManager.FindByIdAsync($"{id}").ConfigureAwait(false);
             if (UserModel == null)
             {
                 return NotFound();
@@ -43,7 +43,7 @@
                 return Page();
             }
 
-            var user = await _userManager.FindByIdAsync($"{UserModel.Id}");
+            var user = await _userManager.FindByIdAsync($"{UserModel.Id}").ConfigureAwait(false);
             if (user == null)
             {
                 return Page();
@@ -58,7 +58,7 @@
             user.PhoneNumber = UserModel.PhoneNumber;
             user.AccessFailedCount = UserModel.AccessFailedCount;
 
-            await _userManager.UpdateAsync(user);
+            await _userManager.UpdateAsync(user).ConfigureAwait(false);
             return RedirectToPage("../Details/Index", new { UserModel.Id });
         }
     }

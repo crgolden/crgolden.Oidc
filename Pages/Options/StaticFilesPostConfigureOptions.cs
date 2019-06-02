@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Options
+﻿namespace crgolden.Oidc.Options
 {
     using System.Diagnostics.CodeAnalysis;
     using Microsoft.AspNetCore.Builder;

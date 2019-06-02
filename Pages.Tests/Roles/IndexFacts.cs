@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.Roles
+﻿namespace crgolden.Oidc.Pages.Tests.Roles
 {
     using System.Collections.Generic;
     using Microsoft.AspNetCore.Identity;

@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc
+﻿namespace crgolden.Oidc
 {
     using System.Threading;
     using System.Threading.Tasks;
@@ -24,7 +24,7 @@
             WebHost
                 .CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration(configBuilder => configBuilder.AddAzureKeyVault())
-                .UseSerilog("Clarity.Oidc", true)
+                .UseSerilog("crgolden.Oidc", true)
                 .UseStartup<Startup>()
                 .Build();
     }

@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.DeviceFlowCodes
+﻿namespace crgolden.Oidc.Pages.Tests.DeviceFlowCodes
 {
     using System.Collections.Generic;
     using IdentityServer4.EntityFramework.Entities;

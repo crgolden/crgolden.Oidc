@@ -2,28 +2,31 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>Clarity.Oidc</RootNamespace>
+    <RootNamespace>crgolden.Oidc</RootNamespace>
     <LangVersion>latest</LangVersion>
-    <PackageId>Clarity.Oidc.Data</PackageId>
-    <Version>1.1.1</Version>
-    <Company>Clarity</Company>
+    <PackageId>crgolden.Oidc.Data</PackageId>
+    <Version>1.0.0</Version>
+    <Company>crgolden</Company>
     <Authors>Chris Golden</Authors>
-    <RepositoryUrl>https://crgolden.visualstudio.com/Clarity/_git/Clarity.Oidc</RepositoryUrl>
+    <RepositoryUrl>https://github.com/crgolden/crgolden.Oidc</RepositoryUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\Clarity.Oidc.snk</AssemblyOriginatorKeyFile>
-    <PackageIconUrl>https://clarity-ui.azurewebsites.net/favicon.ico</PackageIconUrl>
-    <PackageProjectUrl>https://crgolden.visualstudio.com/Clarity</PackageProjectUrl>
+    <AssemblyOriginatorKeyFile>..\crgolden.Oidc.snk</AssemblyOriginatorKeyFile>
+    <PackageIconUrl>https://crgolden-ui.azurewebsites.net/favicon.ico</PackageIconUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="IdentityServer4.EntityFramework" Version="2.4.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.4" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-19270-01">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

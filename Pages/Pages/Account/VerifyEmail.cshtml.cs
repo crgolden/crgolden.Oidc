@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Account
+﻿namespace crgolden.Oidc.Pages.Account
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -54,25 +54,26 @@
             returnUrl = returnUrl ?? Url.Content("~/");
             TempData[nameof(Origin)] = origin;
 
-            var info = await _signInManager.GetExternalLoginInfoAsync();
+            var info = await _signInManager.GetExternalLoginInfoAsync().ConfigureAwait(false);
             if (info == null)
             {
                 ErrorMessage = "Error loading external login information.";
                 return RedirectToPage("./Login", new { returnUrl });
             }
 
-            var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+            var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey).ConfigureAwait(false);
             if (user == null)
             {
                 ErrorMessage = $"Unable to load user with ID '{_userManager.GetUserId(info.Principal)}'.";
                 return RedirectToPage("./Login", new { ReturnUrl });
             }
 
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user).ConfigureAwait(false);
             await _emailQueueClient.SendConfirmationEmailAsync(
                 userId: user.Id,
                 email: user.Email,
                 origin: origin,
-                code: await _userManager.GenerateEmailConfirmationTokenAsync(user));
+                code: code).ConfigureAwait(false);
             _logger.LogInformation($"Email verification email sent to '{user.Email}'.");
 
             SuccessMessage = "Verification email sent. Please check your email.";

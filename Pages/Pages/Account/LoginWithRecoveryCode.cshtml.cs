@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Account
+﻿namespace crgolden.Oidc.Pages.Account
 {
     using System;
     using System.ComponentModel.DataAnnotations;
@@ -42,7 +42,7 @@
         public async Task<IActionResult> OnGetAsync(string returnUrl = null)
         {
             // Ensure the user has gone through the username & password screen first
-            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync().ConfigureAwait(false);
             if (user == null)
             {
                 throw new InvalidOperationException("Unable to load two-factor authentication user.");
@@ -59,14 +59,14 @@
             returnUrl = returnUrl ?? Url.Content("~/");
             TempData[nameof(Origin)] = origin;
 
-            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync().ConfigureAwait(false);
             if (user == null)
             {
                 throw new InvalidOperationException("Unable to load two-factor authentication user.");
             }
 
             var result = await _signInManager.TwoFactorRecoveryCodeSignInAsync(
-                recoveryCode: Input.RecoveryCode.Replace(" ", string.Empty));
+                recoveryCode: Input.RecoveryCode.Replace(" ", string.Empty)).ConfigureAwait(false);
             if (result.Succeeded)
             {
                 _logger.LogInformation($"User with email '{user.Email}' logged in with a recovery code.");

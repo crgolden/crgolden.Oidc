@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Roles.Edit
+﻿namespace crgolden.Oidc.Pages.Roles.Edit
 {
     using System;
     using System.Collections.Generic;
@@ -39,7 +39,8 @@
 
             Role = await _roleManager.Roles
                 .Include(x => x.UserRoles)
-                .SingleOrDefaultAsync(x => x.Id.Equals(id));
+                .SingleOrDefaultAsync(x => x.Id.Equals(id))
+                .ConfigureAwait(false);
 
             if (Role == null)
             {
@@ -64,7 +65,8 @@
 
             var role = await _roleManager.Roles
                 .Include(x => x.UserRoles)
-                .SingleOrDefaultAsync(x => x.Id.Equals(Role.Id));
+                .SingleOrDefaultAsync(x => x.Id.Equals(Role.Id))
+                .ConfigureAwait(false);
 
             if (role == null)
             {
@@ -75,30 +77,30 @@
             {
                 foreach (var roleUser in Role.UserRoles.Where(x => !role.UserRoles.Any(y => y.UserId.Equals(x.UserId))))
                 {
-                    var user = await _userManager.FindByIdAsync($"{roleUser.UserId}");
-                    await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, role.Name));
+                    var user = await _userManager.FindByIdAsync($"{roleUser.UserId}").ConfigureAwait(false);
+                    await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, role.Name)).ConfigureAwait(false);
                     role.UserRoles.Add(roleUser);
                 }
 
                 var roleUsers = role.UserRoles.Where(x => !Role.UserRoles.Any(y => y.UserId.Equals(x.UserId))).ToArray();
                 foreach (var roleUser in roleUsers)
                 {
-                    var user = await _userManager.FindByIdAsync($"{roleUser.UserId}");
-                    await _userManager.RemoveClaimAsync(user, new Claim(ClaimTypes.Role, role.Name));
+                    var user = await _userManager.FindByIdAsync($"{roleUser.UserId}").ConfigureAwait(false);
+                    await _userManager.RemoveClaimAsync(user, new Claim(ClaimTypes.Role, role.Name)).ConfigureAwait(false);
                     role.UserRoles.Remove(roleUser);
                 }
             }
             else
             {
                 role.UserRoles = new List<UserRole>();
-                var users = await _userManager.GetUsersInRoleAsync(role.Name);
+                var users = await _userManager.GetUsersInRoleAsync(role.Name).ConfigureAwait(false);
                 foreach (var user in users)
                 {
-                    await _userManager.RemoveClaimAsync(user, new Claim(ClaimTypes.Role, role.Name));
+                    await _userManager.RemoveClaimAsync(user, new Claim(ClaimTypes.Role, role.Name)).ConfigureAwait(false);
                 }
             }
 
-            await _roleManager.UpdateAsync(role);
+            await _roleManager.UpdateAsync(role).ConfigureAwait(false);
             return RedirectToPage("../Details/Users", new { Role.Id });
         }
     }

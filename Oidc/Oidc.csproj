@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <RootNamespace>Clarity.Oidc</RootNamespace>
+    <RootNamespace>crgolden.Oidc</RootNamespace>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <UserSecretsId>67b77ad0-95d6-4b9d-960d-e31607ac82cc</UserSecretsId>
     <ApplicationInsightsResourceId>/subscriptions/71eb0568-25ab-4be5-b85a-a043d609410f/resourcegroups/Default-ApplicationInsights-WestUS2/providers/microsoft.insights/components/DotNetCore</ApplicationInsightsResourceId>
@@ -20,10 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Clarity.Core.Factories" Version="1.3.0" />
-    <PackageReference Include="Clarity.Core.QueueClients" Version="1.7.2" />
-    <PackageReference Include="Clarity.Core.Services" Version="1.5.4" />
-    <PackageReference Include="Clarity.Core.Transformers" Version="1.4.0" />
+    <PackageReference Include="crgolden.Core.Factories" Version="1.0.0" />
+    <PackageReference Include="crgolden.Core.QueueClients" Version="1.0.1" />
+    <PackageReference Include="crgolden.Core.Services" Version="1.0.1" />
+    <PackageReference Include="crgolden.Core.Transformers" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 

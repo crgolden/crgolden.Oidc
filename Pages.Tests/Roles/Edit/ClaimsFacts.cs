@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.Roles.Edit
+﻿namespace crgolden.Oidc.Pages.Tests.Roles.Edit
 {
     using System;
     using System.Collections.Generic;
@@ -49,7 +49,7 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(role);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             ClaimsModel model;
@@ -60,7 +60,7 @@
             {
                 _roleManager.Setup(x => x.Roles).Returns(context.Roles);
                 model = new ClaimsModel(_roleManager.Object);
-                get = await model.OnGetAsync(role.Id);
+                get = await model.OnGetAsync(role.Id).ConfigureAwait(false);
             }
 
             // Assert
@@ -91,7 +91,7 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(role);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             ClaimsModel model;
@@ -102,7 +102,7 @@
             {
                 _roleManager.Setup(x => x.Roles).Returns(context.Roles);
                 model = new ClaimsModel(_roleManager.Object);
-                get = await model.OnGetAsync(Guid.Empty);
+                get = await model.OnGetAsync(Guid.Empty).ConfigureAwait(false);
             }
 
             // Assert
@@ -131,7 +131,7 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(role);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             ClaimsModel model;
@@ -142,7 +142,7 @@
             {
                 _roleManager.Setup(x => x.Roles).Returns(context.Roles);
                 model = new ClaimsModel(_roleManager.Object);
-                get = await model.OnGetAsync(Guid.NewGuid());
+                get = await model.OnGetAsync(Guid.NewGuid()).ConfigureAwait(false);
             }
 
             // Assert
@@ -194,7 +194,7 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(role);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             IActionResult post;
@@ -207,7 +207,7 @@
                 model.Role.RoleClaims.Single(x => x.ClaimType.Equals(roleClaim2.ClaimType)).ClaimType = newRoleClaim2Type;
                 model.Role.RoleClaims.Remove(roleClaim3);
                 model.Role.RoleClaims.Add(roleClaim4);
-                post = await model.OnPostAsync();
+                post = await model.OnPostAsync().ConfigureAwait(false);
             }
 
             // Assert
@@ -268,7 +268,7 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(role);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             IActionResult get;
@@ -281,7 +281,7 @@
                 {
                     Role = new Role {Id = role.Id}
                 };
-                get = await model.OnPostAsync();
+                get = await model.OnPostAsync().ConfigureAwait(false);
             }
 
             // Assert
@@ -313,7 +313,7 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(role);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             IActionResult post;
@@ -326,7 +326,7 @@
                 {
                     Role = new Role {Id = id}
                 };
-                post = await model.OnPostAsync();
+                post = await model.OnPostAsync().ConfigureAwait(false);
             }
 
             // Assert
@@ -347,7 +347,7 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(role);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             IActionResult post;
@@ -360,7 +360,7 @@
                 {
                     Role = new Role {Id = id}
                 };
-                post = await model.OnPostAsync();
+                post = await model.OnPostAsync().ConfigureAwait(false);
             }
 
             // Assert

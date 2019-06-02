@@ -1,4 +1,4 @@
-namespace Clarity.Oidc
+namespace crgolden.Oidc
 {
     using System.Collections.Generic;
     using System.Linq;

@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Roles
+﻿namespace crgolden.Oidc.Pages.Roles
 {
     using System.Collections.Generic;
     using System.Security.Claims;
@@ -41,12 +41,12 @@
             {
                 foreach (var userRole in Role.UserRoles)
                 {
-                    var user = await _userManager.FindByIdAsync($"{userRole.UserId}");
-                    await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, Role.Name));
+                    var user = await _userManager.FindByIdAsync($"{userRole.UserId}").ConfigureAwait(false);
+                    await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, Role.Name)).ConfigureAwait(false);
                 }
             }
 
-            await _roleManager.CreateAsync(Role);
+            await _roleManager.CreateAsync(Role).ConfigureAwait(false);
             return RedirectToPage("./Details/Index", new { Role.Id });
         }
     }

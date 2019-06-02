@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Account
+﻿namespace crgolden.Oidc.Pages.Account
 {
     using System;
     using System.ComponentModel.DataAnnotations;
@@ -47,7 +47,7 @@
         public async Task<IActionResult> OnGetAsync(bool rememberMe, string returnUrl = null)
         {
             // Ensure the user has gone through the username & password screen first
-            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync().ConfigureAwait(false);
             if (user == null)
             {
                 throw new InvalidOperationException("Unable to load two-factor authentication user.");
@@ -66,7 +66,7 @@
             returnUrl = returnUrl ?? Url.Content("~/");
             TempData[nameof(Origin)] = origin;
 
-            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync().ConfigureAwait(false);
             if (user == null)
             {
                 throw new InvalidOperationException($"Unable to load two-factor authentication user.");
@@ -75,7 +75,7 @@
             var result = await _signInManager.TwoFactorAuthenticatorSignInAsync(
                 code: Input.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty),
                 isPersistent: rememberMe,
-                rememberClient: Input.RememberMachine);
+                rememberClient: Input.RememberMachine).ConfigureAwait(false);
             if (result.Succeeded)
             {
                 _logger.LogInformation($"User with email '{user.Email}' logged in with 2fa.");

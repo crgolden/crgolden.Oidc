@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.Roles.Edit
+﻿namespace crgolden.Oidc.Pages.Tests.Roles.Edit
 {
     using System;
     using System.Collections.Generic;
@@ -34,7 +34,7 @@
             var index = new IndexModel(_roleManager.Object);
 
             // Act
-            var get = await index.OnGetAsync(role.Id);
+            var get = await index.OnGetAsync(role.Id).ConfigureAwait(false);
 
             // Assert
             _roleManager.Verify(x => x.FindByIdAsync($"{role.Id}"), Times.Once);
@@ -51,7 +51,7 @@
             var index = new IndexModel(_roleManager.Object);
 
             // Act
-            var get = await index.OnGetAsync(Guid.Empty);
+            var get = await index.OnGetAsync(Guid.Empty).ConfigureAwait(false);
 
             // Assert
             _roleManager.Verify(x => x.FindByIdAsync($"{role.Id}"), Times.Never);
@@ -69,7 +69,7 @@
             var id = Guid.NewGuid();
 
             // Act
-            var get = await index.OnGetAsync(id);
+            var get = await index.OnGetAsync(id).ConfigureAwait(false);
 
             // Assert
             _roleManager.Verify(x => x.FindByIdAsync($"{id}"), Times.Once);
@@ -95,7 +95,7 @@
             var index = new IndexModel(_roleManager.Object) {Role = role2};
 
             // Act
-            var post = await index.OnPostAsync();
+            var post = await index.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             _roleManager.Verify(
@@ -124,7 +124,7 @@
             };
 
             // Act
-            var post = await index.OnPostAsync();
+            var post = await index.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             _roleManager.Verify(x => x.FindByIdAsync($"{id}"), Times.Never);
@@ -144,7 +144,7 @@
             };
 
             // Act
-            var post = await index.OnPostAsync();
+            var post = await index.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             _roleManager.Verify(x => x.FindByIdAsync($"{id}"), Times.Once);

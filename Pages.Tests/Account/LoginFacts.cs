@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.Account
+﻿namespace crgolden.Oidc.Pages.Tests.Account
 {
     using System;
     using System.Collections.Generic;
@@ -81,7 +81,7 @@
             };
 
             // Act
-            var get = await login.OnGetAsync(returnUrl);
+            var get = await login.OnGetAsync(returnUrl).ConfigureAwait(false);
 
             // Assert
             Assert.IsType<PageResult>(get);
@@ -116,7 +116,7 @@
             };
 
             // Act
-            var get = await login.OnGetAsync();
+            var get = await login.OnGetAsync().ConfigureAwait(false);
 
             // Assert
             Assert.IsType<PageResult>(get);
@@ -168,7 +168,7 @@
             };
 
             // Act
-            var post = await login.OnPostAsync(returnUrl, origin);
+            var post = await login.OnPostAsync(returnUrl, origin).ConfigureAwait(false);
 
             // Assert
             var result = Assert.IsType<LocalRedirectResult>(post);
@@ -215,7 +215,7 @@
             };
 
             // Act
-            var post = await login.OnPostAsync();
+            var post = await login.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             Assert.IsType<PageResult>(post);
@@ -264,7 +264,7 @@
             };
 
             // Act
-            var post = await login.OnPostAsync();
+            var post = await login.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             Assert.IsType<PageResult>(post);
@@ -316,7 +316,7 @@
             };
 
             // Act
-            var post = await login.OnPostAsync(returnUrl);
+            var post = await login.OnPostAsync(returnUrl).ConfigureAwait(false);
 
             // Assert
             var result = Assert.IsType<RedirectToPageResult>(post);
@@ -380,7 +380,7 @@
             };
 
             // Act
-            var post = await login.OnPostAsync(returnUrl);
+            var post = await login.OnPostAsync(returnUrl).ConfigureAwait(false);
 
             // Assert
             var result = Assert.IsType<RedirectToPageResult>(post);
@@ -430,7 +430,7 @@
             };
 
             // Act
-            var post = await login.OnPostAsync(returnUrl);
+            var post = await login.OnPostAsync(returnUrl).ConfigureAwait(false);
 
             // Assert
             var result = Assert.IsType<RedirectToPageResult>(post);
@@ -488,7 +488,7 @@
             };
 
             // Act
-            var post = await login.OnPostAsync(returnUrl);
+            var post = await login.OnPostAsync(returnUrl).ConfigureAwait(false);
 
             // Assert
             Assert.IsType<PageResult>(post);

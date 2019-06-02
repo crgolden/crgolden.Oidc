@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Clients.Edit
+﻿namespace crgolden.Oidc.Pages.Clients.Edit
 {
     using System;
     using System.Threading.Tasks;
@@ -28,7 +28,7 @@
                 return NotFound();
             }
 
-            Client = await _context.Clients.FindAsync(id);
+            Client = await _context.Clients.FindAsync(id).ConfigureAwait(false);
             if (Client == null)
             {
                 return NotFound();
@@ -44,7 +44,7 @@
                 return Page();
             }
 
-            var client = await _context.Clients.FindAsync(Client.Id);
+            var client = await _context.Clients.FindAsync(Client.Id).ConfigureAwait(false);
             if (client == null)
             {
                 return Page();
@@ -90,7 +90,7 @@
             client.UserCodeType = Client.UserCodeType;
             client.UserSsoLifetime = Client.UserSsoLifetime;
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return RedirectToPage("../Details/Index", new { Client.Id });
         }
     }

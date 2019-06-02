@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.Users.Edit
+﻿namespace crgolden.Oidc.Pages.Tests.Users.Edit
 {
     using System;
     using System.Collections.Generic;
@@ -54,7 +54,7 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(user);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             ClaimsModel model;
@@ -65,7 +65,7 @@
             {
                 _userManager.Setup(x => x.Users).Returns(context.Users);
                 model = new ClaimsModel(_userManager.Object);
-                get = await model.OnGetAsync(user.Id);
+                get = await model.OnGetAsync(user.Id).ConfigureAwait(false);
             }
 
             // Assert
@@ -96,7 +96,7 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(user);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             ClaimsModel model;
@@ -107,7 +107,7 @@
             {
                 _userManager.Setup(x => x.Users).Returns(context.Users);
                 model = new ClaimsModel(_userManager.Object);
-                get = await model.OnGetAsync(Guid.Empty);
+                get = await model.OnGetAsync(Guid.Empty).ConfigureAwait(false);
             }
 
             // Assert
@@ -136,7 +136,7 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(user);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             ClaimsModel model;
@@ -147,7 +147,7 @@
             {
                 _userManager.Setup(x => x.Users).Returns(context.Users);
                 model = new ClaimsModel(_userManager.Object);
-                get = await model.OnGetAsync(Guid.NewGuid());
+                get = await model.OnGetAsync(Guid.NewGuid()).ConfigureAwait(false);
             }
 
             // Assert
@@ -199,7 +199,7 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(user);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             IActionResult post;
@@ -212,7 +212,7 @@
                 model.UserModel.Claims.Single(x => x.ClaimType.Equals(userClaim2.ClaimType)).ClaimType = newUserClaim2Type;
                 model.UserModel.Claims.Remove(userClaim3);
                 model.UserModel.Claims.Add(userClaim4);
-                post = await model.OnPostAsync();
+                post = await model.OnPostAsync().ConfigureAwait(false);
             }
 
             // Assert
@@ -267,7 +267,7 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(user);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             IActionResult get;
@@ -280,7 +280,7 @@
                 {
                     UserModel = new User {Id = user.Id}
                 };
-                get = await model.OnPostAsync();
+                get = await model.OnPostAsync().ConfigureAwait(false);
             }
 
             // Assert
@@ -312,7 +312,7 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(user);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             IActionResult post;
@@ -325,7 +325,7 @@
                 {
                     UserModel = new User {Id = id}
                 };
-                post = await model.OnPostAsync();
+                post = await model.OnPostAsync().ConfigureAwait(false);
             }
 
             // Assert
@@ -346,7 +346,7 @@
             using (var context = new OidcDbContext(options))
             {
                 context.Add(user);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             IActionResult post;
@@ -359,7 +359,7 @@
                 {
                     UserModel = new User {Id = id}
                 };
-                post = await model.OnPostAsync();
+                post = await model.OnPostAsync().ConfigureAwait(false);
             }
 
             // Assert

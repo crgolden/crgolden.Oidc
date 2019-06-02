@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Home
+﻿namespace crgolden.Oidc.Pages.Home
 {
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;

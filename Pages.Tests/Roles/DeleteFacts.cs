@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.Roles
+﻿namespace crgolden.Oidc.Pages.Tests.Roles
 {
     using System;
     using System.Collections.Generic;
@@ -48,7 +48,7 @@
             var delete = new DeleteModel(_roleManager.Object, _userManager.Object);
 
             // Act
-            var get = await delete.OnGetAsync(role.Id);
+            var get = await delete.OnGetAsync(role.Id).ConfigureAwait(false);
 
             // Assert
             _roleManager.Verify(x => x.FindByIdAsync($"{role.Id}"), Times.Once);
@@ -66,7 +66,7 @@
             var id = Guid.Empty;
 
             // Act
-            var get = await delete.OnGetAsync(id);
+            var get = await delete.OnGetAsync(id).ConfigureAwait(false);
 
             // Assert
             _roleManager.Verify(x => x.FindByIdAsync($"{id}"), Times.Never);
@@ -84,7 +84,7 @@
             var id = Guid.NewGuid();
 
             // Act
-            var get = await delete.OnGetAsync(id);
+            var get = await delete.OnGetAsync(id).ConfigureAwait(false);
 
             // Assert
             _roleManager.Verify(x => x.FindByIdAsync($"{id}"), Times.Once);
@@ -109,7 +109,7 @@
             var delete = new DeleteModel(_roleManager.Object, _userManager.Object) {Role = role};
 
             // Act
-            var post = await delete.OnPostAsync();
+            var post = await delete.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             _roleManager.Verify(x => x.FindByIdAsync($"{role.Id}"), Times.Once);
@@ -139,7 +139,7 @@
             };
 
             // Act
-            var post = await delete.OnPostAsync();
+            var post = await delete.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             _roleManager.Verify(x => x.FindByIdAsync($"{id}"), Times.Never);
@@ -160,7 +160,7 @@
             };
 
             // Act
-            var post = await delete.OnPostAsync();
+            var post = await delete.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             _roleManager.Verify(x => x.FindByIdAsync($"{id}"), Times.Once);

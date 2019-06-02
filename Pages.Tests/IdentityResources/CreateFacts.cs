@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.IdentityResources
+﻿namespace crgolden.Oidc.Pages.Tests.IdentityResources
 {
     using System;
     using System.Threading.Tasks;
@@ -43,7 +43,7 @@
             var create = new CreateModel(context.Object) {IdentityResource = identityResource};
 
             // Act
-            var post = await create.OnPostAsync();
+            var post = await create.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             identityResources.Verify(

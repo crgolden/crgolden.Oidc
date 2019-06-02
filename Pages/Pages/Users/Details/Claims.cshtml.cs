@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Users.Details
+﻿namespace crgolden.Oidc.Pages.Users.Details
 {
     using System;
     using System.Collections.Generic;
@@ -35,7 +35,8 @@
 
             UserModel = await _userManager.Users
                 .Include(x => x.Claims)
-                .SingleOrDefaultAsync(x => x.Id.Equals(id));
+                .SingleOrDefaultAsync(x => x.Id.Equals(id))
+                .ConfigureAwait(false);
             if (UserModel == null)
             {
                 return NotFound();

@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc
+﻿namespace crgolden.Oidc
 {
     using System;
     using System.Collections.Generic;
@@ -97,7 +97,7 @@
                     var client = new Client
                     {
                         ClientId = $"{Guid.NewGuid()}",
-                        ClientName = "Clarity Angular Client",
+                        ClientName = "Angular Client",
                         AllowedGrantTypes = GrantTypes.Implicit,
                         AllowAccessTokensViaBrowser = true,
                         RedirectUris =

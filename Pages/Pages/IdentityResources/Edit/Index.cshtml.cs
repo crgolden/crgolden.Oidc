@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.IdentityResources.Edit
+﻿namespace crgolden.Oidc.Pages.IdentityResources.Edit
 {
     using System;
     using System.Threading.Tasks;
@@ -28,7 +28,7 @@
                 return NotFound();
             }
 
-            IdentityResource = await _context.IdentityResources.FindAsync(id);
+            IdentityResource = await _context.IdentityResources.FindAsync(id).ConfigureAwait(false);
             if (IdentityResource == null)
             {
                 return NotFound();
@@ -44,7 +44,7 @@
                 return Page();
             }
 
-            var identityResource = await _context.IdentityResources.FindAsync(IdentityResource.Id);
+            var identityResource = await _context.IdentityResources.FindAsync(IdentityResource.Id).ConfigureAwait(false);
             if (identityResource == null)
             {
                 return Page();
@@ -60,7 +60,7 @@
             identityResource.NonEditable = IdentityResource.NonEditable;
             identityResource.Updated = DateTime.UtcNow;
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return RedirectToPage("../Details/Index", new { IdentityResource.Id });
         }
     }

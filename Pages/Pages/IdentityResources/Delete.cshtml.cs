@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.IdentityResources
+﻿namespace crgolden.Oidc.Pages.IdentityResources
 {
     using System.Threading.Tasks;
     using IdentityServer4.EntityFramework.Entities;
@@ -27,7 +27,7 @@
                 return NotFound();
             }
 
-            IdentityResource = await _context.IdentityResources.FindAsync(id);
+            IdentityResource = await _context.IdentityResources.FindAsync(id).ConfigureAwait(false);
             if (IdentityResource == null)
             {
                 return NotFound();
@@ -43,14 +43,14 @@
                 return Page();
             }
 
-            var identityResource = await _context.IdentityResources.FindAsync(IdentityResource.Id);
+            var identityResource = await _context.IdentityResources.FindAsync(IdentityResource.Id).ConfigureAwait(false);
             if (identityResource == null)
             {
                 return Page();
             }
 
             _context.IdentityResources.Remove(identityResource);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return RedirectToPage("./Index");
         }
     }

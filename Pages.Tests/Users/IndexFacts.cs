@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.Users
+﻿namespace crgolden.Oidc.Pages.Tests.Users
 {
     using System;
     using System.Collections.Generic;

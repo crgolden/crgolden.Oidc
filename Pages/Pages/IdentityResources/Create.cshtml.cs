@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.IdentityResources
+﻿namespace crgolden.Oidc.Pages.IdentityResources
 {
     using System;
     using System.Threading.Tasks;
@@ -31,7 +31,7 @@
         {
             IdentityResource.Created = DateTime.UtcNow;
             _context.IdentityResources.Add(IdentityResource);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return RedirectToPage("./Details/Index", new { IdentityResource.Id });
         }
     }

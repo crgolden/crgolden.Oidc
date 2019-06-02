@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.ApiResources
+﻿namespace crgolden.Oidc.Pages.Tests.ApiResources
 {
     using System;
     using System.Threading.Tasks;
@@ -27,7 +27,7 @@
             var delete = new DeleteModel(context.Object);
 
             // Act
-            var get = await delete.OnGetAsync(apiResource.Id);
+            var get = await delete.OnGetAsync(apiResource.Id).ConfigureAwait(false);
 
             // Assert
             apiResources.Verify(x => x.FindAsync(apiResource.Id), Times.Once);
@@ -48,7 +48,7 @@
             const int id = 0;
 
             // Act
-            var get = await delete.OnGetAsync(id);
+            var get = await delete.OnGetAsync(id).ConfigureAwait(false);
 
             // Assert
             apiResources.Verify(x => x.FindAsync(id), Times.Never);
@@ -69,7 +69,7 @@
             var id = Random.Next();
 
             // Act
-            var get = await delete.OnGetAsync(id);
+            var get = await delete.OnGetAsync(id).ConfigureAwait(false);
 
             // Assert
             apiResources.Verify(x => x.FindAsync(id), Times.Once);
@@ -89,7 +89,7 @@
             var delete = new DeleteModel(context.Object) {ApiResource = apiResource};
 
             // Act
-            var post = await delete.OnPostAsync();
+            var post = await delete.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             apiResources.Verify(x => x.FindAsync(apiResource.Id), Times.Once);
@@ -115,7 +115,7 @@
             };
 
             // Act
-            var post = await delete.OnPostAsync();
+            var post = await delete.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             apiResources.Verify(x => x.FindAsync(id), Times.Never);
@@ -140,7 +140,7 @@
             };
 
             // Act
-            var post = await delete.OnPostAsync();
+            var post = await delete.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             apiResources.Verify(x => x.FindAsync(id), Times.Once);

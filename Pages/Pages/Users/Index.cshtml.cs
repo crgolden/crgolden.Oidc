@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Users
+﻿namespace crgolden.Oidc.Pages.Users
 {
     using System.Collections.Generic;
     using Microsoft.AspNetCore.Authorization;

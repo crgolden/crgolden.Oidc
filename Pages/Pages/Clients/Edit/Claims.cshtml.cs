@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Clients.Edit
+﻿namespace crgolden.Oidc.Pages.Clients.Edit
 {
     using System;
     using System.Collections.Generic;
@@ -35,7 +35,8 @@
 
             Client = await _context.Clients
                 .Include(x => x.Claims)
-                .SingleOrDefaultAsync(x => x.Id.Equals(id));
+                .SingleOrDefaultAsync(x => x.Id.Equals(id))
+                .ConfigureAwait(false);
 
             if (Client == null)
             {
@@ -62,7 +63,8 @@
 
             var client = await _context.Clients
                 .Include(x => x.Claims)
-                .SingleOrDefaultAsync(x => x.Id.Equals(Client.Id));
+                .SingleOrDefaultAsync(x => x.Id.Equals(Client.Id))
+                .ConfigureAwait(false);
 
             if (client == null)
             {
@@ -91,7 +93,7 @@
                 client.Claims = new List<ClientClaim>();
             }
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return RedirectToPage("../Details/Claims", new { Client.Id });
         }
     }

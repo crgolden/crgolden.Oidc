@@ -1,4 +1,4 @@
-﻿namespace Clarity.Oidc.Pages.Tests.PersistedGrants
+﻿namespace crgolden.Oidc.Pages.Tests.PersistedGrants
 {
     using System;
     using System.Threading.Tasks;
@@ -25,7 +25,7 @@
             var delete = new DeleteModel(context.Object);
 
             // Act
-            var get = await delete.OnGetAsync(persistedGrant.Key);
+            var get = await delete.OnGetAsync(persistedGrant.Key).ConfigureAwait(false);
 
             // Assert
             persistedGrants.Verify(x => x.FindAsync(persistedGrant.Key), Times.Once);
@@ -45,7 +45,7 @@
             var delete = new DeleteModel(context.Object);
 
             // Act
-            var get = await delete.OnGetAsync(string.Empty);
+            var get = await delete.OnGetAsync(string.Empty).ConfigureAwait(false);
 
             // Assert
             persistedGrants.Verify(x => x.FindAsync(persistedGrant.Key), Times.Never);
@@ -66,7 +66,7 @@
             var key = $"{Guid.NewGuid()}";
 
             // Act
-            var get = await delete.OnGetAsync(key);
+            var get = await delete.OnGetAsync(key).ConfigureAwait(false);
 
             // Assert
             persistedGrants.Verify(x => x.FindAsync(key), Times.Once);
@@ -86,7 +86,7 @@
             var delete = new DeleteModel(context.Object) {PersistedGrant = persistedGrant};
 
             // Act
-            var post = await delete.OnPostAsync();
+            var post = await delete.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             persistedGrants.Verify(x => x.FindAsync(persistedGrant.Key), Times.Once);
@@ -111,7 +111,7 @@
             };
 
             // Act
-            var post = await delete.OnPostAsync();
+            var post = await delete.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             persistedGrants.Verify(x => x.FindAsync(persistedGrant.Key), Times.Never);
@@ -132,7 +132,7 @@
             var delete = new DeleteModel(context.Object) {PersistedGrant = persistedGrant};
 
             // Act
-            var post = await delete.OnPostAsync();
+            var post = await delete.OnPostAsync().ConfigureAwait(false);
 
             // Assert
             persistedGrants.Verify(x => x.FindAsync(persistedGrant.Key), Times.Once);
