@@ -106,7 +106,7 @@
                             $"{origin}/silent-callback.html"
                         },
                         RequireConsent = false,
-                        PostLogoutRedirectUris = { $"{origin}/account/logout-success" },
+                        PostLogoutRedirectUris = { $"{origin}/logout-success" },
                         AllowedCorsOrigins = { origin },
                         AllowedScopes =
                         {
