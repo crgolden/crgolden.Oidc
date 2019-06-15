@@ -4,6 +4,7 @@
     ViewData["Title"] = "Verify Email";
     var routeData = new Dictionary<string, string>
     {
+        {nameof(Model.Email), Model.Email},
         {nameof(Model.ReturnUrl), Model.ReturnUrl},
         {nameof(Model.Origin), Model.Origin}
     };

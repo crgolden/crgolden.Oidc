@@ -111,7 +111,7 @@
 
             if (result.IsNotAllowed)
             {
-                return RedirectToPage("./VerifyEmail", new { returnUrl });
+                return RedirectToPage("./VerifyEmail", new { Input.Email, returnUrl });
             }
 
             ModelState.AddModelError(string.Empty, "Invalid login attempt.");

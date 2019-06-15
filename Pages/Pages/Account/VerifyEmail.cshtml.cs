@@ -33,6 +33,8 @@
             _logger = logger;
         }
 
+        public string Email { get; set; }
+
         public string ReturnUrl { get; set; }
 
         public string SuccessMessage { get; set; }
@@ -44,27 +46,21 @@
         [ViewData]
         public string Origin { get; set; }
 
-        public void OnGetAsync(string returnUrl = null)
+        public void OnGetAsync(string email, string returnUrl = null)
         {
+            Email = email;
             ReturnUrl = returnUrl ?? Url.Content("~/");
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null, string origin = null)
+        public async Task<IActionResult> OnPostAsync(string email, string returnUrl = null, string origin = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
             TempData[nameof(Origin)] = origin;
 
-            var info = await _signInManager.GetExternalLoginInfoAsync().ConfigureAwait(false);
-            if (info == null)
-            {
-                ErrorMessage = "Error loading external login information.";
-                return RedirectToPage("./Login", new { returnUrl });
-            }
-
-            var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey).ConfigureAwait(false);
+            var user = await _userManager.FindByEmailAsync(email).ConfigureAwait(false);
             if (user == null)
             {
-                ErrorMessage = $"Unable to load user with ID '{_userManager.GetUserId(info.Principal)}'.";
+                ErrorMessage = $"Unable to load user with email '{email}'.";
                 return RedirectToPage("./Login", new { ReturnUrl });
             }
 
