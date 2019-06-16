@@ -141,7 +141,7 @@
 
                 if (result.IsNotAllowed)
                 {
-                    return RedirectToPage("./VerifyEmail", new { returnUrl });
+                    return RedirectToPage("./VerifyEmail", new { user.Email, returnUrl });
                 }
             }
             else if (info.Principal.HasClaim(x => x.Type == ClaimTypes.Email))
@@ -241,7 +241,7 @@
                                 new Claim(JwtClaimTypes.FamilyName, Input.LastName),
                                 new Claim(ClaimTypes.Role, "User")
                             }).ConfigureAwait(false);
-                            return RedirectToPage("./VerifyEmail", new { returnUrl });
+                            return RedirectToPage("./VerifyEmail", new { user.Email, returnUrl });
                         }
                     }
 
@@ -272,7 +272,7 @@
 
             if (!await _userManager.IsEmailConfirmedAsync(user).ConfigureAwait(false))
             {
-                return RedirectToPage("./VerifyEmail", new { returnUrl });
+                return RedirectToPage("./VerifyEmail", new { user.Email, returnUrl });
             }
 
             if (returnUrl == Url.Content("~/") && !await _userManager.IsInRoleAsync(user, "Admin").ConfigureAwait(false))

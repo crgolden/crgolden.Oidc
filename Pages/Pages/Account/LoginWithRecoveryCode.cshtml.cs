@@ -81,7 +81,7 @@
 
             if (result.IsNotAllowed)
             {
-                return RedirectToPage("./VerifyEmail", new { returnUrl });
+                return RedirectToPage("./VerifyEmail", new { user.Email, returnUrl });
             }
 
             _logger.LogWarning($"Invalid recovery code entered for user with email '{user.Email}'.");

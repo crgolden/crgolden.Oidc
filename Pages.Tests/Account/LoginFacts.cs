@@ -440,6 +440,12 @@
                 routeValue =>
                 {
                     var (key, value) = routeValue;
+                    Assert.Equal(nameof(user.Email), key);
+                    Assert.Equal(user.Email, value);
+                },
+                routeValue =>
+                {
+                    var (key, value) = routeValue;
                     Assert.Equal(nameof(returnUrl), key);
                     Assert.Equal(returnUrl, value);
                 });
