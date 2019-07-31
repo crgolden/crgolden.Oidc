@@ -20,9 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="crgolden.Core.Factories" Version="1.0.1" />
-    <PackageReference Include="crgolden.Core.QueueClients" Version="1.0.1" />
-    <PackageReference Include="crgolden.Core.Services" Version="1.0.2" />
+    <PackageReference Include="crgolden.Core.Factories" Version="1.0.0" />
+    <PackageReference Include="crgolden.Core.QueueClients" Version="1.0.0" />
+    <PackageReference Include="crgolden.Core.Services" Version="1.0.0" />
     <PackageReference Include="crgolden.Core.Transformers" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
