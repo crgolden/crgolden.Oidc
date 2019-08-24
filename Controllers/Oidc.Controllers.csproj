@@ -5,7 +5,7 @@
     <RootNamespace>crgolden.Oidc</RootNamespace>
     <LangVersion>latest</LangVersion>
     <PackageId>crgolden.Oidc.Controllers</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Company>crgolden</Company>
     <Authors>Chris Golden</Authors>
     <RepositoryUrl>https://github.com/crgolden/crgolden.Oidc</RepositoryUrl>
